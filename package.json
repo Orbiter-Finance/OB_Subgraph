@@ -3,14 +3,14 @@
   "license": "MIT",
   "scripts": {
     "ct": "graph codegen --output-dir src/types/ && graph build && graph test",
-    "setup": "mustache configurations/configurations.json configurations/subgraph.yaml> subgraph.yaml && mustache configurations/graph-production.json configurations/graph-test-config.mustache src/mappings/config.ts && graph codegen --output-dir src/types/ && graph build",
-    "codegen": "mustache configurations/graph-production.json configurations/graph-test-config.mustache src/mappings/config.ts && graph codegen --output-dir src/types/",
-    "build": "mustache configurations/graph-production.json configurations/graph-test-config.mustache src/mappings/config.ts && graph build",
+    "setup": "mustache configurations/configurations.json configurations/configTemplate/subgraph.yaml> subgraph.yaml && mustache configurations/graph-production.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph codegen --output-dir src/types/ && graph build",
+    "codegen": "mustache configurations/graph-production.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph codegen --output-dir src/types/",
+    "build": "mustache configurations/graph-production.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ OBCabin",
     "create-local": "graph create --node http://localhost:8020/ OBCabin",
     "remove-local": "graph remove --node http://localhost:8020/ OBCabin",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 OBCabin",
-    "test": "mustache configurations/graph-test.json configurations/graph-test-config.mustache src/mappings/config.ts && graph test"
+    "test": "mustache configurations/graph-test.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph test"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.51.2",

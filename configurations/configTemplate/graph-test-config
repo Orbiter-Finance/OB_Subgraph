@@ -2,3 +2,4 @@ export const isProduction = {{ isProduction }}
 export const debugLog = {{ debugLog }}
 export const debugLogCreateRules = {{ debugLogCreateRules }}
 export const debugLogMapping = {{ debugLogMapping }}
+export const ManulDataSource: boolean = {{ ManulDataSource }}

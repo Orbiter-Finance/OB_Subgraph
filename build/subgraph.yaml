@@ -1,6 +1,6 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: MDCFactory
@@ -17,11 +17,11 @@ dataSources:
         - MDCCreated
       abis:
         - name: MDCFactory
-          file: ./abis/MDCFactory.json
+          file: MDCFactory/abis/MDCFactory.json
       eventHandlers:
         - event: MDCCreated(address,address)
           handler: handleMDCCreated
-      file: ./src/mappings/mdc-factory.ts
+      file: MDCFactory/MDCFactory.wasm
   - kind: ethereum
     name: ORManager
     network: mainnet
@@ -47,9 +47,9 @@ dataSources:
         - SubmitterFeeUpdated
       abis:
         - name: ORManager
-          file: ./abis/ORManager.json
+          file: ORManager/abis/ORManager.json
         - name: ERC20
-          file: ./abis/ERC20.json
+          file: ORManager/abis/ERC20.json
       eventHandlers:
         - event: ChainInfoUpdated(indexed
             uint64,(uint64,uint192,uint64,uint64,uint64,uint64,uint256,address[]))
@@ -74,7 +74,7 @@ dataSources:
           handler: handleProtocolFeeUpdated
         - event: SubmitterFeeUpdated(address)
           handler: handleSubmitterFeeUpdated
-      file: ./src/mappings/or-manager.ts
+      file: ORManager/ORManager.wasm
   - kind: ethereum
     name: FeeManager
     network: mainnet
@@ -95,7 +95,7 @@ dataSources:
         - Withdraw
       abis:
         - name: FeeManager
-          file: ./abis/ORFeeManager.json
+          file: FeeManager/abis/ORFeeManager.json
       eventHandlers:
         - event: DealerUpdated(indexed address,uint256,bytes)
           handler: handleDealerUpdated
@@ -109,7 +109,7 @@ dataSources:
           handler: handleSubmitterRegistered
         - event: Withdraw(indexed address,uint64,address,uint256,uint256)
           handler: handleWithdraw
-      file: ./src/mappings/fee-manager.ts
+      file: FeeManager/FeeManager.wasm
 templates:
   - kind: ethereum
     name: MDC
@@ -128,7 +128,7 @@ templates:
         - SpvUpdated
       abis:
         - name: MDC
-          file: ./abis/ORMakerDeposit.json
+          file: MDC/abis/ORMakerDeposit.json
       eventHandlers:
         - event: ChallengeInfoUpdated(indexed
             bytes32,(uint256,uint64,address,address,uint64,uint256,uint256,uint64,uint64,uint64,uint64,bytes32))
@@ -141,7 +141,7 @@ templates:
           handler: handleRulesRootUpdated
         - event: SpvUpdated(indexed address,uint64,address)
           handler: handleSpvUpdated
-      file: ./src/mappings/mdc.ts
+      file: templates/MDC/MDC.wasm
   - kind: ethereum
     name: MDCFactory
     network: mainnet
@@ -155,8 +155,8 @@ templates:
         - MDCCreated
       abis:
         - name: MDCFactory
-          file: ./abis/MDCFactory.json
+          file: MDCFactory/abis/MDCFactory.json
       eventHandlers:
         - event: MDCCreated(address,address)
           handler: handleMDCCreated
-      file: ./src/mappings/mdc-factory.ts
+      file: MDCFactory/MDCFactory.wasm
