@@ -1,0 +1,642 @@
+interface ChallengeInfoUpdated {
+  id: ID!
+  challengeId: String! # bytes32
+  sourceTxFrom: BigInt # uint256
+  sourceTxTime: BigInt! # uint64
+  challenger: String! # address
+  freezeToken: String! # address
+  challengeUserRatio: BigInt # uint64
+  freezeAmount0: BigInt! # uint256
+  freezeAmount1: BigInt! # uint256
+  challengeTime: BigInt! # uint64
+  abortTime: BigInt # uint64
+  verifiedTime0: BigInt # uint64
+  verifiedTime1: BigInt # uint64
+  verifiedDataHash0: String
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
+}
+
+type challengeManager @entity {
+  id: ID! # hash(sourceChainId, sourceTxHash) == challengeId
+  createChallenge: [createChallenge!]!
+}
+
+type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
+  id: ID! #hash(challengeId, TxHash, logIndex)
+  challengeId: String! # bytes32
+  sourceTxFrom: BigInt # uint256
+  sourceTxTime: BigInt! # uint64
+  challenger: String! # address
+  freezeToken: String! # address
+  challengeUserRatio: BigInt # uint64
+  freezeAmount0: BigInt! # uint256
+  freezeAmount1: BigInt! # uint256
+  challengeTime: BigInt! # uint64
+  abortTime: BigInt # uint64
+  verifiedTime0: BigInt # uint64
+  verifiedTime1: BigInt # uint64
+  verifiedDataHash0: String
+  msgSender: String
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
+  challengeManager: challengeManager! @derivedFrom(field: "createChallenge")
+}
+
+# using entity, binding in contract Event
+type ColumnArrayUpdated @entity(immutable: true) {
+  id: ID!
+  impl: String # address
+  columnArrayHash: String # bytes32
+  dealers: [String!]! # address[]
+  ebcs: [String!]! # address[]
+  chainIds: [BigInt!]! # uint64[]
+  mdc: MDC! @derivedFrom(field: "columnArrayUpdated") # MDC
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: String!
+}
+
+type responseMakersMapping @entity {
+  id: ID! # hash(mdc address - txHash - logIndex)
+  responseMakerList: [String!]! # responseMaker address array
+  enableTimestamp: BigInt
+  owner: String!
+  mdc: MDC! @derivedFrom(field: "responseMakersSnapshot") # MDC
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+# customed using entity
+type MDC @entity {
+  id: ID! # mdc address
+  owner: String! # address
+  factoryAddr: String! # address
+  ruleUpdateRel: [ruleUpdateRel!]!
+  responseMakersSnapshot: [responseMakersMapping!]! #snapshot
+  dealerSnapshot: [dealerSnapshot!]! #snapshot
+  ebcSnapshot: [ebcSnapshot!]! #snapshot
+  chainIdSnapshot: [chainIdSnapshot!]! #snapshot
+  ruleSnapshot: [ruleRel!]! #snapshot
+  ruleLatest: [latestRule!]! #latestData
+  bindSPVs: [MDCBindSPV!]! # MDCBindSPV
+  columnArrayUpdated: [ColumnArrayUpdated!]! # ColumnArrayUpdated
+  mapping: MDCMapping # dealer/ebc/chainId mapping
+  factory: [FactoryManager!]! @derivedFrom(field: "mdcs")
+  ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
+  dealer: [Dealer!]! @derivedFrom(field: "mdcs") # Dealer
+  responseMaker: [responseMaker!]! @derivedFrom(field: "mdcs") # responseMaker
+  createblockNumber: BigInt!
+  createblockTimestamp: BigInt!
+  createtransactionHash: String!
+  latestUpdatetransactionHash: String!
+}
+
+type ruleUpdateRel @entity {
+  id: ID! # hash(mdc, ebc, chain0, chain1)
+  ruleUpdateVersion: [ruleUpdateVersion!]!
+  latestVersion: BigInt!
+  # Rel
+  mdc: MDC! @derivedFrom(field: "ruleUpdateRel")
+  ebc: ebcRel! @derivedFrom(field: "ruleUpdateRel")
+  latestRule: latestRule! @derivedFrom(field: "ruleUpdateRel")
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+type ruleUpdateVersion
+  @entity(immutable: true) { # every rule update
+  # As MDC LatestRule: hash(hash(mdc, ebc, chain0, chain1), updateVersion)
+  id: ID!
+  makerHash: String! # hash(mdc, ebc, chain0, chain1)
+  owner: String! # address
+  updateVersion: BigInt! # version++
+  mdcAddr: String! # address
+  ebcAddr: String! # address
+  type: String # ETH/ERC20
+  chain0: BigInt # uint64
+  chain1: BigInt # uint64
+  chain0Status: Int # uint8
+  chain1Status: Int # uint8
+  chain0Token: String # Address
+  chain1Token: String # Address
+  chain0minPrice: BigInt # uint128
+  chain1minPrice: BigInt # uint128
+  chain0maxPrice: BigInt # uint128
+  chain1maxPrice: BigInt # uint128
+  chain0WithholdingFee: BigInt # uint128
+  chain1WithholdingFee: BigInt # uint128
+  chain0TradeFee: Int # uint16
+  chain1TradeFee: Int # uint16
+  chain0ResponseTime: Int # uint32
+  chain1ResponseTime: Int # uint32
+  chain0CompensationRatio: Int # uint32
+  chain1CompensationRatio: Int # uint32
+  enableTimestamp: BigInt # uint64
+  latestUpdateVersion: Int # uint32
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+  latestUpdateHash: String
+  ruleValidation: Boolean!
+  ruleValidationErrorstatus: String!
+
+  # Related
+  ruleUpdateRel: [ruleUpdateRel!]! @derivedFrom(field: "ruleUpdateVersion")
+  ruleRel: [ruleRel!]! @derivedFrom(field: "ruleUpdateVersion")
+}
+
+interface PairManager {
+  id: ID!
+  #Rel
+  latestRule: [latestRule!]!
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+type chainPairManager implements PairManager @entity {
+  id: ID! # chain0Id-chain1Id: 5-420
+  #Rel
+  latestRule: [latestRule!]!
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+type tokenPairManager implements PairManager @entity {
+  id: ID! # token id: 0x00000000000000000000000076fc39362ef66dad742791bde738b9b050c3cbf5
+  #Rel
+  latestRule: [latestRule!]!
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+type MDCMapping @entity {
+  id: ID! # mdc address
+  dealerMapping: [DealerMapping!]! # dealer address mapping, defined by maker
+  ebcMapping: [ebcMapping!]! # ebc address mapping, defined by maker
+  chainIdMapping: [chainIdMapping!]! # chainId mapping, defined by maker
+  mdc: [MDC!]! @derivedFrom(field: "mapping") # MDC
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+# customed using entity
+type Dealer @entity {
+  id: ID! # dealer address
+  mdcs: [MDC!]! # binding MDC
+  rules: [ruleRel!]! # binding ruleSnapshot
+  feeRatio: BigInt! # uint
+  extraInfo: String! # string
+  register: Boolean!
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
+}
+
+# customed using entity
+type FactoryManager @entity {
+  id: ID! # factory address
+  mdcs: [MDC!]! # MDC[]
+  owners: [String!]! # ownerAddress
+  responseMakers: [responseMaker!]! # responseMaker[]
+  mdcCounts: BigInt!
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
+}
+
+type responseMaker @entity {
+  id: ID! # responseMaker address
+  mdcs: [MDC!]! # MDC[]
+  factory: FactoryManager! @derivedFrom(field: "responseMakers") # FactoryManager
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
+}
+
+# customed using entity
+type ebcMapping @entity {
+  id: ID! # mdc address - ebc address
+  owner: String! # address
+  ebcAddr: String! # ebc address
+  ebcIndex: BigInt # uint64
+  enableTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+  latestUpdateTimestamp: BigInt
+  latestUpdateHash: String
+  mdcmapping: MDCMapping! @derivedFrom(field: "ebcMapping") # MDCMapping
+}
+
+# customed using entity
+type ebcMappingSnapshot @entity {
+  id: ID! # mdc address - ebc address
+  owner: String! # address
+  ebcAddr: String! # ebc address
+  ebcIndex: BigInt # uint64
+  enableTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+  latestUpdateTimestamp: BigInt
+  latestUpdateHash: String
+  ebcSnapshot: ebcSnapshot! @derivedFrom(field: "ebcMappingSnapshot") # ebcSnapshot
+}
+
+# customed using entity
+type MDCBindSPV @entity {
+  id: ID! # mdc address - ChainId
+  chainId: BigInt # uint64 - the index of state varible "_spvs[]" in MDC contract
+  spv: String # spv address - the value of state varible "_spvs[]" in MDC contract
+  enableTimestamp: BigInt
+  mdc: MDC! @derivedFrom(field: "bindSPVs") # MDC
+}
+
+# customed using entity
+type dealerSnapshot @entity {
+  id: ID! # txHash - logIndex
+  dealerList: [String!]! # dealer address array
+  dealerMappingSnapshot: [DealerMappingSnapshot!]! # dealer address mapping, defined by maker
+  mdc: MDC! @derivedFrom(field: "dealerSnapshot") # MDC
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+# customed using entity
+type ebcSnapshot @entity {
+  id: ID! # txHash - logIndex
+  ebcList: [String!]! # ebc address array
+  ebcMappingSnapshot: [ebcMappingSnapshot!]! # ebc address mapping, defined by maker
+  mdc: MDC! @derivedFrom(field: "ebcSnapshot") # MDC
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+type chainIdSnapshot @entity {
+  id: ID! # txHash - logIndex
+  chainIdList: [BigInt!]! # chainId array
+  chainIdMappingSnapshot: [chainIdMappingSnapshot!]! # chainId mapping, defined by maker
+  mdc: MDC! @derivedFrom(field: "chainIdSnapshot") # MDC
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+# customed using entity
+type DealerMapping @entity {
+  id: ID! # mdc address - dealer address
+  owner: String! # address
+  dealerAddr: String! # dealer address
+  dealerIndex: BigInt # uint64
+  enableTimestamp: BigInt # uint64
+  latestUpdateBlockNumber: BigInt
+  latestUpdateTimestamp: BigInt
+  latestUpdateHash: String
+  MDCMapping: MDCMapping! @derivedFrom(field: "dealerMapping") # MDCMapping
+}
+
+# customed using entity
+type DealerMappingSnapshot @entity {
+  id: ID! # hash(mdc address - dealer address - txHash - logIndex)
+  owner: String! # address
+  dealerAddr: String! # dealer address
+  dealerIndex: BigInt # uint64
+  enableTimestamp: BigInt # uint64
+  latestUpdateBlockNumber: BigInt
+  latestUpdateTimestamp: BigInt
+  latestUpdateHash: String
+  dealerSnapshot: dealerSnapshot! @derivedFrom(field: "dealerMappingSnapshot") # dealerSnapshot
+}
+
+# customed using entity
+type chainIdMapping @entity {
+  id: ID! # mdc address - chainId
+  owner: String! # address
+  chainId: BigInt! # chainId
+  chainIdIndex: BigInt # uint64
+  enableTimestamp: BigInt # uint64
+  latestUpdateBlockNumber: BigInt
+  latestUpdateTimestamp: BigInt
+  latestUpdateHash: String
+}
+
+type chainIdMappingSnapshot @entity {
+  id: ID! # mdc address - chainId
+  owner: String! # address
+  chainId: BigInt! # chainId
+  chainIdIndex: BigInt # uint64
+  enableTimestamp: BigInt # uint64
+  latestUpdateBlockNumber: BigInt
+  latestUpdateTimestamp: BigInt
+  latestUpdateHash: String
+  chainIdSnapshot: chainIdSnapshot!
+    @derivedFrom(field: "chainIdMappingSnapshot")
+}
+
+# customed using entity
+type ruleRel
+  @entity { #contain all rules snapshot
+  # As MDC snapshot, id: hash(mdc-ecb-transactionHash-logIndex)
+  id: ID!
+  # rules: [rule!]! # rules in input Data
+  type: String! # ETH/ERC20
+  ruleLatest: [latestRuleSnapshot!]! # all latest rules
+  root: String! # String
+  version: Int! # uint32
+  sourceChainIds: [BigInt!]! # uint64[]
+  pledgeAmounts: [BigInt!]! # uint[]
+  token: String! # address
+  ruleUpdateVersion: [ruleUpdateVersion!]!
+  # related to rule
+  # mappingSnapshot: [MDCMapping!] # ruleMapping
+  mdc: MDC! @derivedFrom(field: "ruleSnapshot") # MDC
+  ebc: ebcRel! @derivedFrom(field: "rulesList") # EBCs
+  # dealer: Dealer! @derivedFrom(field: "rules") # Dealer
+
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+# customed using entitys
+# type rule
+#   @entity { # only one rule in ruleRel
+#   id: ID! # mdc-ebc-chain0-chain1
+#   owner: String! # address
+#   ebcAddr: String! # address
+#   chain0: BigInt! # uint64
+#   chain1: BigInt! # uint64
+#   chain0Status: Int! # uint8
+#   chain1Status: Int! # uint8
+#   chain0Token: String! # Address
+#   chain1Token: String! # Address
+#   chain0minPrice: BigInt! # uint128
+#   chain1minPrice: BigInt! # uint128
+#   chain0maxPrice: BigInt! # uint128
+#   chain1maxPrice: BigInt! # uint128
+#   chain0WithholdingFee: BigInt! # uint128
+#   chain1WithholdingFee: BigInt! # uint128
+#   chain0TradeFee: Int! # uint16
+#   chain1TradeFee: Int! # uint16
+#   chain0ResponseTime: Int! # uint32
+#   chain1ResponseTime: Int! # uint32
+#   chain0CompensationRatio: Int! # uint32
+#   chain1CompensationRatio: Int! # uint32
+#   enableTimestamp: BigInt! # uint64
+#   ruleValidation: Boolean!
+#   ruleValidationErrorstatus: String!
+#   latestVersion: BigInt!
+#   transactionRuleIndex: Int!
+#   latestUpdateBlockNumber: BigInt!
+#   latestUpdateTimestamp: BigInt!
+#   latestUpdatetransactionHash: String!
+#   ruleRel: ruleRel! @derivedFrom(field: "rules") # ruleRel
+# }
+
+# customed using entitys
+type latestRule
+  @entity { # latest rule
+  # As MDC LatestRule: hash(mdc-ebc-chain0-chain1)
+  id: ID!
+  owner: String! # address
+  mdcAddr: String! # address
+  ebcAddr: String! # address
+  type: String # ETH/ERC20
+  chain0: BigInt! # uint64
+  chain1: BigInt! # uint64
+  chain0Status: Int # uint8
+  chain1Status: Int # uint8
+  chain0Token: String! # Address
+  chain1Token: String! # Address
+  chain0minPrice: BigInt # uint128
+  chain1minPrice: BigInt # uint128
+  chain0maxPrice: BigInt # uint128
+  chain1maxPrice: BigInt # uint128
+  chain0WithholdingFee: BigInt # uint128
+  chain1WithholdingFee: BigInt # uint128
+  chain0TradeFee: Int # uint16
+  chain1TradeFee: Int # uint16
+  chain0ResponseTime: Int # uint32
+  chain1ResponseTime: Int # uint32
+  chain0CompensationRatio: Int # uint32
+  chain1CompensationRatio: Int # uint32
+  enableTimestamp: BigInt # uint64
+  latestUpdateVersion: Int # uint32
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+  latestUpdateHash: String
+  ruleValidation: Boolean!
+  ruleValidationErrorstatus: String!
+  root: String!
+  # Rel
+  ruleUpdateRel: [ruleUpdateRel!]!
+  latestSnapShotID: String!
+  ebc: ebcRel! @derivedFrom(field: "ruleLatest") # EBCs
+  mdc: MDC! @derivedFrom(field: "ruleLatest") # MDC
+  chainPairManager: chainPairManager! @derivedFrom(field: "latestRule")
+  tokenPairManager: tokenPairManager! @derivedFrom(field: "latestRule")
+}
+
+# customed using entitys
+type latestRuleSnapshot
+  @entity(immutable: true) { # latest rule
+  id: ID! # As MDC LatestRuleSnapshot: hash(mdc,ebc,chain0,chain1,token0,token1)
+  owner: String! # address
+  mdcAddr: String! # address
+  ebcAddr: String! # address
+  type: String # ETH/ERC20
+  chain0: BigInt! # uint64
+  chain1: BigInt! # uint64
+  chain0Status: Int # uint8
+  chain1Status: Int # uint8
+  chain0Token: String! # Address
+  chain1Token: String! # Address
+  chain0minPrice: BigInt # uint128
+  chain1minPrice: BigInt # uint128
+  chain0maxPrice: BigInt # uint128
+  chain1maxPrice: BigInt # uint128
+  chain0WithholdingFee: BigInt # uint128
+  chain1WithholdingFee: BigInt # uint128
+  chain0TradeFee: Int # uint16
+  chain1TradeFee: Int # uint16
+  chain0ResponseTime: Int # uint32
+  chain1ResponseTime: Int # uint32
+  chain0CompensationRatio: Int # uint32
+  chain1CompensationRatio: Int # uint32
+  enableTimestamp: BigInt # uint64
+  latestUpdateVersion: Int # uint32
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+  latestUpdateHash: String
+  ruleValidation: Boolean!
+  ruleValidationErrorstatus: String!
+  # ebc: ebcRel! @derivedFrom(field: "ruleLatest") # EBCs
+  # mdc: MDC! @derivedFrom(field: "ruleLatest") # MDC
+  ruleRelSnapshot: ruleRel! @derivedFrom(field: "ruleLatest") # ruleRel
+}
+
+# using entity, binding in contract Event
+type chainRel @entity {
+  id: ID! # chainId
+  tokens: [tokenRel!]! # ChainToken
+  spvs: [String!]! # address[]
+  nativeToken: String! # address
+  batchLimit: BigInt # uint192
+  minVerifyChallengeSourceTxSecond: BigInt # uint64
+  maxVerifyChallengeSourceTxSecond: BigInt # uint64
+  minVerifyChallengeDestTxSecond: BigInt # uint64
+  maxVerifyChallengeDestTxSecond: BigInt # uint64
+  enableTimestamp: BigInt # uint64
+  latestUpdateBlockNumber: BigInt!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateHash: String!
+}
+
+# using entity, binding in contract Event
+type tokenRel @entity {
+  id: ID! # hash(chain - token Address)
+  tokenAddress: String! # address
+  chainId: String! # chainId
+  symbol: String! # string
+  name: String! # string
+  mainnetToken: String # address
+  decimals: Int # uint8
+  chain: [chainRel!]! @derivedFrom(field: "tokens") # ChainInfo
+  latestUpdateBlockNumber: BigInt!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateHash: String!
+}
+
+type ChallengeUserRatioUpdated @entity(immutable: true) {
+  id: Bytes!
+  challengeUserRatio: BigInt! # uint64
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+# using entity, binding in contract Event
+type ebcRel @entity {
+  id: ID! #ebc address
+  mdcList: [MDC!]! # list all mdc!! who bind this ebc
+  rulesList: [ruleRel!]! # list all rules Snapshot!! who bind this ebc
+  ruleLatest: [latestRule!]! # list all latest rules!! who bind this ebc
+  ruleUpdateRel: [ruleUpdateRel!]!
+  statuses: Boolean!
+  latestUpdateHash: String!
+}
+
+type FeeChallengeSecondUpdated @entity(immutable: true) {
+  id: Bytes!
+  feeChallengeSecond: BigInt! # uint64
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FeeTakeOnChallengeSecondUpdated @entity(immutable: true) {
+  id: Bytes!
+  feeTakeOnChallengeSecond: BigInt! # uint64
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MaxMDCLimitUpdated @entity(immutable: true) {
+  id: Bytes!
+  maxMDCLimit: BigInt! # uint64
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MinChallengeRatioUpdated @entity(immutable: true) {
+  id: Bytes!
+  minChallengeRatio: BigInt! # uint64
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type OwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProtocolFeeUpdated @entity(immutable: true) {
+  id: Bytes!
+  protocolFee: BigInt! # uint64
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SubmitterFeeUpdated @entity(immutable: true) {
+  id: Bytes!
+  submitter: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ETHDeposit @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type FeeManagerOwnershipTransferred @entity(immutable: true) {
+  id: Bytes!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SubmissionUpdated @entity(immutable: true) {
+  id: Bytes!
+  startBlock: BigInt! # uint64
+  endBlock: BigInt! # uint64
+  submitTimestamp: BigInt! # uint64
+  profitRoot: Bytes! # bytes32
+  stateTransTreeRoot: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SubmitterRegistered @entity(immutable: true) {
+  id: ID!
+  submitter: Bytes! # address
+  marginAmount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Withdraw @entity(immutable: true) {
+  # id:hash(transactionHash, logIndex)
+  id: ID!
+  user: Bytes! # address
+  chainId: BigInt! # uint64
+  token: Bytes! # address
+  debt: BigInt! # uint256
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: String!
+}

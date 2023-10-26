@@ -1,0 +1,36 @@
+{
+  "name": "OBCabin",
+  "license": "MIT",
+  "scripts": {
+    "ct": "graph codegen --output-dir src/types/ && graph build && graph test",
+    "setup": "mustache configurations/configurations.json configurations/subgraph.yaml> subgraph.yaml && mustache configurations/graph-production.json configurations/graph-test-config.mustache src/mappings/config.ts && graph codegen --output-dir src/types/ && graph build",
+    "codegen": "mustache configurations/graph-production.json configurations/graph-test-config.mustache src/mappings/config.ts && graph codegen --output-dir src/types/",
+    "build": "mustache configurations/graph-production.json configurations/graph-test-config.mustache src/mappings/config.ts && graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ OBCabin",
+    "create-local": "graph create --node http://localhost:8020/ OBCabin",
+    "remove-local": "graph remove --node http://localhost:8020/ OBCabin",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 OBCabin",
+    "test": "mustache configurations/graph-test.json configurations/graph-test-config.mustache src/mappings/config.ts && graph test"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "0.51.2",
+    "@graphprotocol/graph-ts": "^0.31.0"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
+    "eslint-plugin-unused-imports": "^2.0.0",
+    "matchstick-as": "^0.6.0",
+    "mustache": "^4.2.0",
+    "prettier": "^2.8.8",
+    "prettier-plugin-solidity": "^1.1.3",
+    "solhint": "^3.4.1",
+    "solhint-plugin-prettier": "^0.0.5"
+  }
+}

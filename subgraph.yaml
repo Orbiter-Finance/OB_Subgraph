@@ -1,0 +1,149 @@
+specVersion: 0.0.5
+schema:
+  file: ./schema.graphql
+features:
+  - grafting
+graft:
+  base: QmTRWhRLhEtZdNaJsJLuBbR9Znusrju9Hoys6vGgqU8AMG
+  block: 18417650
+dataSources:
+  - kind: ethereum
+    name: MDCFactory
+    network: mainnet
+    source:
+      address: "0xfd854cb189Eb6754f02c5d6d0f9a70D78629F644"
+      abi: MDCFactory
+      startBlock: 18417650
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MDCCreated
+      abis:
+        - name: MDCFactory
+          file: ./abis/MDCFactory.json
+      eventHandlers:
+        - event: MDCCreated(address,address)
+          handler: handleMDCCreated
+      file: ./src/mappings/mdc-factory.ts
+  - kind: ethereum
+    name: ORManager
+    network: mainnet
+    source:
+      address: "0xe90fab21fEbFb008886B3639C26cCf70E414B9de"
+      abi: ORManager
+      startBlock: 18212087
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ChainInfoUpdated
+        - ChainTokenUpdated
+        - ChallengeUserRatioUpdated
+        - EbcsUpdated
+        - FeeChallengeSecondUpdated
+        - FeeTakeOnChallengeSecondUpdated
+        - MaxMDCLimitUpdated
+        - MinChallengeRatioUpdated
+        - OwnershipTransferred
+        - ProtocolFeeUpdated
+        - SubmitterFeeUpdated
+      abis:
+        - name: ORManager
+          file: ./abis/ORManager.json
+        - name: ERC20
+          file: ./abis/ERC20.json
+      eventHandlers:
+        - event: ChainInfoUpdated(indexed
+            uint64,(uint64,uint192,uint64,uint64,uint64,uint64,uint256,address[]))
+          handler: handleChainInfoUpdated
+        - event: ChainTokenUpdated(indexed uint64,(uint256,address,uint8))
+          handler: handleChainTokenUpdated
+        - event: ChallengeUserRatioUpdated(uint64)
+          handler: handleChallengeUserRatioUpdated
+        - event: EbcsUpdated(address[],bool[])
+          handler: handleEbcsUpdated
+        - event: FeeChallengeSecondUpdated(uint64)
+          handler: handleFeeChallengeSecondUpdated
+        - event: FeeTakeOnChallengeSecondUpdated(uint64)
+          handler: handleFeeTakeOnChallengeSecondUpdated
+        - event: MaxMDCLimitUpdated(uint64)
+          handler: handleMaxMDCLimitUpdated
+        - event: MinChallengeRatioUpdated(uint64)
+          handler: handleMinChallengeRatioUpdated
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: ProtocolFeeUpdated(uint64)
+          handler: handleProtocolFeeUpdated
+        - event: SubmitterFeeUpdated(address)
+          handler: handleSubmitterFeeUpdated
+      file: ./src/mappings/or-manager.ts
+  - kind: ethereum
+    name: FeeManager
+    network: mainnet
+    source:
+      address: "0xcC45c67d121A4BC3BC88Cc5A3099a8F7854f11f6"
+      abi: FeeManager
+      startBlock: 18212091
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DealerUpdated
+        - ETHDeposit
+        - FeeManagerOwnershipTransferred
+        - SubmissionUpdated
+        - SubmitterRegistered
+        - Withdraw
+      abis:
+        - name: FeeManager
+          file: ./abis/ORFeeManager.json
+      eventHandlers:
+        - event: DealerUpdated(indexed address,uint256,bytes)
+          handler: handleDealerUpdated
+        - event: ETHDeposit(indexed address,uint256)
+          handler: handleETHDeposit
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: SubmissionUpdated(uint64,uint64,indexed uint64,indexed bytes32,indexed bytes32)
+          handler: handleSubmissionUpdated
+        - event: SubmitterRegistered(indexed address,uint256)
+          handler: handleSubmitterRegistered
+        - event: Withdraw(indexed address,uint64,address,uint256,uint256)
+          handler: handleWithdraw
+      file: ./src/mappings/fee-manager.ts
+templates:
+  - kind: ethereum
+    name: MDC
+    network: mainnet
+    source:
+      abi: MDC
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ChallengeInfoUpdated
+        - ColumnArrayUpdated
+        - ResponseMakersUpdated
+        - RulesRootUpdated
+        - SpvUpdated
+      abis:
+        - name: MDC
+          file: ./abis/ORMakerDeposit.json
+      eventHandlers:
+        - event: ChallengeInfoUpdated(indexed
+            bytes32,(uint256,uint64,address,address,uint64,uint256,uint256,uint64,uint64,uint64,uint64,bytes32))
+          handler: handleChallengeInfoUpdated
+        - event: ColumnArrayUpdated(indexed address,bytes32,address[],address[],uint64[])
+          handler: handleColumnArrayUpdated
+        - event: ResponseMakersUpdated(indexed address,uint256[])
+          handler: handleResponseMakersUpdated
+        - event: RulesRootUpdated(indexed address,address,(bytes32,uint32))
+          handler: handleRulesRootUpdated
+        - event: SpvUpdated(indexed address,uint64,address)
+          handler: handleSpvUpdated
+      file: ./src/mappings/mdc.ts
