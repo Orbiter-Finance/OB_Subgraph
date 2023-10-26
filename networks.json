@@ -12,6 +12,9 @@
     },
     "FeeManager": {
       "address": "0x7a4f10205Bf1EBc2ffAB75e8795BA2182aC35220"
+    },
+    "spvData": {
+      "address": "0xFcCC806cB3D3c2230645Ba762340350d82777b4e"
     }
   }
 }

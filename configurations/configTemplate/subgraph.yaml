@@ -117,6 +117,29 @@ dataSources:
         - event: Withdraw(indexed address,uint64,address,uint256,uint256)
           handler: handleWithdraw
       file: ./src/mappings/fee-manager.ts
+  - kind: ethereum
+    name: spvData
+    network: {{network}}
+    source:
+      address: "{{orSpvDataAddress}}"
+      abi: spvData
+      startBlock: {{orSpvDataStartBlock}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BlockIntervalUpdated
+        - HistoryBlockSaved
+      abis:
+        - name: spvData
+          file: ./abis/ORSpvData.json
+      eventHandlers:
+        - event: BlockIntervalUpdated(uint64)
+          handler: handleBlockIntervalUpdated
+        - event: HistoryBlockSaved(indexed uint256,bytes32)
+          handler: handleHistoryBlockSaved
+      file: ./src/mappings/spv-data.ts      
 templates:
   - kind: ethereum
     name: MDC

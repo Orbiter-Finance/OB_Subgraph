@@ -649,3 +649,19 @@ type Withdraw @entity(immutable: true) {
   blockTimestamp: BigInt!
   transactionHash: String!
 }
+type BlockIntervalUpdated @entity(immutable: true) {
+  id: ID!
+  blockInterval: BigInt! # uint64
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: String!
+}
+
+type HistoryBlockSaved @entity(immutable: true) {
+  id: ID!
+  blkNumber: BigInt! # uint256
+  blockHash: String! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: String!
+}

@@ -1,11 +1,13 @@
 {
-  "network": "mainnet",
+  "network": "goerli",
   "orMDCFactoryAddress": "0xfd854cb189Eb6754f02c5d6d0f9a70D78629F644",
   "orMDCFactoryStartBlock": 18417650,
   "orManagerAddress": "0xe90fab21fEbFb008886B3639C26cCf70E414B9de",
   "orManagerStartBlock": 18212087,
   "orFeeManagerAddress": "0xcC45c67d121A4BC3BC88Cc5A3099a8F7854f11f6",
   "orFeeManagerStartBlock": 18212091,
+  "orSpvDataAddress": "0xFcCC806cB3D3c2230645Ba762340350d82777b4e",
+  "orSpvDataStartBlock": 9927831,
   "graftingEnable": false,
   "DeploymentID-LastVersion": "",
   "UpgradeStartBlock": 0

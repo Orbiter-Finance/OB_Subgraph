@@ -4,7 +4,7 @@ schema:
 dataSources:
   - kind: ethereum
     name: MDCFactory
-    network: mainnet
+    network: goerli
     source:
       address: "0xfd854cb189Eb6754f02c5d6d0f9a70D78629F644"
       abi: MDCFactory
@@ -24,7 +24,7 @@ dataSources:
       file: MDCFactory/MDCFactory.wasm
   - kind: ethereum
     name: ORManager
-    network: mainnet
+    network: goerli
     source:
       address: "0xe90fab21fEbFb008886B3639C26cCf70E414B9de"
       abi: ORManager
@@ -77,7 +77,7 @@ dataSources:
       file: ORManager/ORManager.wasm
   - kind: ethereum
     name: FeeManager
-    network: mainnet
+    network: goerli
     source:
       address: "0xcC45c67d121A4BC3BC88Cc5A3099a8F7854f11f6"
       abi: FeeManager
@@ -110,10 +110,33 @@ dataSources:
         - event: Withdraw(indexed address,uint64,address,uint256,uint256)
           handler: handleWithdraw
       file: FeeManager/FeeManager.wasm
+  - kind: ethereum
+    name: spvData
+    network: goerli
+    source:
+      address: "0xFcCC806cB3D3c2230645Ba762340350d82777b4e"
+      abi: spvData
+      startBlock: 9927831
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BlockIntervalUpdated
+        - HistoryBlockSaved
+      abis:
+        - name: spvData
+          file: spvData/abis/ORSpvData.json
+      eventHandlers:
+        - event: BlockIntervalUpdated(uint64)
+          handler: handleBlockIntervalUpdated
+        - event: HistoryBlockSaved(indexed uint256,bytes32)
+          handler: handleHistoryBlockSaved
+      file: spvData/spvData.wasm
 templates:
   - kind: ethereum
     name: MDC
-    network: mainnet
+    network: goerli
     source:
       abi: MDC
     mapping:
@@ -144,7 +167,7 @@ templates:
       file: templates/MDC/MDC.wasm
   - kind: ethereum
     name: MDCFactory
-    network: mainnet
+    network: goerli
     source:
       abi: MDCFactory
     mapping:
