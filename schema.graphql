@@ -658,10 +658,9 @@ type BlockIntervalUpdated @entity(immutable: true) {
 }
 
 type HistoryBlockSaved @entity(immutable: true) {
-  id: ID!
-  blkNumber: BigInt! # uint256
-  blockHash: String! # bytes32
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: String!
+  id: ID! # block number
+  blockHash: String! # block hash
+  latestUpdateBlockNumber: BigInt!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateHash: String!
 }

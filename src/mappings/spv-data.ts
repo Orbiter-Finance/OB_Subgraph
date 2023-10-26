@@ -3,6 +3,7 @@ import {
   HistoryBlockSaved as HistoryBlockSavedEvent
 } from "../types/spvData/spvData"
 import { BlockIntervalUpdated, HistoryBlockSaved } from "../types/schema"
+import { handleHistoryBlockSavedEvent } from "./spv-data-core"
 
 export function handleBlockIntervalUpdated(
   event: BlockIntervalUpdatedEvent
@@ -20,15 +21,9 @@ export function handleBlockIntervalUpdated(
 }
 
 export function handleHistoryBlockSaved(event: HistoryBlockSavedEvent): void {
-  // let entity = new HistoryBlockSaved(
-  //   event.transaction.hash.concatI32(event.logIndex.toI32())
-  // )
-  // entity.blockNumber = event.params.blkNumber
-  // entity.blockHash = event.params.blockHash
-
-  // entity.blockNumber = event.block.number
-  // entity.blockTimestamp = event.block.timestamp
-  // entity.transactionHash = event.transaction.hash
-
-  // entity.save()
+  handleHistoryBlockSavedEvent(
+    event,
+    event.params.blkNumber,
+    event.params.blockHash.toHexString()
+  )
 }

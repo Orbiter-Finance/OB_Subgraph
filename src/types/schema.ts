@@ -7102,19 +7102,6 @@ export class HistoryBlockSaved extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get blkNumber(): BigInt {
-    let value = this.get("blkNumber");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set blkNumber(value: BigInt) {
-    this.set("blkNumber", Value.fromBigInt(value));
-  }
-
   get blockHash(): string {
     let value = this.get("blockHash");
     if (!value || value.kind == ValueKind.NULL) {
@@ -7128,8 +7115,8 @@ export class HistoryBlockSaved extends Entity {
     this.set("blockHash", Value.fromString(value));
   }
 
-  get blockNumber(): BigInt {
-    let value = this.get("blockNumber");
+  get latestUpdateBlockNumber(): BigInt {
+    let value = this.get("latestUpdateBlockNumber");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -7137,12 +7124,12 @@ export class HistoryBlockSaved extends Entity {
     }
   }
 
-  set blockNumber(value: BigInt) {
-    this.set("blockNumber", Value.fromBigInt(value));
+  set latestUpdateBlockNumber(value: BigInt) {
+    this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
   }
 
-  get blockTimestamp(): BigInt {
-    let value = this.get("blockTimestamp");
+  get latestUpdateTimestamp(): BigInt {
+    let value = this.get("latestUpdateTimestamp");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -7150,12 +7137,12 @@ export class HistoryBlockSaved extends Entity {
     }
   }
 
-  set blockTimestamp(value: BigInt) {
-    this.set("blockTimestamp", Value.fromBigInt(value));
+  set latestUpdateTimestamp(value: BigInt) {
+    this.set("latestUpdateTimestamp", Value.fromBigInt(value));
   }
 
-  get transactionHash(): string {
-    let value = this.get("transactionHash");
+  get latestUpdateHash(): string {
+    let value = this.get("latestUpdateHash");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -7163,8 +7150,8 @@ export class HistoryBlockSaved extends Entity {
     }
   }
 
-  set transactionHash(value: string) {
-    this.set("transactionHash", Value.fromString(value));
+  set latestUpdateHash(value: string) {
+    this.set("latestUpdateHash", Value.fromString(value));
   }
 }
 
