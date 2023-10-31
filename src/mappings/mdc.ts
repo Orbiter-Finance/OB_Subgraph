@@ -20,18 +20,19 @@ export function handleChallengeInfoUpdated(
   handleChallengeInfoUpdatedEvent(
     event,
     event.params.challengeId.toHexString(),
-    event.params.challengeInfo.sourceTxFrom,
-    event.params.challengeInfo.sourceTxTime,
-    event.params.challengeInfo.challenger.toHexString(),
-    event.params.challengeInfo.freezeToken.toHexString(),
-    event.params.challengeInfo.challengeUserRatio,
-    event.params.challengeInfo.freezeAmount0,
-    event.params.challengeInfo.freezeAmount1,
-    event.params.challengeInfo.challengeTime,
-    event.params.challengeInfo.abortTime,
-    event.params.challengeInfo.verifiedTime0,
-    event.params.challengeInfo.verifiedTime1,
-    event.params.challengeInfo.verifiedDataHash0.toHexString()
+    event.params.statement.sourceTxFrom,
+    event.params.statement.sourceTxTime,
+    event.params.statement.freezeToken.toHexString(),
+    event.params.statement.challengeUserRatio,
+    event.params.statement.freezeAmount0,
+    event.params.statement.freezeAmount1,
+    event.params.statement.challengeTime,
+    event.params.statement.abortTime,
+    event.params.statement.gasUsed,
+    event.params.result.winner.toHexString(),
+    event.params.result.verifiedTime0,
+    event.params.result.verifiedTime1,
+    event.params.result.verifiedDataHash0.toHexString()
   )
 }
 

@@ -47,7 +47,6 @@ describe("Describe check MDC rule snaptShot", () => {
       impl,
       ebc,
       rootWithVersion,
-      Bytes.fromHexString(funcERC20RootMockInput)
     )
     handleRulesRootUpdated(newRulesRootUpdatedEvent)
   })

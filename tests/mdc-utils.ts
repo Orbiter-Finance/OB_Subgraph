@@ -10,7 +10,8 @@ import {
 
 export function createChallengeInfoUpdatedEvent(
   challengeId: Bytes,
-  challengeInfo: ethereum.Tuple
+  statement: ethereum.Tuple,
+  result: ethereum.Tuple
 ): ChallengeInfoUpdated {
   let challengeInfoUpdatedEvent = changetype<ChallengeInfoUpdated>(
     newMockEvent()
@@ -25,10 +26,10 @@ export function createChallengeInfoUpdatedEvent(
     )
   )
   challengeInfoUpdatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "challengeInfo",
-      ethereum.Value.fromTuple(challengeInfo)
-    )
+    new ethereum.EventParam("statement", ethereum.Value.fromTuple(statement))
+  )
+  challengeInfoUpdatedEvent.parameters.push(
+    new ethereum.EventParam("result", ethereum.Value.fromTuple(result))
   )
 
   return challengeInfoUpdatedEvent
@@ -39,7 +40,7 @@ export function createColumnArrayUpdatedEvent(
   columnArrayHash: Bytes,
   dealers: Array<Address>,
   ebcs: Array<Address>,
-  chainIds: Array<i32>
+  chainIds: Array<BigInt>
 ): ColumnArrayUpdated {
   let columnArrayUpdatedEvent = changetype<ColumnArrayUpdated>(newMockEvent())
 
@@ -61,7 +62,10 @@ export function createColumnArrayUpdatedEvent(
     new ethereum.EventParam("ebcs", ethereum.Value.fromAddressArray(ebcs))
   )
   columnArrayUpdatedEvent.parameters.push(
-    new ethereum.EventParam("chainIds", ethereum.Value.fromI32Array(chainIds))
+    new ethereum.EventParam(
+      "chainIds",
+      ethereum.Value.fromUnsignedBigIntArray(chainIds)
+    )
   )
 
   return columnArrayUpdatedEvent
@@ -93,8 +97,7 @@ export function createResponseMakersUpdatedEvent(
 export function createRulesRootUpdatedEvent(
   impl: Address,
   ebc: Address,
-  rootWithVersion: ethereum.Tuple,
-  input: Bytes
+  rootWithVersion: ethereum.Tuple
 ): RulesRootUpdated {
   let rulesRootUpdatedEvent = changetype<RulesRootUpdated>(newMockEvent())
 
@@ -112,19 +115,13 @@ export function createRulesRootUpdatedEvent(
       ethereum.Value.fromTuple(rootWithVersion)
     )
   )
-  rulesRootUpdatedEvent.parameters.push(
-    new ethereum.EventParam(
-      "input",
-      ethereum.Value.fromFixedBytes(input)
-     )
-  )
 
   return rulesRootUpdatedEvent
 }
 
 export function createSpvUpdatedEvent(
   impl: Address,
-  chainId: i32,
+  chainId: BigInt,
   spv: Address
 ): SpvUpdated {
   let spvUpdatedEvent = changetype<SpvUpdated>(newMockEvent())
@@ -137,7 +134,7 @@ export function createSpvUpdatedEvent(
   spvUpdatedEvent.parameters.push(
     new ethereum.EventParam(
       "chainId",
-      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(chainId))
+      ethereum.Value.fromUnsignedBigInt(chainId)
     )
   )
   spvUpdatedEvent.parameters.push(

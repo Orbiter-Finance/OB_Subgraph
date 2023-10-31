@@ -27,14 +27,20 @@ export class ChallengeInfoUpdated__Params {
     return this._event.parameters[0].value.toBytes();
   }
 
-  get challengeInfo(): ChallengeInfoUpdatedChallengeInfoStruct {
-    return changetype<ChallengeInfoUpdatedChallengeInfoStruct>(
+  get statement(): ChallengeInfoUpdatedStatementStruct {
+    return changetype<ChallengeInfoUpdatedStatementStruct>(
       this._event.parameters[1].value.toTuple()
+    );
+  }
+
+  get result(): ChallengeInfoUpdatedResultStruct {
+    return changetype<ChallengeInfoUpdatedResultStruct>(
+      this._event.parameters[2].value.toTuple()
     );
   }
 }
 
-export class ChallengeInfoUpdatedChallengeInfoStruct extends ethereum.Tuple {
+export class ChallengeInfoUpdatedStatementStruct extends ethereum.Tuple {
   get sourceTxFrom(): BigInt {
     return this[0].toBigInt();
   }
@@ -43,44 +49,50 @@ export class ChallengeInfoUpdatedChallengeInfoStruct extends ethereum.Tuple {
     return this[1].toBigInt();
   }
 
-  get challenger(): Address {
+  get freezeToken(): Address {
     return this[2].toAddress();
   }
 
-  get freezeToken(): Address {
-    return this[3].toAddress();
-  }
-
   get challengeUserRatio(): BigInt {
-    return this[4].toBigInt();
+    return this[3].toBigInt();
   }
 
   get freezeAmount0(): BigInt {
-    return this[5].toBigInt();
+    return this[4].toBigInt();
   }
 
   get freezeAmount1(): BigInt {
-    return this[6].toBigInt();
+    return this[5].toBigInt();
   }
 
   get challengeTime(): BigInt {
-    return this[7].toBigInt();
+    return this[6].toBigInt();
   }
 
   get abortTime(): BigInt {
+    return this[7].toBigInt();
+  }
+
+  get gasUsed(): BigInt {
     return this[8].toBigInt();
+  }
+}
+
+export class ChallengeInfoUpdatedResultStruct extends ethereum.Tuple {
+  get winner(): Address {
+    return this[0].toAddress();
   }
 
   get verifiedTime0(): BigInt {
-    return this[9].toBigInt();
+    return this[1].toBigInt();
   }
 
   get verifiedTime1(): BigInt {
-    return this[10].toBigInt();
+    return this[2].toBigInt();
   }
 
   get verifiedDataHash0(): Bytes {
-    return this[11].toBytes();
+    return this[3].toBytes();
   }
 }
 
@@ -503,6 +515,10 @@ export class CheckChallengeCall__Inputs {
 
   get verifiedData0(): Array<BigInt> {
     return this._call.inputValues[2].value.toBigIntArray();
+  }
+
+  get challenger(): Array<Address> {
+    return this._call.inputValues[3].value.toAddressArray();
   }
 }
 
@@ -993,26 +1009,30 @@ export class VerifyChallengeDestCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
+  get challenger(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
   get proof(): Bytes {
-    return this._call.inputValues[1].value.toBytes();
+    return this._call.inputValues[2].value.toBytes();
   }
 
   get spvBlockHashs(): Array<Bytes> {
-    return this._call.inputValues[2].value.toBytesArray();
+    return this._call.inputValues[3].value.toBytesArray();
   }
 
   get verifyInfo(): VerifyChallengeDestCallVerifyInfoStruct {
     return changetype<VerifyChallengeDestCallVerifyInfoStruct>(
-      this._call.inputValues[3].value.toTuple()
+      this._call.inputValues[4].value.toTuple()
     );
   }
 
   get verifiedData0(): Array<BigInt> {
-    return this._call.inputValues[4].value.toBigIntArray();
+    return this._call.inputValues[5].value.toBigIntArray();
   }
 
   get rawDatas(): Bytes {
-    return this._call.inputValues[5].value.toBytes();
+    return this._call.inputValues[6].value.toBytes();
   }
 }
 
@@ -1069,22 +1089,26 @@ export class VerifyChallengeSourceCall__Inputs {
     return this._call.inputValues[0].value.toAddress();
   }
 
+  get challenger(): Address {
+    return this._call.inputValues[1].value.toAddress();
+  }
+
   get proof(): Bytes {
-    return this._call.inputValues[1].value.toBytes();
+    return this._call.inputValues[2].value.toBytes();
   }
 
   get spvBlockHashs(): Array<Bytes> {
-    return this._call.inputValues[2].value.toBytesArray();
+    return this._call.inputValues[3].value.toBytesArray();
   }
 
   get verifyInfo(): VerifyChallengeSourceCallVerifyInfoStruct {
     return changetype<VerifyChallengeSourceCallVerifyInfoStruct>(
-      this._call.inputValues[3].value.toTuple()
+      this._call.inputValues[4].value.toTuple()
     );
   }
 
   get rawDatas(): Bytes {
-    return this._call.inputValues[4].value.toBytes();
+    return this._call.inputValues[5].value.toBytes();
   }
 }
 

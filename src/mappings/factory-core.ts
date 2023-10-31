@@ -45,10 +45,11 @@ export function factoryCreateMDC(
 
     let factory = getFactoryEntity(factoryId)
     factory.mdcCounts = factory.mdcCounts.plus(BigInt.fromI32(1))
-    let mdcNew = getMDCEntity(mdc, maker, event)
+    let mdcNew = getMDCEntity(mdc, event)
     factory.mdcs = entity.addRelation(factory.mdcs, mdcNew.id)
     factory.owners = entity.addRelation(factory.owners, maker.toHexString())
     let mdcMapping = getMDCMappingEntity(mdcNew, event)
+    mdcNew.owner = maker.toHexString()
     mdcNew.mapping = mdcMapping.id
     mdcMapping.save()
     mdcNew.save()

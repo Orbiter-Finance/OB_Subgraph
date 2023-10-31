@@ -35,8 +35,9 @@ import {
   func_registerChainsName,
   func_updateChainSpvsName,
   fullfillLatestRuleSnapshot,
-  func_challenge,
-  function_challenge
+  function_challenge,
+  func_challengeName,
+  decodeChallengeSourceChainId
 } from "./helpers"
 import {
   FactoryManager, ebcRel
@@ -63,6 +64,7 @@ import {
   isProduction
 } from './config'
 import { rscRules } from "./rule-utils";
+import { getChallengeManagerEntity, getCreateChallenge } from "./mdc-challenge";
 
 
 export function handleupdateRulesRootEvent(
@@ -77,7 +79,7 @@ export function handleupdateRulesRootEvent(
   const inputData = isProduction ? event.transaction.input : Bytes.fromHexString(funcERC20RootMockInput) as Bytes
   const updateRulesRootEntity = rscRules.parseCalldata(inputData, mdcAddress)
   const ebcAddress = updateRulesRootEntity.ebcAddress
-  let mdc = getMDCEntity(Address.fromString(mdcAddress), Address.fromString(ONE_ADDRESS), event)
+  let mdc = getMDCEntity(Address.fromString(mdcAddress), event)
   let factoryAddress = Bytes.fromHexString(mdc.factory._id)
   let factory = FactoryManager.load(factoryAddress.toHexString())
 
@@ -124,7 +126,7 @@ export function handleColumnArrayUpdatedEvent(
   chainIds: Array<BigInt>
 ): void {
   const mdcAddress = isProduction ? event.address : Address.fromString(mockMdcAddr);
-  let mdc = getMDCEntity(mdcAddress, Address.fromString(ONE_ADDRESS), event)
+  let mdc = getMDCEntity(mdcAddress, event)
   const inputData = isProduction ? event.transaction.input : Bytes.fromHexString(functionupdateColumnArrayMockinput) as Bytes
   const enableTimestamp = decodeEnabletime(inputData, func_updateColumnArrayName)
 
@@ -267,7 +269,7 @@ export function handleResponseMakersUpdatedEvent(
   responseMakers: Array<BigInt>
 ): void {
   const mdcAddress = isProduction ? event.address : Address.fromString(mockMdcAddr);
-  let mdc = getMDCEntity(mdcAddress, Address.fromString(ONE_ADDRESS), event)
+  let mdc = getMDCEntity(mdcAddress, event)
   let responseMakersArray = new Array<string>()
   for (let i = 0; i < responseMakers.length; i++) {
     responseMakersArray.push(AddressFmtPadZero(responseMakers[i].toHexString()))
@@ -283,7 +285,7 @@ export function handleSpvUpdatedEvent(
   chainId: BigInt,
   spv: Bytes
 ): void {
-  let mdc = isProduction ? getMDCEntity(event.address, Address.fromString(ONE_ADDRESS), event) : getMDCEntity(Address.fromString(mockMdcAddr), Address.fromString(ONE_ADDRESS), event)
+  let mdc = isProduction ? getMDCEntity(event.address, event) : getMDCEntity(Address.fromString(mockMdcAddr), event)
   let _spv = getMDCBindSPVEntity(mdc, chainId)
   _spv.spv = spv.toHexString()
   _spv.save()
@@ -293,30 +295,43 @@ export function handleSpvUpdatedEvent(
 
 export function handleChallengeInfoUpdatedEvent(
   event: ethereum.Event,
-  challengeId: String,
+  challengeId: string,
   sourceTxFrom: BigInt,
   sourceTxTime: BigInt,
-  challenger: String,
-  freezeToken: String,
+  freezeToken: string,
   challengeUserRatio: BigInt,
   freezeAmount0: BigInt,
   freezeAmount1: BigInt,
   challengeTime: BigInt,
   abortTime: BigInt,
+  gasUsed: BigInt,
+  winner: string,
   verifiedTime0: BigInt,
   verifiedTime1: BigInt,
-  verifiedDataHash0: String
+  verifiedDataHash0: string
 ): void {
   const inputdata = isProduction ?
     event.transaction.input :
     Bytes.fromHexString(functionrChallengeinput) as Bytes
   const selector: string = calldata.getSelector(inputdata).toHexString()
-
+  let mdc = getMDCEntity(event.address, event)
+  let challengeManager = getChallengeManagerEntity(mdc, challengeId)
   if (selector == function_challenge) {
     log.debug("challenge", [selector]);
-  } else if (selector == func_challenge) {
-    log.debug("challenge", [selector]);
-  } else {
-    log.error("error selector", [selector]);
+    // decode inputData
+    const decodeData = decodeChallengeSourceChainId(inputdata)
+    log.debug("SourceChainId: {}", [decodeData.toString()])
+    let createChallenge = getCreateChallenge(challengeManager, event.transaction.from.toHexString())
+    createChallenge.sourceTxTime = sourceTxTime
+    createChallenge.freezeToken = freezeToken
+    createChallenge.freezeAmount0 = freezeAmount0
+    createChallenge.freezeAmount1 = freezeAmount1
+    createChallenge.challengeTime = challengeTime
+    createChallenge.latestUpdateHash = event.transaction.hash.toHexString()
+    createChallenge.latestUpdateTimestamp = event.block.timestamp
+    createChallenge.latestUpdateBlockNumber = event.block.number
+    createChallenge.save()
   }
+  challengeManager.save()
+  mdc.save()
 }

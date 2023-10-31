@@ -52,7 +52,7 @@ describe("Describe ColumnArrayUpdated assertions", () => {
     let dealersAddrRemove1 = Address.fromString(dealerRemoved1)
     let dealersAddrRemove2 = Address.fromString(dealerRemoved2)
     let ebcsRemove = [Address.fromString(ebcRemoved1), Address.fromString(ebcRemoved2)]
-    let chainIds = [123, 456, 789, 123, 123]
+    let chainIds = [BigInt.fromI32(123), BigInt.fromI32(456), BigInt.fromI32(789), BigInt.fromI32(123), BigInt.fromI32(123)]
     let ebcs = [Address.fromString(ebc0), Address.fromString(ebc1), Address.fromString(ebc2)]
 
     const newColumnArrayUpdatedEvent0 = createColumnArrayUpdatedEvent(

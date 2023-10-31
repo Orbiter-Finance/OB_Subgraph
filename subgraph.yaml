@@ -154,7 +154,7 @@ templates:
           file: ./abis/ORMakerDeposit.json
       eventHandlers:
         - event: ChallengeInfoUpdated(indexed
-            bytes32,(uint256,uint64,address,address,uint64,uint256,uint256,uint64,uint64,uint64,uint64,bytes32))
+            bytes32,(uint256,uint64,address,uint64,uint256,uint256,uint64,uint64,uint256),(address,uint64,uint64,bytes32))
           handler: handleChallengeInfoUpdated
         - event: ColumnArrayUpdated(indexed address,bytes32,address[],address[],uint64[])
           handler: handleColumnArrayUpdated

@@ -22,11 +22,6 @@
           },
           {
             "internalType": "address",
-            "name": "challenger",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
             "name": "freezeToken",
             "type": "address"
           },
@@ -56,6 +51,24 @@
             "type": "uint64"
           },
           {
+            "internalType": "uint256",
+            "name": "gasUsed",
+            "type": "uint256"
+          }
+        ],
+        "indexed": false,
+        "internalType": "struct IORMakerDeposit.ChallengeStatement",
+        "name": "statement",
+        "type": "tuple"
+      },
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "winner",
+            "type": "address"
+          },
+          {
             "internalType": "uint64",
             "name": "verifiedTime0",
             "type": "uint64"
@@ -72,8 +85,8 @@
           }
         ],
         "indexed": false,
-        "internalType": "struct IORMakerDeposit.ChallengeInfo",
-        "name": "challengeInfo",
+        "internalType": "struct IORMakerDeposit.ChallengeResult",
+        "name": "result",
         "type": "tuple"
       }
     ],
@@ -247,6 +260,11 @@
         "internalType": "uint256[]",
         "name": "verifiedData0",
         "type": "uint256[]"
+      },
+      {
+        "internalType": "address[]",
+        "name": "challenger",
+        "type": "address[]"
       }
     ],
     "name": "checkChallenge",
@@ -795,6 +813,11 @@
         "type": "address"
       },
       {
+        "internalType": "address",
+        "name": "challenger",
+        "type": "address"
+      },
+      {
         "internalType": "bytes",
         "name": "proof",
         "type": "bytes"
@@ -859,6 +882,11 @@
       {
         "internalType": "address",
         "name": "spvAddress",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "challenger",
         "type": "address"
       },
       {

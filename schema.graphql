@@ -19,7 +19,7 @@ interface ChallengeInfoUpdated {
 }
 
 type challengeManager @entity {
-  id: ID! # hash(sourceChainId, sourceTxHash) == challengeId
+  id: ID! #challengeId
   createChallenge: [createChallenge!]!
   verifyChallengeSource: verifyChallengeSource!
   verifyChallengeDest: verifyChallengeDest!

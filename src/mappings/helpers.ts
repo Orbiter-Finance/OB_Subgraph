@@ -101,8 +101,8 @@ export const func_updateChainSpvsName = "(uint64,uint64,address[],uint[])"
 export const func_updateColumnArrayName = "(uint64,address[],address[],uint64[])"
 export const func_updateResponseMakersName = "(uint64,bytes[])"
 // chalenge related
-export const func_checkChallenge = "(uint64,bytes32,uint256[],address[])"
-export const func_challenge = "(uint64,bytes32,uint64,address,uint256)"
+export const func_checkChallengeName = "(uint64,bytes32,uint256[],address[])"
+export const func_challengeName = "(uint64,bytes32,uint64,address,uint256)"
 /**** decode function format ****/
 
 export enum updateRulesRootMode {
@@ -175,14 +175,13 @@ export function getEBCEntityNew(
 
 export function getMDCEntity(
     mdcAddress: Address,
-    maker: Address,
     event: ethereum.Event
 ): MDC {
     let mdc = MDC.load(mdcAddress.toHexString())
     if (mdc == null) {
-        log.info('create new MDC, maker: {}, mdc: {}, factory: {}', [maker.toHexString(), mdcAddress.toHexString(), event.address.toHexString()])
+        log.info('create new MDC, mdc: {}, factory: {}', [mdcAddress.toHexString(), event.address.toHexString()])
         mdc = new MDC(mdcAddress.toHexString())
-        mdc.owner = maker.toHexString()
+        mdc.owner = STRING_EMPTY
         mdc.columnArrayUpdated = []
         mdc.ruleUpdateRel = []
         mdc.responseMakersSnapshot = []
@@ -1478,6 +1477,22 @@ export function decodeEnabletime(inputData: Bytes, type: string): BigInt {
     }
     return enableTimestamp
 }
+
+export function decodeChallengeSourceChainId(inputData: Bytes): BigInt {
+    let tuple = calldata.decodeWOPrefix(inputData, func_challengeName)
+    if (debugLogMapping) {
+        for (let i = 0; i < tuple.length; i++) {
+            log.debug("tuple[{}].kind:{}", [i.toString(), tuple[i].kind.toString()])
+        }
+    }
+
+    let sourceChainId: BigInt = BigInt.fromI32(0)
+    if (tuple[0].kind == ethereum.ValueKind.UINT) {
+        sourceChainId = tuple[0].toBigInt()
+    }
+    return sourceChainId
+}
+
 
 export function handleDealerUpdatedEvent(
     dealer: Address,

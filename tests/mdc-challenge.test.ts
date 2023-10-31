@@ -10,52 +10,76 @@ import { Bytes, Address, BigInt, ethereum } from "@graphprotocol/graph-ts"
 import { ChallengeInfoUpdated as ChallengeInfoUpdatedEvent } from "../src/types/templates/MDC/MDC"
 import { handleChallengeInfoUpdated } from "../src/mappings/mdc"
 import { createChallengeInfoUpdatedEvent } from "./mdc-utils"
+import { entity } from "../src/mappings/utils"
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
 
-describe("Describe entity assertions", () => {
+describe("test MDC Challenge related function", () => {
+  const ChallengeId: string = "0x123456"
+  const Challenger: string = "0xa16081f360e3847006db660bae1c6d1b2e17ec2a"
+  const CreateChallengeID: string = "0x778717170816eec659b4cafc039ffd50d70a4a72e9043886d3597c9641e00b2f"
   beforeAll(() => {
-    let challengeId = Bytes.fromI32(1234567890)
-    // let challengeInfo = "ethereum.Tuple Not implemented"
-    let challengeTuple: Array<ethereum.Value> = [
-      ethereum.Value.fromBytes(Bytes.fromI32(1234567890)),
-      ethereum.Value.fromBytes(Bytes.fromI32(1234567890)),
-      ethereum.Value.fromBytes(Bytes.fromI32(1234567890)),
+    let challengeId = Bytes.fromHexString(ChallengeId)
+
+    let freezeToken: Address = Address.fromString("0x5f9204bc7402d77d8c9baa97d8f225e85347961e")
+    let statementTuple: Array<ethereum.Value> = [
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromAddress(freezeToken),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
     ]
+    let statementInfo = changetype<ethereum.Tuple>(statementTuple)
+
+    let winner: Address = Address.fromString("0x5f9204bc7402d77d8c9baa97d8f225e85347961e")
+    let resultTuple: Array<ethereum.Value> = [
+      ethereum.Value.fromAddress(winner),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromBytes(Address.fromHexString("0x5f9204bc7402d77d8c9baa97d8f225e85347961e")),
+    ]
+    let resultInfo = changetype<ethereum.Tuple>(resultTuple)
+
     // let challengeInfo = changetype<ethereum.Tuple>(challengeTuple)
-    // let newChallengeInfoUpdatedEvent = createChallengeInfoUpdatedEvent(
-    //   challengeId,
-    //   challengeInfo
-    // )
-    // handleChallengeInfoUpdated(newChallengeInfoUpdatedEvent)
+    let newChallengeInfoUpdatedEvent = createChallengeInfoUpdatedEvent(
+      challengeId,
+      statementInfo,
+      resultInfo
+    )
+    handleChallengeInfoUpdated(newChallengeInfoUpdatedEvent)
   })
 
-  // afterAll(() => {
-  //   clearStore()
-  // })
+  afterAll(() => {
+    clearStore()
+  })
 
-  // For more test scenarios, see:
-  // https://thegraph.com/docs/en/developer/matchstick/#write-a-unit-test
+  test("challenger related entities created and stored", () => {
+    assert.entityCount("challengeManager", 1)
+    assert.entityCount("createChallenge", 1)
 
-  // test("ChallengeInfoUpdated created and stored", () => {
-  // assert.entityCount("ChallengeInfoUpdated", 1)
+    // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
+    assert.fieldEquals(
+      "challengeManager",
+      ChallengeId,
+      "id",
+      ChallengeId
+    )
 
-  // // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
-  // assert.fieldEquals(
-  //   "ChallengeInfoUpdated",
-  //   "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-  //   "challengeId",
-  //   "1234567890"
-  // )
-  // assert.fieldEquals(
-  //   "ChallengeInfoUpdated",
-  //   "0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1",
-  //   "challengeInfo",
-  //   "ethereum.Tuple Not implemented"
-  // )
+    let createChallengeIdList = new Array<string>()
+    createChallengeIdList.push(CreateChallengeID)
 
-  // More assert options:
-  // https://thegraph.com/docs/en/developer/matchstick/#asserts
-  // })
+    assert.fieldEquals(
+      "challengeManager",
+      ChallengeId,
+      "createChallenge",
+      `[${createChallengeIdList}\]`
+    )
+
+
+  })
 })

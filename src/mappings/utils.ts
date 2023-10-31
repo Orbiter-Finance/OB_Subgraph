@@ -104,7 +104,7 @@ export class calldata {
     static decodeWOPrefix(data: Bytes, functionFormat: string): ethereum.Tuple {
         const decoded = ethereum.decode(
             functionFormat,
-            data
+            Bytes.fromUint8Array(data.slice(4, data.length))
         ) as ethereum.Value;
         if (!decoded) {
             log.error("Failed to decode transaction input data", ["error"])
