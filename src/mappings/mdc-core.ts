@@ -11,7 +11,6 @@ import {
   ONE_ADDRESS,
   getMDCEntity,
   ebcSave,
-  removeDuplicates,
   AddressFmtPadZero,
   getChainInfoEntity,
   ChainInfoUpdatedMode,
@@ -21,7 +20,6 @@ import {
   getColumnArrayUpdatedEntity,
   getMDCBindSPVEntity,
   getdealerSnapshotEntity,
-  removeDuplicatesBigInt,
   mdcStoreEBCNewMapping,
   mdcStoreDealerNewMapping,
   mdcStoreChainIdNewMapping,
@@ -37,7 +35,8 @@ import {
   func_registerChainsName,
   func_updateChainSpvsName,
   fullfillLatestRuleSnapshot,
-  func_challenge
+  func_challenge,
+  function_challenge
 } from "./helpers"
 import {
   FactoryManager, ebcRel
@@ -55,7 +54,9 @@ import {
 import { ChainInfoUpdatedChainInfoStruct, ChainTokenUpdatedTokenInfoStruct } from "../types/ORManager/ORManager";
 import {
   calldata,
-  padZeroToUint
+  padZeroToUint,
+  removeDuplicates,
+  removeDuplicatesBigInt
 } from "./utils";
 import { fetchTokenDecimals, fetchTokenName, fetchTokenSymbol } from "./ERC20utils";
 import {
@@ -311,7 +312,7 @@ export function handleChallengeInfoUpdatedEvent(
     Bytes.fromHexString(functionrChallengeinput) as Bytes
   const selector: string = calldata.getSelector(inputdata).toHexString()
 
-  if (selector == func_challenge) {
+  if (selector == function_challenge) {
     log.debug("challenge", [selector]);
   } else if (selector == func_challenge) {
     log.debug("challenge", [selector]);

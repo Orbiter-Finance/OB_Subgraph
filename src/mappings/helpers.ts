@@ -86,7 +86,9 @@ export const func_updateRulesRoot = "0x6d9437b1"
 export const func_updateRulesRootERC20 = "0x34bc98de"
 export const func_registerChains = "0x2e96565f"
 export const func_updateChainSpvs = "0x434417cf"
-export const func_challenge = "0x0000"
+// chalenge related
+export const function_checkChallenge = "0x8f2c4068"
+export const function_challenge = "0x8adac2c5"
 /**** function selectors ****/
 
 /**** decode function format ****/
@@ -98,6 +100,9 @@ export const func_registerChainsName = "(uint64,(uint64,uint192,uint64,uint64,ui
 export const func_updateChainSpvsName = "(uint64,uint64,address[],uint[])"
 export const func_updateColumnArrayName = "(uint64,address[],address[],uint64[])"
 export const func_updateResponseMakersName = "(uint64,bytes[])"
+// chalenge related
+export const func_checkChallenge = "(uint64,bytes32,uint256[],address[])"
+export const func_challenge = "(uint64,bytes32,uint64,address,uint256)"
 /**** decode function format ****/
 
 export enum updateRulesRootMode {
@@ -187,6 +192,8 @@ export function getMDCEntity(
         mdc.chainIdSnapshot = []
         mdc.ruleSnapshot = []
         mdc.ruleLatest = []
+        mdc.challengeManager = []
+        mdc.challengeNodeList = []
         mdc.factoryAddr = event.address.toHexString()
         mdc.createblockNumber = event.block.number
         mdc.createblockTimestamp = event.block.timestamp
@@ -1446,39 +1453,7 @@ export function fullfillLatestRuleSnapshot(
     }
 }
 
-export function removeDuplicates(data: Array<Address>): Array<Address> {
-    const uniques = new Array<Address>();
-    for (let i = 0; i < data.length; i++) {
-        let isDuplicate = false;
-        for (let j = 0; j < uniques.length; j++) {
-            if (data[i].equals(uniques[j])) {
-                isDuplicate = true;
-                break;
-            }
-        }
-        if (!isDuplicate) {
-            uniques.push(data[i]);
-        }
-    }
-    return uniques;
-}
 
-export function removeDuplicatesBigInt(data: Array<BigInt>): Array<BigInt> {
-    const uniques = new Array<BigInt>();
-    for (let i = 0; i < data.length; i++) {
-        let isDuplicate = false;
-        for (let j = 0; j < uniques.length; j++) {
-            if (data[i].equals(uniques[j])) {
-                isDuplicate = true;
-                break;
-            }
-        }
-        if (!isDuplicate) {
-            uniques.push(data[i]);
-        }
-    }
-    return uniques;
-}
 
 
 export function compareUpdateRulesRootSelector(selector: Bytes): updateRulesRootMode {

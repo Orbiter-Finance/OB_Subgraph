@@ -21,10 +21,15 @@ interface ChallengeInfoUpdated {
 type challengeManager @entity {
   id: ID! # hash(sourceChainId, sourceTxHash) == challengeId
   createChallenge: [createChallenge!]!
+  verifyChallengeSource: verifyChallengeSource!
+  verifyChallengeDest: verifyChallengeDest!
+  liquidation: [liquidation!]!
+  # Rel
+  mdc: MDC! @derivedFrom(field: "challengeManager")
 }
 
 type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
-  id: ID! #hash(challengeId, TxHash, logIndex)
+  id: ID! #hash(challengeId, challengerAddress)
   challengeId: String! # bytes32
   sourceTxFrom: BigInt # uint256
   sourceTxTime: BigInt! # uint64
@@ -43,6 +48,63 @@ type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
   challengeManager: challengeManager! @derivedFrom(field: "createChallenge")
+}
+
+type verifyChallengeSource implements ChallengeInfoUpdated
+  @entity(immutable: true) {
+  id: ID! #challengeId
+  challengeId: String! # bytes32
+  sourceTxFrom: BigInt # uint256
+  sourceTxTime: BigInt! # uint64
+  challenger: String! # address
+  freezeToken: String! # address
+  challengeUserRatio: BigInt # uint64
+  freezeAmount0: BigInt! # uint256
+  freezeAmount1: BigInt! # uint256
+  challengeTime: BigInt! # uint64
+  abortTime: BigInt # uint64
+  verifiedTime0: BigInt # uint64
+  verifiedTime1: BigInt # uint64
+  verifiedDataHash0: String
+  msgSender: String
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
+  challengeManager: challengeManager!
+    @derivedFrom(field: "verifyChallengeSource")
+}
+
+type verifyChallengeDest implements ChallengeInfoUpdated
+  @entity(immutable: true) {
+  id: ID! #challengeId
+  challengeId: String! # bytes32
+  sourceTxFrom: BigInt # uint256
+  sourceTxTime: BigInt! # uint64
+  challenger: String! # address
+  freezeToken: String! # address
+  challengeUserRatio: BigInt # uint64
+  freezeAmount0: BigInt! # uint256
+  freezeAmount1: BigInt! # uint256
+  challengeTime: BigInt! # uint64
+  abortTime: BigInt # uint64
+  verifiedTime0: BigInt # uint64
+  verifiedTime1: BigInt # uint64
+  verifiedDataHash0: String
+  msgSender: String
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
+  challengeManager: challengeManager! @derivedFrom(field: "verifyChallengeDest")
+}
+
+type liquidation implements ChallengeInfoUpdated @entity(immutable: true) {
+  id: ID! #challenger
+  challengeId: String!
+  liquidators: String!
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
+  challengeManager: challengeManager! @derivedFrom(field: "liquidation")
 }
 
 # using entity, binding in contract Event
@@ -85,6 +147,8 @@ type MDC @entity {
   bindSPVs: [MDCBindSPV!]! # MDCBindSPV
   columnArrayUpdated: [ColumnArrayUpdated!]! # ColumnArrayUpdated
   mapping: MDCMapping # dealer/ebc/chainId mapping
+  challengeManager: [challengeManager!]!
+  challengeNodeList: [String!]! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   factory: [FactoryManager!]! @derivedFrom(field: "mdcs")
   ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
   dealer: [Dealer!]! @derivedFrom(field: "mdcs") # Dealer

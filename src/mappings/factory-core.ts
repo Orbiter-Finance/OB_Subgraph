@@ -19,7 +19,7 @@ import {
     getMDCMappingEntity,
 } from './helpers'
 import { entity } from "./utils";
-import { ContractDeployment, subgraphManagerID } from "./contractAddressConfig";
+import { ContractDeployment, subgraphManagerID } from "./contractConfig";
 
 export function getSubgraphManager(): SubgraphManager {
     let subgraphManager = SubgraphManager.load(subgraphManagerID)

@@ -200,3 +200,44 @@ export function findDifferentData(A: string[], B: string[]): string[] {
 
     return differentData;
 }
+
+export function calcaulateFunctionSelector(functionName: string): Bytes {
+    return Bytes.fromHexString(crypto.keccak256(Bytes.fromUTF8(
+        functionName
+    )).toHexString().slice(0, 10));
+}
+
+export function removeDuplicates(data: Array<Address>): Array<Address> {
+    const uniques = new Array<Address>();
+    for (let i = 0; i < data.length; i++) {
+        let isDuplicate = false;
+        for (let j = 0; j < uniques.length; j++) {
+            if (data[i].equals(uniques[j])) {
+                isDuplicate = true;
+                break;
+            }
+        }
+        if (!isDuplicate) {
+            uniques.push(data[i]);
+        }
+    }
+    return uniques;
+}
+
+export function removeDuplicatesBigInt(data: Array<BigInt>): Array<BigInt> {
+    const uniques = new Array<BigInt>();
+    for (let i = 0; i < data.length; i++) {
+        let isDuplicate = false;
+        for (let j = 0; j < uniques.length; j++) {
+            if (data[i].equals(uniques[j])) {
+                isDuplicate = true;
+                break;
+            }
+        }
+        if (!isDuplicate) {
+            uniques.push(data[i]);
+        }
+    }
+    return uniques;
+}
+
