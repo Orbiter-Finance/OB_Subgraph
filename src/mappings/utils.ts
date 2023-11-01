@@ -34,6 +34,39 @@ export class entity {
         return entity
     }
 
+    static BytesSorting(_entity: Bytes[], id: Bytes): Bytes[] {
+        if (_entity == null) {
+            _entity = [id];
+        } else if (!_entity.includes(id)) {
+            _entity.push(id);
+            _entity.sort((a, b) => entity.compareBytes(b, a));
+        }
+        return _entity;
+    }
+
+    static compareBytes(a: Bytes, b: Bytes): i32 {
+        const lenA = a.length;
+        const lenB = b.length;
+        const minLength = lenA < lenB ? lenA : lenB;
+
+        for (let i: i32 = 0; i < minLength; i++) {
+            if (a[i] > b[i]) {
+                log.warning("{}>{}", [a[i].toString()])
+                return -1;
+            } else if (a[i] < b[i]) {
+                return 1;
+            }
+        }
+
+        if (lenA > lenB) {
+            return -1;
+        } else if (lenA < lenB) {
+            return 1;
+        }
+
+        return 0;
+    }
+
     static createBindID(
         ids: Array<string>
     ): string {
@@ -171,6 +204,23 @@ export function padZeroToAddress(hexString: string): string {
     if (hexStringLength < uint256Length) {
         const paddingLength = uint256Length - hexStringLength;
         const padding = '0'.repeat(paddingLength);
+        paddedHexString = padding + paddedHexString;
+    } else if (hexStringLength > uint256Length) {
+        throw new Error('Invalid hex string length');
+    }
+    return '0x' + paddedHexString;
+}
+
+export function padZeroToBytes(BytesNumber: number, hexString: string): string {
+    const uint256Length: number = BytesNumber;
+    let paddedHexString = hexString;
+    if (paddedHexString.startsWith('0x')) {
+        paddedHexString = paddedHexString.slice(2);
+    }
+    const hexStringLength: number = paddedHexString.length;
+    if (hexStringLength < uint256Length) {
+        const paddingLength: i32 = uint256Length as i32 - hexStringLength as i32;
+        const padding = '0'.repeat(paddingLength as i32);
         paddedHexString = padding + paddedHexString;
     } else if (hexStringLength > uint256Length) {
         throw new Error('Invalid hex string length');

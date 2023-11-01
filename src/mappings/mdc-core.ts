@@ -67,7 +67,7 @@ import {
   isProduction
 } from './config'
 import { rscRules } from "./rule-utils";
-import { getChallengeManagerEntity, getCreateChallenge } from "./mdc-challenge";
+import { calChallengeNodeList, getChallengeManagerEntity, getCreateChallenge } from "./mdc-challenge";
 
 
 export function handleupdateRulesRootEvent(
@@ -325,7 +325,8 @@ export function handleChallengeInfoUpdatedEvent(
     log.debug("trigger challenge(), selector: {}", [selector]);
     const sourceChainId = decodeChallengeSourceChainId(inputdata)
     log.debug("SourceChainId: {}", [sourceChainId.toString()])
-    let createChallenge = getCreateChallenge(challengeManager, event.transaction.from.toHexString())
+    const challenger: string = event.transaction.from.toHexString();
+    let createChallenge = getCreateChallenge(challengeManager, challenger)
     createChallenge.sourceTxTime = sourceTxTime
     createChallenge.freezeToken = freezeToken
     createChallenge.freezeAmount0 = freezeAmount0
@@ -337,6 +338,17 @@ export function handleChallengeInfoUpdatedEvent(
     createChallenge.latestUpdateHash = event.transaction.hash.toHexString()
     createChallenge.latestUpdateTimestamp = event.block.timestamp
     createChallenge.latestUpdateBlockNumber = event.block.number
+
+    calChallengeNodeList(
+      mdc,
+      event,
+      sourceTxTime,
+      sourceChainId,
+      sourceTXBlockNumber,
+      sourceTxIndex)
+
+
+
     createChallenge.save()
   } else if (selector == function_checkChallenge) {
 

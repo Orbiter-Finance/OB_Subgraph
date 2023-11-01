@@ -160,7 +160,7 @@ type MDC @entity {
   columnArrayUpdated: [ColumnArrayUpdated!]! # ColumnArrayUpdated
   mapping: MDCMapping # dealer/ebc/chainId mapping
   challengeManager: [challengeManager!]!
-  challengeNodeList: [String!]! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
+  challengeNodeList: [Bytes!]! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   factory: [FactoryManager!]! @derivedFrom(field: "mdcs")
   ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
   dealer: [Dealer!]! @derivedFrom(field: "mdcs") # Dealer

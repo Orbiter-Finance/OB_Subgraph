@@ -1772,17 +1772,17 @@ export class MDC extends Entity {
     this.set("challengeManager", Value.fromStringArray(value));
   }
 
-  get challengeNodeList(): Array<string> {
+  get challengeNodeList(): Array<Bytes> {
     let value = this.get("challengeNodeList");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toStringArray();
+      return value.toBytesArray();
     }
   }
 
-  set challengeNodeList(value: Array<string>) {
-    this.set("challengeNodeList", Value.fromStringArray(value));
+  set challengeNodeList(value: Array<Bytes>) {
+    this.set("challengeNodeList", Value.fromBytesArray(value));
   }
 
   get factory(): FactoryManagerLoader {

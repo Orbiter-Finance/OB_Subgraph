@@ -19,6 +19,7 @@ describe("test MDC Challenge related function", () => {
   const ChallengeId: string = "0x123456"
   const Challenger: string = "0xa16081f360e3847006db660bae1c6d1b2e17ec2a"
   const CreateChallengeID: string = "0x778717170816eec659b4cafc039ffd50d70a4a72e9043886d3597c9641e00b2f"
+  const mdcAddr: string = "0xa16081f360e3847006db660bae1c6d1b2e17ec2a"
   beforeAll(() => {
     let challengeId = Bytes.fromHexString(ChallengeId)
 
@@ -81,6 +82,13 @@ describe("test MDC Challenge related function", () => {
       ChallengeId,
       "createChallenge",
       `[${createChallengeIdList}\]`
+    )
+
+    assert.fieldEquals(
+      "MDC",
+      mdcAddr,
+      "challengeNodeList",
+      "[0x00000000499602d2000000000000000500000000499602d200000000499602d2]"
     )
 
 
