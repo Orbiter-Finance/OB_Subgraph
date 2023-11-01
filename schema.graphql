@@ -10,6 +10,9 @@ interface ChallengeInfoUpdated {
   freezeAmount1: BigInt! # uint256
   challengeTime: BigInt! # uint64
   abortTime: BigInt # uint64
+  sourceTxBlockNum: BigInt
+  sourceTxIndex: BigInt
+  challengerVerifyTransactionFee: BigInt
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
@@ -40,6 +43,9 @@ type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
   freezeAmount1: BigInt! # uint256
   challengeTime: BigInt! # uint64
   abortTime: BigInt # uint64
+  sourceTxBlockNum: BigInt!
+  sourceTxIndex: BigInt!
+  challengerVerifyTransactionFee: BigInt!
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
@@ -63,6 +69,9 @@ type verifyChallengeSource implements ChallengeInfoUpdated
   freezeAmount1: BigInt! # uint256
   challengeTime: BigInt! # uint64
   abortTime: BigInt # uint64
+  sourceTxBlockNum: BigInt!
+  sourceTxIndex: BigInt!
+  challengerVerifyTransactionFee: BigInt!
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
@@ -87,6 +96,9 @@ type verifyChallengeDest implements ChallengeInfoUpdated
   freezeAmount1: BigInt! # uint256
   challengeTime: BigInt! # uint64
   abortTime: BigInt # uint64
+  sourceTxBlockNum: BigInt!
+  sourceTxIndex: BigInt!
+  challengerVerifyTransactionFee: BigInt!
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String

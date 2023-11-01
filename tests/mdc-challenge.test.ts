@@ -33,6 +33,9 @@ describe("test MDC Challenge related function", () => {
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
     ]
     let statementInfo = changetype<ethereum.Tuple>(statementTuple)
 

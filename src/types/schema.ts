@@ -294,6 +294,45 @@ export class createChallenge extends Entity {
     }
   }
 
+  get sourceTxBlockNum(): BigInt {
+    let value = this.get("sourceTxBlockNum");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceTxBlockNum(value: BigInt) {
+    this.set("sourceTxBlockNum", Value.fromBigInt(value));
+  }
+
+  get sourceTxIndex(): BigInt {
+    let value = this.get("sourceTxIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceTxIndex(value: BigInt) {
+    this.set("sourceTxIndex", Value.fromBigInt(value));
+  }
+
+  get challengerVerifyTransactionFee(): BigInt {
+    let value = this.get("challengerVerifyTransactionFee");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set challengerVerifyTransactionFee(value: BigInt) {
+    this.set("challengerVerifyTransactionFee", Value.fromBigInt(value));
+  }
+
   get verifiedTime0(): BigInt | null {
     let value = this.get("verifiedTime0");
     if (!value || value.kind == ValueKind.NULL) {
@@ -598,6 +637,45 @@ export class verifyChallengeSource extends Entity {
     }
   }
 
+  get sourceTxBlockNum(): BigInt {
+    let value = this.get("sourceTxBlockNum");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceTxBlockNum(value: BigInt) {
+    this.set("sourceTxBlockNum", Value.fromBigInt(value));
+  }
+
+  get sourceTxIndex(): BigInt {
+    let value = this.get("sourceTxIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceTxIndex(value: BigInt) {
+    this.set("sourceTxIndex", Value.fromBigInt(value));
+  }
+
+  get challengerVerifyTransactionFee(): BigInt {
+    let value = this.get("challengerVerifyTransactionFee");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set challengerVerifyTransactionFee(value: BigInt) {
+    this.set("challengerVerifyTransactionFee", Value.fromBigInt(value));
+  }
+
   get verifiedTime0(): BigInt | null {
     let value = this.get("verifiedTime0");
     if (!value || value.kind == ValueKind.NULL) {
@@ -897,6 +975,45 @@ export class verifyChallengeDest extends Entity {
     } else {
       this.set("abortTime", Value.fromBigInt(<BigInt>value));
     }
+  }
+
+  get sourceTxBlockNum(): BigInt {
+    let value = this.get("sourceTxBlockNum");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceTxBlockNum(value: BigInt) {
+    this.set("sourceTxBlockNum", Value.fromBigInt(value));
+  }
+
+  get sourceTxIndex(): BigInt {
+    let value = this.get("sourceTxIndex");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceTxIndex(value: BigInt) {
+    this.set("sourceTxIndex", Value.fromBigInt(value));
+  }
+
+  get challengerVerifyTransactionFee(): BigInt {
+    let value = this.get("challengerVerifyTransactionFee");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set challengerVerifyTransactionFee(value: BigInt) {
+    this.set("challengerVerifyTransactionFee", Value.fromBigInt(value));
   }
 
   get verifiedTime0(): BigInt | null {

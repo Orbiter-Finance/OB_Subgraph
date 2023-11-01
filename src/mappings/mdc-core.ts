@@ -37,7 +37,10 @@ import {
   fullfillLatestRuleSnapshot,
   function_challenge,
   func_challengeName,
-  decodeChallengeSourceChainId
+  decodeChallengeSourceChainId,
+  function_checkChallenge,
+  function_verifyChallengeSource,
+  function_verifyChallengeDest
 } from "./helpers"
 import {
   FactoryManager, ebcRel
@@ -304,7 +307,9 @@ export function handleChallengeInfoUpdatedEvent(
   freezeAmount1: BigInt,
   challengeTime: BigInt,
   abortTime: BigInt,
-  gasUsed: BigInt,
+  sourceTXBlockNumber: BigInt,
+  sourceTxIndex: BigInt,
+  challengerVerifyTransactionFee: BigInt,
   winner: string,
   verifiedTime0: BigInt,
   verifiedTime1: BigInt,
@@ -317,21 +322,32 @@ export function handleChallengeInfoUpdatedEvent(
   let mdc = getMDCEntity(event.address, event)
   let challengeManager = getChallengeManagerEntity(mdc, challengeId)
   if (selector == function_challenge) {
-    log.debug("challenge", [selector]);
-    // decode inputData
-    const decodeData = decodeChallengeSourceChainId(inputdata)
-    log.debug("SourceChainId: {}", [decodeData.toString()])
+    log.debug("trigger challenge(), selector: {}", [selector]);
+    const sourceChainId = decodeChallengeSourceChainId(inputdata)
+    log.debug("SourceChainId: {}", [sourceChainId.toString()])
     let createChallenge = getCreateChallenge(challengeManager, event.transaction.from.toHexString())
     createChallenge.sourceTxTime = sourceTxTime
     createChallenge.freezeToken = freezeToken
     createChallenge.freezeAmount0 = freezeAmount0
     createChallenge.freezeAmount1 = freezeAmount1
     createChallenge.challengeTime = challengeTime
+    createChallenge.sourceTxBlockNum = sourceTXBlockNumber
+    createChallenge.sourceTxIndex = sourceTxIndex
+    createChallenge.challengerVerifyTransactionFee = challengerVerifyTransactionFee
     createChallenge.latestUpdateHash = event.transaction.hash.toHexString()
     createChallenge.latestUpdateTimestamp = event.block.timestamp
     createChallenge.latestUpdateBlockNumber = event.block.number
     createChallenge.save()
+  } else if (selector == function_checkChallenge) {
+
+  } else if (selector == function_verifyChallengeSource) {
+
+  } else if (selector == function_verifyChallengeDest) {
+
+  } else {
+    log.error("challenge function mismatch {}", [selector])
   }
+
   challengeManager.save()
   mdc.save()
 }

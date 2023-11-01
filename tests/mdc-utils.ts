@@ -5,7 +5,8 @@ import {
   ColumnArrayUpdated,
   ResponseMakersUpdated,
   RulesRootUpdated,
-  SpvUpdated
+  SpvUpdated,
+  WithdrawRequested
 } from "../src/types/templates/MDC/MDC"
 
 export function createChallengeInfoUpdatedEvent(
@@ -142,4 +143,35 @@ export function createSpvUpdatedEvent(
   )
 
   return spvUpdatedEvent
+}
+
+export function createWithdrawRequestedEvent(
+  requestAmount: BigInt,
+  requestTimestamp: BigInt,
+  requestToken: Address
+): WithdrawRequested {
+  let withdrawRequestedEvent = changetype<WithdrawRequested>(newMockEvent())
+
+  withdrawRequestedEvent.parameters = new Array()
+
+  withdrawRequestedEvent.parameters.push(
+    new ethereum.EventParam(
+      "requestAmount",
+      ethereum.Value.fromUnsignedBigInt(requestAmount)
+    )
+  )
+  withdrawRequestedEvent.parameters.push(
+    new ethereum.EventParam(
+      "requestTimestamp",
+      ethereum.Value.fromUnsignedBigInt(requestTimestamp)
+    )
+  )
+  withdrawRequestedEvent.parameters.push(
+    new ethereum.EventParam(
+      "requestToken",
+      ethereum.Value.fromAddress(requestToken)
+    )
+  )
+
+  return withdrawRequestedEvent
 }

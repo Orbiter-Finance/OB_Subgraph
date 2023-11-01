@@ -51,9 +51,19 @@
             "type": "uint64"
           },
           {
-            "internalType": "uint256",
-            "name": "gasUsed",
-            "type": "uint256"
+            "internalType": "uint64",
+            "name": "sourceTxBlockNum",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint64",
+            "name": "sourceTxIndex",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint128",
+            "name": "challengerVerifyTransactionFee",
+            "type": "uint128"
           }
         ],
         "indexed": false,
@@ -212,21 +222,56 @@
     "type": "event"
   },
   {
+    "anonymous": false,
     "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "requestAmount",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint64",
+        "name": "requestTimestamp",
+        "type": "uint64"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "requestToken",
+        "type": "address"
+      }
+    ],
+    "name": "WithdrawRequested",
+    "type": "event"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint64",
+        "name": "sourceTxTime",
+        "type": "uint64"
+      },
       {
         "internalType": "uint64",
         "name": "sourceChainId",
         "type": "uint64"
       },
       {
-        "internalType": "bytes32",
-        "name": "sourceTxHash",
-        "type": "bytes32"
+        "internalType": "uint64",
+        "name": "sourceTxBlockNum",
+        "type": "uint64"
       },
       {
         "internalType": "uint64",
-        "name": "sourceTxTime",
+        "name": "sourceTxIndex",
         "type": "uint64"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "sourceTxHash",
+        "type": "bytes32"
       },
       {
         "internalType": "address",
@@ -236,6 +281,11 @@
       {
         "internalType": "uint256",
         "name": "freezeAmount1",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "lastChallengeIdentNum",
         "type": "uint256"
       }
     ],
@@ -323,6 +373,25 @@
     "type": "function"
   },
   {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "challengeIdentNum",
+        "type": "uint256"
+      }
+    ],
+    "name": "getCanChallengeContinue",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "getVersionAndEnableTime",
     "outputs": [
@@ -340,6 +409,42 @@
         "internalType": "uint64",
         "name": "enableTime",
         "type": "uint64"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "targetToken",
+        "type": "address"
+      }
+    ],
+    "name": "getWithdrawRequestInfo",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "requestAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "requestTimestamp",
+            "type": "uint64"
+          },
+          {
+            "internalType": "address",
+            "name": "requestToken",
+            "type": "address"
+          }
+        ],
+        "internalType": "struct IORMakerDeposit.WithdrawRequestInfo",
+        "name": "",
+        "type": "tuple"
       }
     ],
     "stateMutability": "view",
@@ -382,6 +487,122 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes",
+        "name": "proofData",
+        "type": "bytes"
+      }
+    ],
+    "name": "parsePublicInput",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint64",
+            "name": "sourceChainId",
+            "type": "uint64"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "sourceTxHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "txIndex",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "from",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "to",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "freezeToken",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "freezeAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint64",
+            "name": "timestamp",
+            "type": "uint64"
+          },
+          {
+            "internalType": "uint256",
+            "name": "dest",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "destToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "L1TXBlockHash",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "L1TBlockNumber",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "mdcContractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "managerContractAddress",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ruleRootSlot",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "ruleVersionSlot",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "enableTimeSlot",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "RulePreRootHash",
+            "type": "bytes32"
+          }
+        ],
+        "internalType": "struct ORMakerDeposit.PublicInputData",
+        "name": "",
+        "type": "tuple"
+      }
+    ],
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -870,6 +1091,11 @@
         "internalType": "bytes",
         "name": "rawDatas",
         "type": "bytes"
+      },
+      {
+        "internalType": "uint64",
+        "name": "sourceChainId",
+        "type": "uint64"
       }
     ],
     "name": "verifyChallengeDest",
@@ -893,11 +1119,6 @@
         "internalType": "bytes",
         "name": "proof",
         "type": "bytes"
-      },
-      {
-        "internalType": "bytes32[2]",
-        "name": "spvBlockHashs",
-        "type": "bytes32[2]"
       },
       {
         "components": [
@@ -963,14 +1184,27 @@
         "internalType": "address",
         "name": "token",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
       }
     ],
     "name": "withdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "requestToken",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "requestAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "withdrawRequest",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

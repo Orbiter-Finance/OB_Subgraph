@@ -88,7 +88,9 @@ export const func_registerChains = "0x2e96565f"
 export const func_updateChainSpvs = "0x434417cf"
 // chalenge related
 export const function_checkChallenge = "0x8f2c4068"
-export const function_challenge = "0x8adac2c5"
+export const function_challenge = "0x47062326"
+export const function_verifyChallengeSource = "0x0000"
+export const function_verifyChallengeDest = "0x0000"
 /**** function selectors ****/
 
 /**** decode function format ****/
@@ -102,7 +104,7 @@ export const func_updateColumnArrayName = "(uint64,address[],address[],uint64[])
 export const func_updateResponseMakersName = "(uint64,bytes[])"
 // chalenge related
 export const func_checkChallengeName = "(uint64,bytes32,uint256[],address[])"
-export const func_challengeName = "(uint64,bytes32,uint64,address,uint256)"
+export const func_challengeName = "(uint64,uint64,uint64,uint64,bytes32,address,uint256,uint256)"
 /**** decode function format ****/
 
 export enum updateRulesRootMode {
@@ -1487,8 +1489,8 @@ export function decodeChallengeSourceChainId(inputData: Bytes): BigInt {
     }
 
     let sourceChainId: BigInt = BigInt.fromI32(0)
-    if (tuple[0].kind == ethereum.ValueKind.UINT) {
-        sourceChainId = tuple[0].toBigInt()
+    if (tuple[1].kind == ethereum.ValueKind.UINT) {
+        sourceChainId = tuple[1].toBigInt()
     }
     return sourceChainId
 }
