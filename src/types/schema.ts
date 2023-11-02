@@ -165,6 +165,19 @@ export class createChallenge extends Entity {
     this.set("challengeId", Value.fromString(value));
   }
 
+  get sourceChainId(): BigInt {
+    let value = this.get("sourceChainId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceChainId(value: BigInt) {
+    this.set("sourceChainId", Value.fromBigInt(value));
+  }
+
   get sourceTxFrom(): BigInt | null {
     let value = this.get("sourceTxFrom");
     if (!value || value.kind == ValueKind.NULL) {
@@ -384,21 +397,17 @@ export class createChallenge extends Entity {
     }
   }
 
-  get msgSender(): string | null {
+  get msgSender(): string {
     let value = this.get("msgSender");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
       return value.toString();
     }
   }
 
-  set msgSender(value: string | null) {
-    if (!value) {
-      this.unset("msgSender");
-    } else {
-      this.set("msgSender", Value.fromString(<string>value));
-    }
+  set msgSender(value: string) {
+    this.set("msgSender", Value.fromString(value));
   }
 
   get latestUpdateHash(): string {
@@ -508,6 +517,19 @@ export class verifyChallengeSource extends Entity {
     this.set("challengeId", Value.fromString(value));
   }
 
+  get sourceChainId(): BigInt {
+    let value = this.get("sourceChainId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceChainId(value: BigInt) {
+    this.set("sourceChainId", Value.fromBigInt(value));
+  }
+
   get sourceTxFrom(): BigInt | null {
     let value = this.get("sourceTxFrom");
     if (!value || value.kind == ValueKind.NULL) {
@@ -727,21 +749,17 @@ export class verifyChallengeSource extends Entity {
     }
   }
 
-  get msgSender(): string | null {
+  get msgSender(): string {
     let value = this.get("msgSender");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
       return value.toString();
     }
   }
 
-  set msgSender(value: string | null) {
-    if (!value) {
-      this.unset("msgSender");
-    } else {
-      this.set("msgSender", Value.fromString(<string>value));
-    }
+  set msgSender(value: string) {
+    this.set("msgSender", Value.fromString(value));
   }
 
   get latestUpdateHash(): string {
@@ -848,6 +866,19 @@ export class verifyChallengeDest extends Entity {
     this.set("challengeId", Value.fromString(value));
   }
 
+  get sourceChainId(): BigInt {
+    let value = this.get("sourceChainId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceChainId(value: BigInt) {
+    this.set("sourceChainId", Value.fromBigInt(value));
+  }
+
   get sourceTxFrom(): BigInt | null {
     let value = this.get("sourceTxFrom");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1067,21 +1098,17 @@ export class verifyChallengeDest extends Entity {
     }
   }
 
-  get msgSender(): string | null {
+  get msgSender(): string {
     let value = this.get("msgSender");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
       return value.toString();
     }
   }
 
-  set msgSender(value: string | null) {
-    if (!value) {
-      this.unset("msgSender");
-    } else {
-      this.set("msgSender", Value.fromString(<string>value));
-    }
+  set msgSender(value: string) {
+    this.set("msgSender", Value.fromString(value));
   }
 
   get latestUpdateHash(): string {

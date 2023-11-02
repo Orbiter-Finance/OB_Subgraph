@@ -10,9 +10,9 @@ interface ChallengeInfoUpdated {
   freezeAmount1: BigInt! # uint256
   challengeTime: BigInt! # uint64
   abortTime: BigInt # uint64
-  sourceTxBlockNum: BigInt
-  sourceTxIndex: BigInt
-  challengerVerifyTransactionFee: BigInt
+  sourceTxBlockNum: BigInt!
+  sourceTxIndex: BigInt!
+  challengerVerifyTransactionFee: BigInt!
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
@@ -34,6 +34,7 @@ type challengeManager @entity {
 type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
   id: ID! #hash(challengeId, challengerAddress)
   challengeId: String! # bytes32
+  sourceChainId: BigInt!
   sourceTxFrom: BigInt # uint256
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
@@ -49,7 +50,7 @@ type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
-  msgSender: String
+  msgSender: String!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
@@ -60,6 +61,7 @@ type verifyChallengeSource implements ChallengeInfoUpdated
   @entity(immutable: true) {
   id: ID! #challengeId
   challengeId: String! # bytes32
+  sourceChainId: BigInt!
   sourceTxFrom: BigInt # uint256
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
@@ -75,7 +77,7 @@ type verifyChallengeSource implements ChallengeInfoUpdated
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
-  msgSender: String
+  msgSender: String!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
@@ -87,6 +89,7 @@ type verifyChallengeDest implements ChallengeInfoUpdated
   @entity(immutable: true) {
   id: ID! #challengeId
   challengeId: String! # bytes32
+  sourceChainId: BigInt!
   sourceTxFrom: BigInt # uint256
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
@@ -102,14 +105,14 @@ type verifyChallengeDest implements ChallengeInfoUpdated
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
-  msgSender: String
+  msgSender: String!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
   challengeManager: challengeManager! @derivedFrom(field: "verifyChallengeDest")
 }
 
-type liquidation implements ChallengeInfoUpdated @entity(immutable: true) {
+type liquidation @entity(immutable: true) {
   id: ID! #challenger
   challengeId: String!
   liquidators: String!

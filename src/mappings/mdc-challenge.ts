@@ -68,9 +68,8 @@ export function calChallengeNodeList(
         (padZeroToBytes(16, sourceChainId.toHexString())).slice(2) +
         (padZeroToBytes(16, sourceTXBlockNumber.toHexString())).slice(2) +
         (padZeroToBytes(16, sourceTxIndex.toHexString())).slice(2);
-    log.info("new challengeIdentstring: {}", [challengeIdentstring])
     const challengeIdentNum = (Bytes.fromHexString(challengeIdentstring))
-    log.info("new challengeIdentNum: {}", [challengeIdentNum.toHexString()])
+    // log.info("new challengeIdentNum: {}", [challengeIdentNum.toHexString()])
     mdc.challengeNodeList = mdc.challengeNodeList.concat([challengeIdentNum])
     // mdc.challengeNodeList = entity.BytesSorting(mdc.challengeNodeList, challengeIdentNum)
     // debug fake list

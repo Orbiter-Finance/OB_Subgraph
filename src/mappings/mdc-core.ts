@@ -327,6 +327,8 @@ export function handleChallengeInfoUpdatedEvent(
     log.debug("SourceChainId: {}", [sourceChainId.toString()])
     const challenger: string = event.transaction.from.toHexString();
     let createChallenge = getCreateChallenge(challengeManager, challenger)
+    createChallenge.sourceChainId = sourceChainId
+    createChallenge.msgSender = event.transaction.from.toHexString()
     createChallenge.sourceTxTime = sourceTxTime
     createChallenge.freezeToken = freezeToken
     createChallenge.freezeAmount0 = freezeAmount0
