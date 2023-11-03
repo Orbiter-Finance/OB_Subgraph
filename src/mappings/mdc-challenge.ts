@@ -3,7 +3,9 @@ import {
     MDC,
     challengeManager,
     createChallenge,
-    liquidation
+    liquidation,
+    verifyChallengeDest,
+    verifyChallengeSource
 } from "../types/schema"
 import {
     entity,
@@ -95,8 +97,44 @@ export function getLiquidationEntity(
         _liquidation.latestUpdateBlockNumber = event.block.number
         _liquidation.latestUpdateTimestamp = event.block.timestamp
         _liquidation.latestUpdateHash = event.transaction.hash.toHexString()
-        log.info("check Challenge! challengeId: {}, challenger: {}, liquidators: {}", [challengeId, challenger, event.transaction.from.toHexString()])
+        log.info("Liquidation! challengeId: {}, challenger: {}, liquidators: {}", [challengeId, challenger, event.transaction.from.toHexString()])
     }
     return _liquidation as liquidation
+}
+
+export function getVerifyChallengeSourceEntity(
+    challengeManager: challengeManager,
+    challengeId: string
+): verifyChallengeSource {
+    let _entity = verifyChallengeSource.load(
+        challengeId
+    )
+    if (_entity == null) {
+        _entity = new verifyChallengeSource(
+            challengeId
+        )
+        _entity.challengeId = challengeId
+        challengeManager.verifyChallengeSource = challengeId
+        log.info("verifyChallengeSource! challengeId: {}", [challengeId])
+    }
+    return _entity as verifyChallengeSource
+}
+
+export function getVerifyChallengeDestEntity(
+    challengeManager: challengeManager,
+    challengeId: string
+): verifyChallengeDest {
+    let _entity = verifyChallengeDest.load(
+        challengeId
+    )
+    if (_entity == null) {
+        _entity = new verifyChallengeDest(
+            challengeId
+        )
+        _entity.challengeId = challengeId
+        challengeManager.verifyChallengeDest = challengeId
+        log.info("verifyChallengeDest! challengeId: {}", [challengeId])
+    }
+    return _entity as verifyChallengeDest
 }
 

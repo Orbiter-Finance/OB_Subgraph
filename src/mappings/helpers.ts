@@ -149,7 +149,7 @@ export function getFactoryEntity(
         let subgraphManager = getSubgraphManager()
         subgraphManager.currentFactoryTemplate++;
         subgraphManager.factory = entity.addRelation(subgraphManager.factory, id)
-        log.debug("create FactoryTemplate, Id: {}, statues:[{}/{}]", [id, subgraphManager.currentFactoryTemplate.toString(), subgraphManager.totalFactory.toString()])
+        log.info("create FactoryTemplate, Id: {}, statues:[{}/{}]", [id, subgraphManager.currentFactoryTemplate.toString(), subgraphManager.totalFactory.toString()])
         subgraphManager.save()
     }
     return factory as FactoryManager
@@ -1509,6 +1509,40 @@ export function decodeCheckChallenge(inputData: Bytes): string[] {
             challenger[i] = challengerAddressArray[i].toHexString()
         }
     }
+    return challenger
+}
+
+export function decodeVerifyChallengeSource(inputData: Bytes): string {
+    // let tuple = calldata.decode(inputData, func_checkChallengeName)
+    // if (debugLogMapping) {
+    //     for (let i = 0; i < tuple.length; i++) {
+    //         log.debug("tuple[{}].kind:{}", [i.toString(), tuple[i].kind.toString()])
+    //     }
+    // }
+    let challenger: string = STRING_EMPTY
+    // if (tuple[2].kind == ethereum.ValueKind.ARRAY) {
+    //     const challengerAddressArray: Address[] = tuple[2].toAddressArray();
+    //     for (let i = 0; i < challengerAddressArray.length; i++) {
+    //         challenger[i] = challengerAddressArray[i].toHexString()
+    //     }
+    // }
+    return challenger
+}
+
+export function decodeVerifyChallengeDest(inputData: Bytes): string {
+    // let tuple = calldata.decode(inputData, func_checkChallengeName)
+    // if (debugLogMapping) {
+    //     for (let i = 0; i < tuple.length; i++) {
+    //         log.debug("tuple[{}].kind:{}", [i.toString(), tuple[i].kind.toString()])
+    //     }
+    // }
+    let challenger: string = STRING_EMPTY
+    // if (tuple[2].kind == ethereum.ValueKind.ARRAY) {
+    //     const challengerAddressArray: Address[] = tuple[2].toAddressArray();
+    //     for (let i = 0; i < challengerAddressArray.length; i++) {
+    //         challenger[i] = challengerAddressArray[i].toHexString()
+    //     }
+    // }
     return challenger
 }
 

@@ -41,7 +41,9 @@ import {
   function_checkChallenge,
   function_verifyChallengeSource,
   function_verifyChallengeDest,
-  decodeCheckChallenge
+  decodeCheckChallenge,
+  decodeVerifyChallengeSource,
+  decodeVerifyChallengeDest
 } from "./helpers"
 import {
   FactoryManager, ebcRel
@@ -70,7 +72,7 @@ import {
   isProduction
 } from './config'
 import { rscRules } from "./rule-utils";
-import { calChallengeNodeList, getChallengeManagerEntity, getCreateChallenge, getLiquidationEntity } from "./mdc-challenge";
+import { calChallengeNodeList, getChallengeManagerEntity, getCreateChallenge, getLiquidationEntity, getVerifyChallengeDestEntity, getVerifyChallengeSourceEntity } from "./mdc-challenge";
 import { mockChallengeInput } from "../../tests/mdc-challenge.test";
 
 
@@ -328,11 +330,12 @@ export function handleChallengeInfoUpdatedEvent(
   if (selector == function_challenge) {
     log.debug("trigger challenge(), selector: {}", [selector]);
     const sourceChainId = decodeChallengeSourceChainId(inputdata)
-    log.debug("SourceChainId: {}", [sourceChainId.toString()])
+    // log.debug("SourceChainId: {}", [sourceChainId.toString()])
     const challenger: string = event.transaction.from.toHexString();
     let createChallenge = getCreateChallenge(challengeManager, challenger)
     createChallenge.sourceChainId = sourceChainId
     createChallenge.msgSender = event.transaction.from.toHexString()
+    createChallenge.challenger = event.transaction.from.toHexString()
     createChallenge.sourceTxTime = sourceTxTime
     createChallenge.freezeToken = freezeToken
     createChallenge.freezeAmount0 = freezeAmount0
@@ -366,13 +369,57 @@ export function handleChallengeInfoUpdatedEvent(
     }
 
   } else if (selector == function_verifyChallengeSource) {
-
+    let verifyChallengeSource = getVerifyChallengeSourceEntity(
+      challengeManager, challengeId
+    )
+    const challenger = decodeVerifyChallengeSource(inputdata)
+    let createChallenge = getCreateChallenge(challengeManager, challenger)
+    verifyChallengeSource.sourceChainId = createChallenge.sourceChainId
+    verifyChallengeSource.sourceTxFrom = sourceTxFrom
+    verifyChallengeSource.sourceTxTime = sourceTxTime
+    verifyChallengeSource.challenger = challenger
+    verifyChallengeSource.freezeToken = freezeToken
+    verifyChallengeSource.challengeUserRatio = challengeUserRatio
+    verifyChallengeSource.freezeAmount0 = freezeAmount0
+    verifyChallengeSource.freezeAmount1 = freezeAmount1
+    verifyChallengeSource.challengeTime = challengeTime
+    verifyChallengeSource.sourceTxBlockNum = sourceTXBlockNumber
+    verifyChallengeSource.sourceTxIndex = sourceTxIndex
+    verifyChallengeSource.challengerVerifyTransactionFee = challengerVerifyTransactionFee
+    verifyChallengeSource.verifiedTime0 = verifiedTime0
+    verifyChallengeSource.verifiedTime1 = verifiedTime1
+    verifyChallengeSource.verifiedDataHash0 = verifiedDataHash0
+    verifyChallengeSource.msgSender = event.transaction.from.toHexString()
+    verifyChallengeSource.latestUpdateHash = event.transaction.hash.toHexString()
+    verifyChallengeSource.latestUpdateTimestamp = event.block.timestamp
+    verifyChallengeSource.latestUpdateBlockNumber = event.block.number
   } else if (selector == function_verifyChallengeDest) {
-
+    let verifyChallengeDest = getVerifyChallengeDestEntity(
+      challengeManager, challengeId
+    )
+    const challenger = decodeVerifyChallengeDest(inputdata)
+    let createChallenge = getCreateChallenge(challengeManager, challenger)
+    verifyChallengeDest.sourceChainId = createChallenge.sourceChainId
+    verifyChallengeDest.sourceTxFrom = sourceTxFrom
+    verifyChallengeDest.sourceTxTime = sourceTxTime
+    verifyChallengeDest.challenger = challenger
+    verifyChallengeDest.freezeToken = freezeToken
+    verifyChallengeDest.challengeUserRatio = challengeUserRatio
+    verifyChallengeDest.freezeAmount0 = freezeAmount0
+    verifyChallengeDest.freezeAmount1 = freezeAmount1
+    verifyChallengeDest.challengeTime = challengeTime
+    verifyChallengeDest.sourceTxBlockNum = sourceTXBlockNumber
+    verifyChallengeDest.sourceTxIndex = sourceTxIndex
+    verifyChallengeDest.challengerVerifyTransactionFee = challengerVerifyTransactionFee
+    verifyChallengeDest.verifiedTime0 = verifiedTime0
+    verifyChallengeDest.verifiedTime1 = verifiedTime1
+    verifyChallengeDest.verifiedDataHash0 = verifiedDataHash0
+    verifyChallengeDest.msgSender = event.transaction.from.toHexString()
+    verifyChallengeDest.latestUpdateHash = event.transaction.hash.toHexString()
+    verifyChallengeDest.latestUpdateTimestamp = event.block.timestamp
+    verifyChallengeDest.latestUpdateBlockNumber = event.block.number
   } else {
     log.error("challenge function selector mismatch: {}", [selector])
-
-    // let liquidation = getLiquidationEntity()
   }
 
   challengeManager.save()
