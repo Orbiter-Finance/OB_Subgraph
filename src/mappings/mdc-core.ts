@@ -40,7 +40,8 @@ import {
   decodeChallengeSourceChainId,
   function_checkChallenge,
   function_verifyChallengeSource,
-  function_verifyChallengeDest
+  function_verifyChallengeDest,
+  decodeCheckChallenge
 } from "./helpers"
 import {
   FactoryManager, ebcRel
@@ -53,11 +54,13 @@ import {
   functionUpdateChainSpvsMockinput,
   functionRegisterChainMockinput,
   functionupdateColumnArrayMockinput,
-  functionrChallengeinput
+  functionrChallengeinput,
+  functionCheckChallengeInput
 } from "../../tests/mock-data";
 import { ChainInfoUpdatedChainInfoStruct, ChainTokenUpdatedTokenInfoStruct } from "../types/ORManager/ORManager";
 import {
   calldata,
+  entity,
   padZeroToUint,
   removeDuplicates,
   removeDuplicatesBigInt
@@ -67,7 +70,8 @@ import {
   isProduction
 } from './config'
 import { rscRules } from "./rule-utils";
-import { calChallengeNodeList, getChallengeManagerEntity, getCreateChallenge } from "./mdc-challenge";
+import { calChallengeNodeList, getChallengeManagerEntity, getCreateChallenge, getLiquidationEntity } from "./mdc-challenge";
+import { mockChallengeInput } from "../../tests/mdc-challenge.test";
 
 
 export function handleupdateRulesRootEvent(
@@ -317,7 +321,7 @@ export function handleChallengeInfoUpdatedEvent(
 ): void {
   const inputdata = isProduction ?
     event.transaction.input :
-    Bytes.fromHexString(functionrChallengeinput) as Bytes
+    mockChallengeInput
   const selector: string = calldata.getSelector(inputdata).toHexString()
   let mdc = getMDCEntity(event.address, event)
   let challengeManager = getChallengeManagerEntity(mdc, challengeId)
@@ -340,26 +344,35 @@ export function handleChallengeInfoUpdatedEvent(
     createChallenge.latestUpdateHash = event.transaction.hash.toHexString()
     createChallenge.latestUpdateTimestamp = event.block.timestamp
     createChallenge.latestUpdateBlockNumber = event.block.number
-
     calChallengeNodeList(
       mdc,
       event,
       sourceTxTime,
       sourceChainId,
       sourceTXBlockNumber,
-      sourceTxIndex)
-
-
-
+      sourceTxIndex
+    )
     createChallenge.save()
   } else if (selector == function_checkChallenge) {
+    log.debug("trigger checkChallenge(), selector: {}", [selector]);
+    const challengerArray: string[] = decodeCheckChallenge(inputdata)
+    for (let i = 0; i < challengerArray.length; i++) {
+      let liquidation = getLiquidationEntity(
+        challengerArray[i],
+        challengeId,
+        event)
+      challengeManager.liquidation = entity.addRelation(challengeManager.liquidation, challengerArray[i])
+      liquidation.save()
+    }
 
   } else if (selector == function_verifyChallengeSource) {
 
   } else if (selector == function_verifyChallengeDest) {
 
   } else {
-    log.error("challenge function mismatch {}", [selector])
+    log.error("challenge function selector mismatch: {}", [selector])
+
+    // let liquidation = getLiquidationEntity()
   }
 
   challengeManager.save()

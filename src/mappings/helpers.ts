@@ -87,7 +87,7 @@ export const func_updateRulesRootERC20 = "0x34bc98de"
 export const func_registerChains = "0x2e96565f"
 export const func_updateChainSpvs = "0x434417cf"
 // chalenge related
-export const function_checkChallenge = "0x8f2c4068"
+export const function_checkChallenge = "0x55027e75"
 export const function_challenge = "0x47062326"
 export const function_verifyChallengeSource = "0x0000"
 export const function_verifyChallengeDest = "0x0000"
@@ -103,7 +103,7 @@ export const func_updateChainSpvsName = "(uint64,uint64,address[],uint[])"
 export const func_updateColumnArrayName = "(uint64,address[],address[],uint64[])"
 export const func_updateResponseMakersName = "(uint64,bytes[])"
 // chalenge related
-export const func_checkChallengeName = "(uint64,bytes32,uint256[],address[])"
+export const func_checkChallengeName = "(uint64,bytes32,address[])"
 export const func_challengeName = "(uint64,uint64,uint64,uint64,bytes32,address,uint256,uint256)"
 /**** decode function format ****/
 
@@ -1493,6 +1493,23 @@ export function decodeChallengeSourceChainId(inputData: Bytes): BigInt {
         sourceChainId = tuple[1].toBigInt()
     }
     return sourceChainId
+}
+
+export function decodeCheckChallenge(inputData: Bytes): string[] {
+    let tuple = calldata.decode(inputData, func_checkChallengeName)
+    if (debugLogMapping) {
+        for (let i = 0; i < tuple.length; i++) {
+            log.debug("tuple[{}].kind:{}", [i.toString(), tuple[i].kind.toString()])
+        }
+    }
+    let challenger: string[] = []
+    if (tuple[2].kind == ethereum.ValueKind.ARRAY) {
+        const challengerAddressArray: Address[] = tuple[2].toAddressArray();
+        for (let i = 0; i < challengerAddressArray.length; i++) {
+            challenger[i] = challengerAddressArray[i].toHexString()
+        }
+    }
+    return challenger
 }
 
 

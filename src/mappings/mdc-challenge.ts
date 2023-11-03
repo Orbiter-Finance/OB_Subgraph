@@ -2,7 +2,8 @@ import { log } from "matchstick-as"
 import {
     MDC,
     challengeManager,
-    createChallenge
+    createChallenge,
+    liquidation
 } from "../types/schema"
 import {
     entity,
@@ -79,5 +80,23 @@ export function calChallengeNodeList(
     // for (let i = 0; i < fakeBytes.length; i++) {
     //     log.warning("fakeBytes{}: {}", [i.toString(), fakeBytes[i].toHexString()])
     // }
-
 }
+
+export function getLiquidationEntity(
+    challenger: string,
+    challengeId: string,
+    event: ethereum.Event
+): liquidation {
+    let _liquidation = liquidation.load(challenger)
+    if (_liquidation == null) {
+        _liquidation = new liquidation(challenger)
+        _liquidation.challengeId = challengeId
+        _liquidation.liquidators = event.transaction.from.toHexString()
+        _liquidation.latestUpdateBlockNumber = event.block.number
+        _liquidation.latestUpdateTimestamp = event.block.timestamp
+        _liquidation.latestUpdateHash = event.transaction.hash.toHexString()
+        log.info("check Challenge! challengeId: {}, challenger: {}, liquidators: {}", [challengeId, challenger, event.transaction.from.toHexString()])
+    }
+    return _liquidation as liquidation
+}
+
