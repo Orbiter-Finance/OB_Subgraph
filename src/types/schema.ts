@@ -54,6 +54,19 @@ export class challengeManager extends Entity {
     this.set("id", Value.fromString(value));
   }
 
+  get challengeStatues(): string {
+    let value = this.get("challengeStatues");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set challengeStatues(value: string) {
+    this.set("challengeStatues", Value.fromString(value));
+  }
+
   get createChallenge(): Array<string> {
     let value = this.get("createChallenge");
     if (!value || value.kind == ValueKind.NULL) {
@@ -449,6 +462,19 @@ export class createChallenge extends Entity {
     this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
   }
 
+  get challengeNodeNumber(): Bytes {
+    let value = this.get("challengeNodeNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set challengeNodeNumber(value: Bytes) {
+    this.set("challengeNodeNumber", Value.fromBytes(value));
+  }
+
   get challengeManager(): challengeManagerLoader {
     return new challengeManagerLoader(
       "createChallenge",
@@ -801,6 +827,19 @@ export class verifyChallengeSource extends Entity {
     this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
   }
 
+  get challengeNodeNumber(): Bytes {
+    let value = this.get("challengeNodeNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set challengeNodeNumber(value: Bytes) {
+    this.set("challengeNodeNumber", Value.fromBytes(value));
+  }
+
   get challengeManager(): challengeManagerLoader {
     return new challengeManagerLoader(
       "verifyChallengeSource",
@@ -1148,6 +1187,19 @@ export class verifyChallengeDest extends Entity {
 
   set latestUpdateBlockNumber(value: BigInt) {
     this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
+  }
+
+  get challengeNodeNumber(): Bytes {
+    let value = this.get("challengeNodeNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set challengeNodeNumber(value: Bytes) {
+    this.set("challengeNodeNumber", Value.fromBytes(value));
   }
 
   get challengeManager(): challengeManagerLoader {
@@ -7012,30 +7064,38 @@ export class OwnershipTransferred extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get previousOwner(): Bytes {
+  get previousOwner(): Bytes | null {
     let value = this.get("previousOwner");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBytes();
     }
   }
 
-  set previousOwner(value: Bytes) {
-    this.set("previousOwner", Value.fromBytes(value));
+  set previousOwner(value: Bytes | null) {
+    if (!value) {
+      this.unset("previousOwner");
+    } else {
+      this.set("previousOwner", Value.fromBytes(<Bytes>value));
+    }
   }
 
-  get newOwner(): Bytes {
+  get newOwner(): Bytes | null {
     let value = this.get("newOwner");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBytes();
     }
   }
 
-  set newOwner(value: Bytes) {
-    this.set("newOwner", Value.fromBytes(value));
+  set newOwner(value: Bytes | null) {
+    if (!value) {
+      this.unset("newOwner");
+    } else {
+      this.set("newOwner", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get blockNumber(): BigInt {
@@ -7429,30 +7489,38 @@ export class FeeManagerOwnershipTransferred extends Entity {
     this.set("id", Value.fromBytes(value));
   }
 
-  get previousOwner(): Bytes {
+  get previousOwner(): Bytes | null {
     let value = this.get("previousOwner");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBytes();
     }
   }
 
-  set previousOwner(value: Bytes) {
-    this.set("previousOwner", Value.fromBytes(value));
+  set previousOwner(value: Bytes | null) {
+    if (!value) {
+      this.unset("previousOwner");
+    } else {
+      this.set("previousOwner", Value.fromBytes(<Bytes>value));
+    }
   }
 
-  get newOwner(): Bytes {
+  get newOwner(): Bytes | null {
     let value = this.get("newOwner");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBytes();
     }
   }
 
-  set newOwner(value: Bytes) {
-    this.set("newOwner", Value.fromBytes(value));
+  set newOwner(value: Bytes | null) {
+    if (!value) {
+      this.unset("newOwner");
+    } else {
+      this.set("newOwner", Value.fromBytes(<Bytes>value));
+    }
   }
 
   get blockNumber(): BigInt {

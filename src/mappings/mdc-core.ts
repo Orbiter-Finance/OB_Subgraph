@@ -76,6 +76,20 @@ import { calChallengeNodeList, getChallengeManagerEntity, getCreateChallenge, ge
 import { mockChallengeInput } from "../../tests/mdc-challenge.test";
 
 
+enum challengeENUM {
+  CREATE = 0,
+  VERIFY_SOURCE = 1,
+  VERIFY_DEST = 2,
+  LIQUIDATION = 3
+}
+
+const challengeStatues: string[] = [
+  "CREATE",
+  "VERIFY_SOURCE",
+  "VERIFY_DEST",
+  "LIQUIDATION"
+]
+
 export function handleupdateRulesRootEvent(
   event: ethereum.Event,
   impl: Bytes,
@@ -347,7 +361,7 @@ export function handleChallengeInfoUpdatedEvent(
     createChallenge.latestUpdateHash = event.transaction.hash.toHexString()
     createChallenge.latestUpdateTimestamp = event.block.timestamp
     createChallenge.latestUpdateBlockNumber = event.block.number
-    calChallengeNodeList(
+    createChallenge.challengeNodeNumber = calChallengeNodeList(
       mdc,
       event,
       sourceTxTime,
@@ -356,6 +370,7 @@ export function handleChallengeInfoUpdatedEvent(
       sourceTxIndex
     )
     createChallenge.save()
+    challengeManager.challengeStatues = challengeStatues[challengeENUM.CREATE]
   } else if (selector == function_checkChallenge) {
     log.debug("trigger checkChallenge(), selector: {}", [selector]);
     const challengerArray: string[] = decodeCheckChallenge(inputdata)
@@ -367,6 +382,7 @@ export function handleChallengeInfoUpdatedEvent(
       challengeManager.liquidation = entity.addRelation(challengeManager.liquidation, challengerArray[i])
       liquidation.save()
     }
+    challengeManager.challengeStatues = challengeStatues[challengeENUM.LIQUIDATION]
 
   } else if (selector == function_verifyChallengeSource) {
     let verifyChallengeSource = getVerifyChallengeSourceEntity(
@@ -389,10 +405,12 @@ export function handleChallengeInfoUpdatedEvent(
     verifyChallengeSource.verifiedTime0 = verifiedTime0
     verifyChallengeSource.verifiedTime1 = verifiedTime1
     verifyChallengeSource.verifiedDataHash0 = verifiedDataHash0
+    verifyChallengeSource.challengeNodeNumber = createChallenge.challengeNodeNumber
     verifyChallengeSource.msgSender = event.transaction.from.toHexString()
     verifyChallengeSource.latestUpdateHash = event.transaction.hash.toHexString()
     verifyChallengeSource.latestUpdateTimestamp = event.block.timestamp
     verifyChallengeSource.latestUpdateBlockNumber = event.block.number
+    challengeManager.challengeStatues = challengeStatues[challengeENUM.VERIFY_SOURCE]
   } else if (selector == function_verifyChallengeDest) {
     let verifyChallengeDest = getVerifyChallengeDestEntity(
       challengeManager, challengeId
@@ -414,10 +432,12 @@ export function handleChallengeInfoUpdatedEvent(
     verifyChallengeDest.verifiedTime0 = verifiedTime0
     verifyChallengeDest.verifiedTime1 = verifiedTime1
     verifyChallengeDest.verifiedDataHash0 = verifiedDataHash0
+    verifyChallengeDest.challengeNodeNumber = createChallenge.challengeNodeNumber
     verifyChallengeDest.msgSender = event.transaction.from.toHexString()
     verifyChallengeDest.latestUpdateHash = event.transaction.hash.toHexString()
     verifyChallengeDest.latestUpdateTimestamp = event.block.timestamp
     verifyChallengeDest.latestUpdateBlockNumber = event.block.number
+    challengeManager.challengeStatues = challengeStatues[challengeENUM.VERIFY_SOURCE]
   } else {
     log.error("challenge function selector mismatch: {}", [selector])
   }

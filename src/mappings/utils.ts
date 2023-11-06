@@ -34,37 +34,17 @@ export class entity {
         return entity
     }
 
-    static BytesSorting(_entity: Bytes[], id: Bytes): Bytes[] {
-        if (_entity == null) {
-            _entity = [id];
-        } else if (!_entity.includes(id)) {
-            _entity.push(id);
-            _entity.sort((a, b) => entity.compareBytes(b, a));
+    static addRelationBytes(
+        entity: Bytes[],
+        id: Bytes
+    ): Bytes[] {
+        if (entity == null) {
+            entity = [id];
+        } else if (!entity.includes(id)) {
+            entity = entity.concat([id]);
+            entity.sort((a, b) => b.toHexString().localeCompare(a.toHexString()));
         }
-        return _entity;
-    }
-
-    static compareBytes(a: Bytes, b: Bytes): i32 {
-        const lenA = a.length;
-        const lenB = b.length;
-        const minLength = lenA < lenB ? lenA : lenB;
-
-        for (let i: i32 = 0; i < minLength; i++) {
-            if (a[i] > b[i]) {
-                log.warning("{}>{}", [a[i].toString()])
-                return -1;
-            } else if (a[i] < b[i]) {
-                return 1;
-            }
-        }
-
-        if (lenA > lenB) {
-            return -1;
-        } else if (lenA < lenB) {
-            return 1;
-        }
-
-        return 0;
+        return entity;
     }
 
     static createBindID(

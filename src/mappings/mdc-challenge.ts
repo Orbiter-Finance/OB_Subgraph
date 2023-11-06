@@ -65,23 +65,26 @@ export function calChallengeNodeList(
     sourceChainId: BigInt,
     sourceTXBlockNumber: BigInt,
     sourceTxIndex: BigInt,
-): void {
+): Bytes {
     const challengeIdentstring: string =
         (padZeroToBytes(16, sourceTxTime.toHexString())) +
         (padZeroToBytes(16, sourceChainId.toHexString())).slice(2) +
         (padZeroToBytes(16, sourceTXBlockNumber.toHexString())).slice(2) +
         (padZeroToBytes(16, sourceTxIndex.toHexString())).slice(2);
     const challengeIdentNum = (Bytes.fromHexString(challengeIdentstring))
-    // log.info("new challengeIdentNum: {}", [challengeIdentNum.toHexString()])
     mdc.challengeNodeList = mdc.challengeNodeList.concat([challengeIdentNum])
-    // mdc.challengeNodeList = entity.BytesSorting(mdc.challengeNodeList, challengeIdentNum)
+    mdc.challengeNodeList = entity.addRelationBytes(mdc.challengeNodeList, challengeIdentNum)
     // debug fake list
-    // let fakeBytes: Array<Bytes> = [Bytes.fromHexString('0x00000000499602d2000000000000000500000000499602d200000000499602FF')]
-    // fakeBytes = entity.BytesSorting(fakeBytes, challengeIdentNum)
+    // let fakeBytes: Array<Bytes> = [
+    //     Bytes.fromHexString('0x00000000499602d2000000000000000500000000499602d200000000499602FF'),
+    //     Bytes.fromHexString('0x00000000499602d2000000000000000500000000499602d20000000049960200')]
+    // fakeBytes = entity.addRelationBytes(fakeBytes, challengeIdentNum)
 
     // for (let i = 0; i < fakeBytes.length; i++) {
     //     log.warning("fakeBytes{}: {}", [i.toString(), fakeBytes[i].toHexString()])
     // }
+
+    return challengeIdentNum;
 }
 
 export function getLiquidationEntity(

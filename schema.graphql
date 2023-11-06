@@ -21,8 +21,16 @@ interface ChallengeInfoUpdated {
   latestUpdateBlockNumber: BigInt!
 }
 
+enum ChallengeStatues {
+  CREATE
+  VERIFY_SOURCE
+  VERIFY_DEST
+  LIQUIDATION
+}
+
 type challengeManager @entity {
   id: ID! #challengeId
+  challengeStatues: ChallengeStatues!
   createChallenge: [createChallenge!]!
   verifyChallengeSource: verifyChallengeSource!
   verifyChallengeDest: verifyChallengeDest!
@@ -54,6 +62,7 @@ type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
+  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   challengeManager: challengeManager! @derivedFrom(field: "createChallenge")
 }
 
@@ -81,6 +90,7 @@ type verifyChallengeSource implements ChallengeInfoUpdated
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
+  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   challengeManager: challengeManager!
     @derivedFrom(field: "verifyChallengeSource")
 }
@@ -109,6 +119,7 @@ type verifyChallengeDest implements ChallengeInfoUpdated
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
+  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   challengeManager: challengeManager! @derivedFrom(field: "verifyChallengeDest")
 }
 
@@ -654,8 +665,8 @@ type MinChallengeRatioUpdated @entity(immutable: true) {
 
 type OwnershipTransferred @entity(immutable: true) {
   id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
+  previousOwner: Bytes # address
+  newOwner: Bytes # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
@@ -688,8 +699,8 @@ type ETHDeposit @entity(immutable: true) {
 
 type FeeManagerOwnershipTransferred @entity(immutable: true) {
   id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
+  previousOwner: Bytes # address
+  newOwner: Bytes # address
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
