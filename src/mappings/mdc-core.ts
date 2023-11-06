@@ -73,8 +73,6 @@ import {
 } from './config'
 import { rscRules } from "./rule-utils";
 import { calChallengeNodeList, getChallengeManagerEntity, getCreateChallenge, getLiquidationEntity, getVerifyChallengeDestEntity, getVerifyChallengeSourceEntity } from "./mdc-challenge";
-import { mockChallengeInput } from "../../tests/mdc-challenge.test";
-
 
 enum challengeENUM {
   CREATE = 0,
@@ -337,7 +335,7 @@ export function handleChallengeInfoUpdatedEvent(
 ): void {
   const inputdata = isProduction ?
     event.transaction.input :
-    mockChallengeInput
+    Bytes.fromHexString(functionCheckChallengeInput) as Bytes
   const selector: string = calldata.getSelector(inputdata).toHexString()
   let mdc = getMDCEntity(event.address, event)
   let challengeManager = getChallengeManagerEntity(mdc, challengeId)
