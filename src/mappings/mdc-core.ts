@@ -404,6 +404,7 @@ export function handleChallengeInfoUpdatedEvent(
     verifyChallengeSource.verifiedTime1 = verifiedTime1
     verifyChallengeSource.verifiedDataHash0 = verifiedDataHash0
     verifyChallengeSource.challengeNodeNumber = createChallenge.challengeNodeNumber
+    verifyChallengeSource.createChallenge = createChallenge.id
     verifyChallengeSource.msgSender = event.transaction.from.toHexString()
     verifyChallengeSource.latestUpdateHash = event.transaction.hash.toHexString()
     verifyChallengeSource.latestUpdateTimestamp = event.block.timestamp
@@ -415,6 +416,9 @@ export function handleChallengeInfoUpdatedEvent(
     )
     const challenger = decodeVerifyChallengeDest(inputdata)
     let createChallenge = getCreateChallenge(challengeManager, challenger)
+    let verifyChallengeSource = getVerifyChallengeSourceEntity(
+      challengeManager, challengeId
+    )
     verifyChallengeDest.sourceChainId = createChallenge.sourceChainId
     verifyChallengeDest.sourceTxFrom = sourceTxFrom
     verifyChallengeDest.sourceTxTime = sourceTxTime
@@ -431,6 +435,8 @@ export function handleChallengeInfoUpdatedEvent(
     verifyChallengeDest.verifiedTime1 = verifiedTime1
     verifyChallengeDest.verifiedDataHash0 = verifiedDataHash0
     verifyChallengeDest.challengeNodeNumber = createChallenge.challengeNodeNumber
+    verifyChallengeDest.createChallenge = createChallenge.id
+    verifyChallengeDest.verifyChallengeSource = verifyChallengeSource.id
     verifyChallengeDest.msgSender = event.transaction.from.toHexString()
     verifyChallengeDest.latestUpdateHash = event.transaction.hash.toHexString()
     verifyChallengeDest.latestUpdateTimestamp = event.block.timestamp

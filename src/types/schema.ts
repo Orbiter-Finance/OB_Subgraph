@@ -853,6 +853,19 @@ export class verifyChallengeSource extends Entity {
     this.set("challengeNodeNumber", Value.fromBytes(value));
   }
 
+  get createChallenge(): string {
+    let value = this.get("createChallenge");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set createChallenge(value: string) {
+    this.set("createChallenge", Value.fromString(value));
+  }
+
   get challengeManager(): challengeManagerLoader {
     return new challengeManagerLoader(
       "verifyChallengeSource",
@@ -1213,6 +1226,32 @@ export class verifyChallengeDest extends Entity {
 
   set challengeNodeNumber(value: Bytes) {
     this.set("challengeNodeNumber", Value.fromBytes(value));
+  }
+
+  get createChallenge(): string {
+    let value = this.get("createChallenge");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set createChallenge(value: string) {
+    this.set("createChallenge", Value.fromString(value));
+  }
+
+  get verifyChallengeSource(): string {
+    let value = this.get("verifyChallengeSource");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set verifyChallengeSource(value: string) {
+    this.set("verifyChallengeSource", Value.fromString(value));
   }
 
   get challengeManager(): challengeManagerLoader {

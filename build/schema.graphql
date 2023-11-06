@@ -92,6 +92,8 @@ type verifyChallengeSource implements ChallengeInfoUpdated
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
   challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
+  # Rel
+  createChallenge: createChallenge!
   challengeManager: challengeManager!
     @derivedFrom(field: "verifyChallengeSource")
 }
@@ -121,6 +123,9 @@ type verifyChallengeDest implements ChallengeInfoUpdated
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
   challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
+  # Rel
+  createChallenge: createChallenge!
+  verifyChallengeSource: verifyChallengeSource!
   challengeManager: challengeManager! @derivedFrom(field: "verifyChallengeDest")
 }
 
