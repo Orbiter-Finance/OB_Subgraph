@@ -36,6 +36,7 @@ type challengeManager @entity {
   verifyChallengeDest: verifyChallengeDest!
   liquidation: [liquidation!]!
   # Rel
+  owner: String! # address
   mdc: MDC! @derivedFrom(field: "challengeManager")
 }
 

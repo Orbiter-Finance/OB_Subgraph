@@ -29,6 +29,7 @@ export function getChallengeManagerEntity(
         manager.verifyChallengeSource = STRING_EMPTY
         manager.verifyChallengeDest = STRING_EMPTY
         manager.liquidation = []
+        manager.owner = mdc.owner
         mdc.challengeManager = entity.addRelation(
             mdc.challengeManager,
             challengeId)
@@ -72,7 +73,6 @@ export function calChallengeNodeList(
         (padZeroToBytes(16, sourceTXBlockNumber.toHexString())).slice(2) +
         (padZeroToBytes(16, sourceTxIndex.toHexString())).slice(2);
     const challengeIdentNum = (Bytes.fromHexString(challengeIdentstring))
-    mdc.challengeNodeList = mdc.challengeNodeList.concat([challengeIdentNum])
     mdc.challengeNodeList = entity.addRelationBytes(mdc.challengeNodeList, challengeIdentNum)
     // debug fake list
     // let fakeBytes: Array<Bytes> = [

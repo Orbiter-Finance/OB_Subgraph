@@ -119,6 +119,19 @@ export class challengeManager extends Entity {
     this.set("liquidation", Value.fromStringArray(value));
   }
 
+  get owner(): string {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
   get mdc(): MDCLoader {
     return new MDCLoader("challengeManager", this.get("id")!.toString(), "mdc");
   }

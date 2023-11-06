@@ -335,7 +335,7 @@ export function handleChallengeInfoUpdatedEvent(
 ): void {
   const inputdata = isProduction ?
     event.transaction.input :
-    Bytes.fromHexString(functionCheckChallengeInput) as Bytes
+    Bytes.fromHexString(functionrChallengeinput) as Bytes
   const selector: string = calldata.getSelector(inputdata).toHexString()
   let mdc = getMDCEntity(event.address, event)
   let challengeManager = getChallengeManagerEntity(mdc, challengeId)
