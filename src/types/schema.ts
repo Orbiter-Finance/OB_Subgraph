@@ -204,23 +204,6 @@ export class createChallenge extends Entity {
     this.set("sourceChainId", Value.fromBigInt(value));
   }
 
-  get sourceTxFrom(): BigInt | null {
-    let value = this.get("sourceTxFrom");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set sourceTxFrom(value: BigInt | null) {
-    if (!value) {
-      this.unset("sourceTxFrom");
-    } else {
-      this.set("sourceTxFrom", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
   get sourceTxTime(): BigInt {
     let value = this.get("sourceTxTime");
     if (!value || value.kind == ValueKind.NULL) {
@@ -258,23 +241,6 @@ export class createChallenge extends Entity {
 
   set freezeToken(value: string) {
     this.set("freezeToken", Value.fromString(value));
-  }
-
-  get challengeUserRatio(): BigInt | null {
-    let value = this.get("challengeUserRatio");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set challengeUserRatio(value: BigInt | null) {
-    if (!value) {
-      this.unset("challengeUserRatio");
-    } else {
-      this.set("challengeUserRatio", Value.fromBigInt(<BigInt>value));
-    }
   }
 
   get freezeAmount0(): BigInt {
@@ -316,23 +282,6 @@ export class createChallenge extends Entity {
     this.set("challengeTime", Value.fromBigInt(value));
   }
 
-  get abortTime(): BigInt | null {
-    let value = this.get("abortTime");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set abortTime(value: BigInt | null) {
-    if (!value) {
-      this.unset("abortTime");
-    } else {
-      this.set("abortTime", Value.fromBigInt(<BigInt>value));
-    }
-  }
-
   get sourceTxBlockNum(): BigInt {
     let value = this.get("sourceTxBlockNum");
     if (!value || value.kind == ValueKind.NULL) {
@@ -370,6 +319,53 @@ export class createChallenge extends Entity {
 
   set challengerVerifyTransactionFee(value: BigInt) {
     this.set("challengerVerifyTransactionFee", Value.fromBigInt(value));
+  }
+
+  get challengeNodeNumber(): Bytes {
+    let value = this.get("challengeNodeNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set challengeNodeNumber(value: Bytes) {
+    this.set("challengeNodeNumber", Value.fromBytes(value));
+  }
+
+  get sourceTxFrom(): BigInt | null {
+    let value = this.get("sourceTxFrom");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set sourceTxFrom(value: BigInt | null) {
+    if (!value) {
+      this.unset("sourceTxFrom");
+    } else {
+      this.set("sourceTxFrom", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get challengeUserRatio(): BigInt | null {
+    let value = this.get("challengeUserRatio");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set challengeUserRatio(value: BigInt | null) {
+    if (!value) {
+      this.unset("challengeUserRatio");
+    } else {
+      this.set("challengeUserRatio", Value.fromBigInt(<BigInt>value));
+    }
   }
 
   get verifiedTime0(): BigInt | null {
@@ -423,6 +419,23 @@ export class createChallenge extends Entity {
     }
   }
 
+  get abortTime(): BigInt | null {
+    let value = this.get("abortTime");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set abortTime(value: BigInt | null) {
+    if (!value) {
+      this.unset("abortTime");
+    } else {
+      this.set("abortTime", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
   get msgSender(): string {
     let value = this.get("msgSender");
     if (!value || value.kind == ValueKind.NULL) {
@@ -473,19 +486,6 @@ export class createChallenge extends Entity {
 
   set latestUpdateBlockNumber(value: BigInt) {
     this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
-  }
-
-  get challengeNodeNumber(): Bytes {
-    let value = this.get("challengeNodeNumber");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBytes();
-    }
-  }
-
-  set challengeNodeNumber(value: Bytes) {
-    this.set("challengeNodeNumber", Value.fromBytes(value));
   }
 
   get challengeManager(): challengeManagerLoader {

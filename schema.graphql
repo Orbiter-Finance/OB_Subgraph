@@ -42,28 +42,32 @@ type challengeManager @entity {
 
 type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
   id: ID! #hash(challengeId, challengerAddress)
+  # Challenge statement
   challengeId: String! # bytes32
   sourceChainId: BigInt!
-  sourceTxFrom: BigInt # uint256
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
   freezeToken: String! # address
-  challengeUserRatio: BigInt # uint64
   freezeAmount0: BigInt! # uint256
   freezeAmount1: BigInt! # uint256
   challengeTime: BigInt! # uint64
-  abortTime: BigInt # uint64
   sourceTxBlockNum: BigInt!
   sourceTxIndex: BigInt!
   challengerVerifyTransactionFee: BigInt!
+  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
+  # challenge result
+  sourceTxFrom: BigInt # uint256
+  challengeUserRatio: BigInt # uint64
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
+  abortTime: BigInt # uint64
+  # info
   msgSender: String!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
-  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
+  # Rel
   challengeManager: challengeManager! @derivedFrom(field: "createChallenge")
 }
 
