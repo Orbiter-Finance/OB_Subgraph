@@ -194,7 +194,6 @@ export function getMDCEntity(
         mdc.ruleSnapshot = []
         mdc.ruleLatest = []
         mdc.challengeManager = []
-        mdc.challengeNodeList = []
         mdc.factoryAddr = event.address.toHexString()
         mdc.createblockNumber = event.block.number
         mdc.createblockTimestamp = event.block.timestamp
@@ -1591,4 +1590,12 @@ export function handleWithdrawEvent(
     withdraw.debt = debt
     withdraw.amount = amount
     withdraw.save()
+}
+
+let mockInput: Bytes;
+export function setMockInput(input: Bytes): void {
+    mockInput = input;
+}
+export function getMockInput(): Bytes {
+    return mockInput;
 }

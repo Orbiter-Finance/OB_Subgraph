@@ -26,8 +26,8 @@ export function getChallengeManagerEntity(
             challengeId
         )
         manager.createChallenge = []
-        manager.verifyChallengeSource = STRING_EMPTY
-        manager.verifyChallengeDest = STRING_EMPTY
+        manager.verifyChallengeSource = ""
+        manager.verifyChallengeDest = ""
         manager.liquidation = []
         manager.owner = mdc.owner
         mdc.challengeManager = entity.addRelation(
@@ -60,31 +60,16 @@ export function getCreateChallenge(
 }
 
 export function calChallengeNodeList(
-    mdc: MDC,
-    event: ethereum.Event,
     sourceTxTime: BigInt,
     sourceChainId: BigInt,
     sourceTXBlockNumber: BigInt,
     sourceTxIndex: BigInt,
 ): Bytes {
-    const challengeIdentstring: string =
+    return (Bytes.fromHexString(
         (padZeroToBytes(16, sourceTxTime.toHexString())) +
         (padZeroToBytes(16, sourceChainId.toHexString())).slice(2) +
         (padZeroToBytes(16, sourceTXBlockNumber.toHexString())).slice(2) +
-        (padZeroToBytes(16, sourceTxIndex.toHexString())).slice(2);
-    const challengeIdentNum = (Bytes.fromHexString(challengeIdentstring))
-    mdc.challengeNodeList = entity.addRelationBytes(mdc.challengeNodeList, challengeIdentNum)
-    // debug fake list
-    // let fakeBytes: Array<Bytes> = [
-    //     Bytes.fromHexString('0x00000000499602d2000000000000000500000000499602d200000000499602FF'),
-    //     Bytes.fromHexString('0x00000000499602d2000000000000000500000000499602d20000000049960200')]
-    // fakeBytes = entity.addRelationBytes(fakeBytes, challengeIdentNum)
-
-    // for (let i = 0; i < fakeBytes.length; i++) {
-    //     log.warning("fakeBytes{}: {}", [i.toString(), fakeBytes[i].toHexString()])
-    // }
-
-    return challengeIdentNum;
+        (padZeroToBytes(16, sourceTxIndex.toHexString())).slice(2)))
 }
 
 export function getLiquidationEntity(
@@ -98,7 +83,6 @@ export function getLiquidationEntity(
         _liquidation.challengeId = challengeId
         _liquidation.liquidators = event.transaction.from.toHexString()
         _liquidation.latestUpdateBlockNumber = event.block.number
-        _liquidation.latestUpdateTimestamp = event.block.timestamp
         _liquidation.latestUpdateHash = event.transaction.hash.toHexString()
         log.info("Liquidation! challengeId: {}, challenger: {}, liquidators: {}", [challengeId, challenger, event.transaction.from.toHexString()])
     }

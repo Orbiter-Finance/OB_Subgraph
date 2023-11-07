@@ -53,7 +53,6 @@ type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
   challengeTime: BigInt! # uint64
   sourceTxBlockNum: BigInt!
   sourceTxIndex: BigInt!
-  challengerVerifyTransactionFee: BigInt!
   challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   # challenge result
   sourceTxFrom: BigInt # uint256
@@ -62,7 +61,9 @@ type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
   abortTime: BigInt # uint64
+  winner: String # address
   # info
+  challengerVerifyTransactionFee: BigInt!
   msgSender: String!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
@@ -74,28 +75,32 @@ type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
 type verifyChallengeSource implements ChallengeInfoUpdated
   @entity(immutable: true) {
   id: ID! #challengeId
+  # Challenge statement
   challengeId: String! # bytes32
   sourceChainId: BigInt!
-  sourceTxFrom: BigInt # uint256
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
   freezeToken: String! # address
-  challengeUserRatio: BigInt # uint64
   freezeAmount0: BigInt! # uint256
   freezeAmount1: BigInt! # uint256
   challengeTime: BigInt! # uint64
-  abortTime: BigInt # uint64
   sourceTxBlockNum: BigInt!
   sourceTxIndex: BigInt!
-  challengerVerifyTransactionFee: BigInt!
+  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
+  # challenge result
+  sourceTxFrom: BigInt # uint256
+  challengeUserRatio: BigInt # uint64
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
+  abortTime: BigInt # uint64
+  winner: String # address
+  # info
+  challengerVerifyTransactionFee: BigInt!
   msgSender: String!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
-  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   # Rel
   createChallenge: createChallenge!
   challengeManager: challengeManager!
@@ -105,28 +110,32 @@ type verifyChallengeSource implements ChallengeInfoUpdated
 type verifyChallengeDest implements ChallengeInfoUpdated
   @entity(immutable: true) {
   id: ID! #challengeId
+  # Challenge statement
   challengeId: String! # bytes32
   sourceChainId: BigInt!
-  sourceTxFrom: BigInt # uint256
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
   freezeToken: String! # address
-  challengeUserRatio: BigInt # uint64
   freezeAmount0: BigInt! # uint256
   freezeAmount1: BigInt! # uint256
   challengeTime: BigInt! # uint64
-  abortTime: BigInt # uint64
   sourceTxBlockNum: BigInt!
   sourceTxIndex: BigInt!
-  challengerVerifyTransactionFee: BigInt!
+  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
+  # challenge result
+  sourceTxFrom: BigInt # uint256
+  challengeUserRatio: BigInt # uint64
   verifiedTime0: BigInt # uint64
   verifiedTime1: BigInt # uint64
   verifiedDataHash0: String
+  abortTime: BigInt # uint64
+  winner: String # address
+  # info
+  challengerVerifyTransactionFee: BigInt!
   msgSender: String!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
-  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   # Rel
   createChallenge: createChallenge!
   verifyChallengeSource: verifyChallengeSource!
@@ -137,8 +146,9 @@ type liquidation @entity(immutable: true) {
   id: ID! #challenger
   challengeId: String!
   liquidators: String!
+  abortTime: BigInt!
+
   latestUpdateHash: String!
-  latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
   challengeManager: challengeManager! @derivedFrom(field: "liquidation")
 }
@@ -184,7 +194,6 @@ type MDC @entity {
   columnArrayUpdated: [ColumnArrayUpdated!]! # ColumnArrayUpdated
   mapping: MDCMapping # dealer/ebc/chainId mapping
   challengeManager: [challengeManager!]!
-  challengeNodeList: [Bytes!]! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   factory: [FactoryManager!]! @derivedFrom(field: "mdcs")
   ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
   dealer: [Dealer!]! @derivedFrom(field: "mdcs") # Dealer

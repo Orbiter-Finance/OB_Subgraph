@@ -43,7 +43,8 @@ import {
   function_verifyChallengeDest,
   decodeCheckChallenge,
   decodeVerifyChallengeSource,
-  decodeVerifyChallengeDest
+  decodeVerifyChallengeDest,
+  getMockInput
 } from "./helpers"
 import {
   FactoryManager, ebcRel
@@ -74,14 +75,14 @@ import {
 import { rscRules } from "./rule-utils";
 import { calChallengeNodeList, getChallengeManagerEntity, getCreateChallenge, getLiquidationEntity, getVerifyChallengeDestEntity, getVerifyChallengeSourceEntity } from "./mdc-challenge";
 
-enum challengeENUM {
+export enum challengeENUM {
   CREATE = 0,
   VERIFY_SOURCE = 1,
   VERIFY_DEST = 2,
   LIQUIDATION = 3
 }
 
-const challengeStatues: string[] = [
+export const challengeStatues: string[] = [
   "CREATE",
   "VERIFY_SOURCE",
   "VERIFY_DEST",
@@ -331,11 +332,11 @@ export function handleChallengeInfoUpdatedEvent(
   winner: string,
   verifiedTime0: BigInt,
   verifiedTime1: BigInt,
-  verifiedDataHash0: string
+  verifiedDataHash0: string,
 ): void {
   const inputdata = isProduction ?
     event.transaction.input :
-    Bytes.fromHexString(functionrChallengeinput) as Bytes
+    getMockInput() as Bytes
   const selector: string = calldata.getSelector(inputdata).toHexString()
   let mdc = getMDCEntity(event.address, event)
   let challengeManager = getChallengeManagerEntity(mdc, challengeId)
@@ -360,8 +361,6 @@ export function handleChallengeInfoUpdatedEvent(
     createChallenge.latestUpdateTimestamp = event.block.timestamp
     createChallenge.latestUpdateBlockNumber = event.block.number
     createChallenge.challengeNodeNumber = calChallengeNodeList(
-      mdc,
-      event,
       sourceTxTime,
       sourceChainId,
       sourceTXBlockNumber,
@@ -378,6 +377,7 @@ export function handleChallengeInfoUpdatedEvent(
         challengeId,
         event)
       challengeManager.liquidation = entity.addRelation(challengeManager.liquidation, challengerArray[i])
+      liquidation.abortTime = abortTime
       liquidation.save()
     }
     challengeManager.challengeStatues = challengeStatues[challengeENUM.LIQUIDATION]
@@ -405,6 +405,7 @@ export function handleChallengeInfoUpdatedEvent(
     verifyChallengeSource.verifiedDataHash0 = verifiedDataHash0
     verifyChallengeSource.challengeNodeNumber = createChallenge.challengeNodeNumber
     verifyChallengeSource.createChallenge = createChallenge.id
+    verifyChallengeSource.winner = winner
     verifyChallengeSource.msgSender = event.transaction.from.toHexString()
     verifyChallengeSource.latestUpdateHash = event.transaction.hash.toHexString()
     verifyChallengeSource.latestUpdateTimestamp = event.block.timestamp
@@ -441,7 +442,7 @@ export function handleChallengeInfoUpdatedEvent(
     verifyChallengeDest.latestUpdateHash = event.transaction.hash.toHexString()
     verifyChallengeDest.latestUpdateTimestamp = event.block.timestamp
     verifyChallengeDest.latestUpdateBlockNumber = event.block.number
-    challengeManager.challengeStatues = challengeStatues[challengeENUM.VERIFY_SOURCE]
+    challengeManager.challengeStatues = challengeStatues[challengeENUM.VERIFY_DEST]
   } else {
     log.error("challenge function selector mismatch: {}", [selector])
   }

@@ -1,3 +1,4 @@
+import { Bytes } from "@graphprotocol/graph-ts"
 import {
   ChallengeInfoUpdated as ChallengeInfoUpdatedEvent,
   ColumnArrayUpdated as ColumnArrayUpdatedEvent,
@@ -13,6 +14,7 @@ import {
   handleupdateRulesRootEvent
 } from "./mdc-core"
 import { padZeroToAddress } from "./utils"
+import { isProduction } from "./config"
 
 export function handleChallengeInfoUpdated(
   event: ChallengeInfoUpdatedEvent
@@ -34,7 +36,7 @@ export function handleChallengeInfoUpdated(
     event.params.result.winner.toHexString(),
     event.params.result.verifiedTime0,
     event.params.result.verifiedTime1,
-    event.params.result.verifiedDataHash0.toHexString()
+    event.params.result.verifiedDataHash0.toHexString(),
   )
 }
 
