@@ -366,8 +366,8 @@ export function handleChallengeInfoUpdatedEvent(
       sourceTXBlockNumber,
       sourceTxIndex
     )
-    createChallenge.save()
     challengeManager.challengeStatues = challengeStatues[challengeENUM.CREATE]
+    createChallenge.save()
   } else if (selector == function_checkChallenge) {
     log.debug("trigger checkChallenge(), selector: {}", [selector]);
     const challengerArray: string[] = decodeCheckChallenge(inputdata)
@@ -411,6 +411,7 @@ export function handleChallengeInfoUpdatedEvent(
     verifyChallengeSource.latestUpdateTimestamp = event.block.timestamp
     verifyChallengeSource.latestUpdateBlockNumber = event.block.number
     challengeManager.challengeStatues = challengeStatues[challengeENUM.VERIFY_SOURCE]
+    verifyChallengeSource.save()
   } else if (selector == function_verifyChallengeDest) {
     let verifyChallengeDest = getVerifyChallengeDestEntity(
       challengeManager, challengeId
@@ -443,6 +444,7 @@ export function handleChallengeInfoUpdatedEvent(
     verifyChallengeDest.latestUpdateTimestamp = event.block.timestamp
     verifyChallengeDest.latestUpdateBlockNumber = event.block.number
     challengeManager.challengeStatues = challengeStatues[challengeENUM.VERIFY_DEST]
+    verifyChallengeDest.save()
   } else {
     log.error("challenge function selector mismatch: {}", [selector])
   }
