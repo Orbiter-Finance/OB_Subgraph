@@ -119,6 +119,45 @@ export class challengeManager extends Entity {
     this.set("liquidation", Value.fromStringArray(value));
   }
 
+  get latestUpdateHash(): string {
+    let value = this.get("latestUpdateHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set latestUpdateHash(value: string) {
+    this.set("latestUpdateHash", Value.fromString(value));
+  }
+
+  get latestUpdateTimestamp(): BigInt {
+    let value = this.get("latestUpdateTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestUpdateTimestamp(value: BigInt) {
+    this.set("latestUpdateTimestamp", Value.fromBigInt(value));
+  }
+
+  get latestUpdateBlockNumber(): BigInt {
+    let value = this.get("latestUpdateBlockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestUpdateBlockNumber(value: BigInt) {
+    this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
+  }
+
   get owner(): string {
     let value = this.get("owner");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1429,6 +1468,149 @@ export class liquidation extends Entity {
   }
 }
 
+export class WithdrawRequested extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save WithdrawRequested entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type WithdrawRequested must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("WithdrawRequested", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): WithdrawRequested | null {
+    return changetype<WithdrawRequested | null>(
+      store.get_in_block("WithdrawRequested", id)
+    );
+  }
+
+  static load(id: string): WithdrawRequested | null {
+    return changetype<WithdrawRequested | null>(
+      store.get("WithdrawRequested", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get owner(): string {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
+  get requestAmount(): BigInt {
+    let value = this.get("requestAmount");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set requestAmount(value: BigInt) {
+    this.set("requestAmount", Value.fromBigInt(value));
+  }
+
+  get minWithdrawTimestamp(): BigInt {
+    let value = this.get("minWithdrawTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set minWithdrawTimestamp(value: BigInt) {
+    this.set("minWithdrawTimestamp", Value.fromBigInt(value));
+  }
+
+  get requestToken(): string {
+    let value = this.get("requestToken");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set requestToken(value: string) {
+    this.set("requestToken", Value.fromString(value));
+  }
+
+  get latestUpdateHash(): string {
+    let value = this.get("latestUpdateHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set latestUpdateHash(value: string) {
+    this.set("latestUpdateHash", Value.fromString(value));
+  }
+
+  get latestUpdateTimestamp(): BigInt {
+    let value = this.get("latestUpdateTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestUpdateTimestamp(value: BigInt) {
+    this.set("latestUpdateTimestamp", Value.fromBigInt(value));
+  }
+
+  get latestUpdateBlockNumber(): BigInt {
+    let value = this.get("latestUpdateBlockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestUpdateBlockNumber(value: BigInt) {
+    this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
+  }
+
+  get mdc(): MDCLoader {
+    return new MDCLoader(
+      "WithdrawRequested",
+      this.get("id")!.toString(),
+      "mdc"
+    );
+  }
+}
+
 export class ColumnArrayUpdated extends Entity {
   constructor(id: string) {
     super();
@@ -1976,6 +2158,19 @@ export class MDC extends Entity {
       this.get("id")!.toString(),
       "responseMaker"
     );
+  }
+
+  get withdrawRequested(): Array<string> {
+    let value = this.get("withdrawRequested");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set withdrawRequested(value: Array<string>) {
+    this.set("withdrawRequested", Value.fromStringArray(value));
   }
 
   get createblockNumber(): BigInt {

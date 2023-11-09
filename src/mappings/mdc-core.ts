@@ -47,7 +47,9 @@ import {
   getMockInput
 } from "./helpers"
 import {
-  FactoryManager, ebcRel
+  FactoryManager,
+  WithdrawRequested,
+  ebcRel
 } from "../types/schema";
 import {
   funcETHRootMockInput,
@@ -452,3 +454,28 @@ export function handleChallengeInfoUpdatedEvent(
   challengeManager.save()
   mdc.save()
 }
+
+export function handleWithdrawRequestedEvent(
+  event: ethereum.Event,
+  requestAmount: BigInt,
+  minWithdrawTimestamp: BigInt,
+  requestToken: string
+): void {
+  let Id = entity.createHashEventID(event)
+  let withdrawEntity = new WithdrawRequested(Id)
+  if (withdrawEntity == null) {
+    withdrawEntity = new WithdrawRequested(Id)
+  }
+  withdrawEntity.requestAmount = requestAmount
+  withdrawEntity.minWithdrawTimestamp = minWithdrawTimestamp
+  withdrawEntity.requestToken = requestToken
+  let mdc = getMDCEntity(event.address, event)
+  withdrawEntity.owner = mdc.owner
+  mdc.withdrawRequested = entity.addRelation(mdc.withdrawRequested, Id)
+  withdrawEntity.latestUpdateHash = event.transaction.hash.toHexString()
+  withdrawEntity.latestUpdateTimestamp = event.block.timestamp
+  withdrawEntity.latestUpdateBlockNumber = event.block.number
+  withdrawEntity.save()
+  mdc.save()
+}
+

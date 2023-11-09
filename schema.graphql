@@ -35,6 +35,10 @@ type challengeManager @entity {
   verifyChallengeSource: verifyChallengeSource!
   verifyChallengeDest: verifyChallengeDest!
   liquidation: [liquidation!]!
+  # tx info
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
   # Rel
   owner: String! # address
   mdc: MDC! @derivedFrom(field: "challengeManager")
@@ -153,6 +157,19 @@ type liquidation @entity(immutable: true) {
   challengeManager: challengeManager! @derivedFrom(field: "liquidation")
 }
 
+type WithdrawRequested @entity(immutable: true) {
+  id: ID! # log-index
+  owner: String!
+  requestAmount: BigInt! # uint256
+  minWithdrawTimestamp: BigInt! # uint64
+  requestToken: String! # address
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
+  # Rel
+  mdc: MDC! @derivedFrom(field: "withdrawRequested") # MDC
+}
+
 # using entity, binding in contract Event
 type ColumnArrayUpdated @entity(immutable: true) {
   id: ID!
@@ -198,6 +215,7 @@ type MDC @entity {
   ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
   dealer: [Dealer!]! @derivedFrom(field: "mdcs") # Dealer
   responseMaker: [responseMaker!]! @derivedFrom(field: "mdcs") # responseMaker
+  withdrawRequested: [WithdrawRequested!]!
   createblockNumber: BigInt!
   createblockTimestamp: BigInt!
   createtransactionHash: String!

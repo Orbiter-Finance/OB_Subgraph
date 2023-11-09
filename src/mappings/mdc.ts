@@ -4,17 +4,17 @@ import {
   ColumnArrayUpdated as ColumnArrayUpdatedEvent,
   ResponseMakersUpdated as ResponseMakersUpdatedEvent,
   RulesRootUpdated as RulesRootUpdatedEvent,
-  SpvUpdated as SpvUpdatedEvent
+  SpvUpdated as SpvUpdatedEvent,
+  WithdrawRequested as WithdrawRequestedEvent
 } from "../types/templates/MDC/MDC"
 import {
   handleChallengeInfoUpdatedEvent,
   handleColumnArrayUpdatedEvent,
   handleResponseMakersUpdatedEvent,
   handleSpvUpdatedEvent,
+  handleWithdrawRequestedEvent,
   handleupdateRulesRootEvent
 } from "./mdc-core"
-import { padZeroToAddress } from "./utils"
-import { isProduction } from "./config"
 
 export function handleChallengeInfoUpdated(
   event: ChallengeInfoUpdatedEvent
@@ -78,4 +78,14 @@ export function handleSpvUpdated(event: SpvUpdatedEvent): void {
     event.params.chainId,
     event.params.spv
   )
+}
+
+export function handleWithdrawRequested(event: WithdrawRequestedEvent): void {
+  handleWithdrawRequestedEvent(
+    event,
+    event.params.requestAmount,
+    event.params.requestTimestamp,
+    event.params.requestToken.toHexString()
+  )
+
 }
