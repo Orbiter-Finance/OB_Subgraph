@@ -194,6 +194,7 @@ export function getMDCEntity(
         mdc.ruleSnapshot = []
         mdc.ruleLatest = []
         mdc.challengeManager = []
+        mdc.withdrawRequested = []
         mdc.factoryAddr = event.address.toHexString()
         mdc.createblockNumber = event.block.number
         mdc.createblockTimestamp = event.block.timestamp

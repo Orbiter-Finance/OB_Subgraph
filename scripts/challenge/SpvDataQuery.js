@@ -3,17 +3,16 @@ const fs = require('fs');
 
 const dataArray = [];
 
-//https://api.studio.thegraph.com/query/49058/obcabin/v0.0.30
-axios.post('https://api.studio.thegraph.com/query/49058/obcabin/version/latest',{
+axios.post('https://api.studio.thegraph.com/query/49058/cabin/version/latest',{
     query: `
     {
-      historyBlockSaveds {
+      historyBlocksRootSaveds {
         id
-        blockHash
+        blocksRoot
       }
     }`
 }).then((result) => {
-    for (const resultGet of result.data.data.historyBlockSaveds) {
+    for (const resultGet of result.data.data.historyBlocksRootSaveds) {
         console.log(resultGet);
         dataArray.push(resultGet);
     }

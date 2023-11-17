@@ -137,8 +137,10 @@ dataSources:
       eventHandlers:
         - event: BlockIntervalUpdated(uint64)
           handler: handleBlockIntervalUpdated
-        - event: HistoryBlockSaved(indexed uint256,bytes32)
-          handler: handleHistoryBlockSaved
+        - event: HistoryBlocksRootSaved(indexed uint256,bytes32,uint256)
+          handler: handleHistoryBlocksRootSaved
+        - event: InjectOwnerUpdated(address)
+          handler: handleInjectOwnerUpdated
       file: ./src/mappings/spv-data.ts      
 templates:
   - kind: ethereum

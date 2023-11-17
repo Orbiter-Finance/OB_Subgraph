@@ -8305,8 +8305,8 @@ export class BlockIntervalUpdated extends Entity {
     this.set("blockInterval", Value.fromBigInt(value));
   }
 
-  get blockNumber(): BigInt {
-    let value = this.get("blockNumber");
+  get latestUpdateBlockNumber(): BigInt {
+    let value = this.get("latestUpdateBlockNumber");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -8314,12 +8314,12 @@ export class BlockIntervalUpdated extends Entity {
     }
   }
 
-  set blockNumber(value: BigInt) {
-    this.set("blockNumber", Value.fromBigInt(value));
+  set latestUpdateBlockNumber(value: BigInt) {
+    this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
   }
 
-  get blockTimestamp(): BigInt {
-    let value = this.get("blockTimestamp");
+  get latestUpdateTimestamp(): BigInt {
+    let value = this.get("latestUpdateTimestamp");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -8327,12 +8327,12 @@ export class BlockIntervalUpdated extends Entity {
     }
   }
 
-  set blockTimestamp(value: BigInt) {
-    this.set("blockTimestamp", Value.fromBigInt(value));
+  set latestUpdateTimestamp(value: BigInt) {
+    this.set("latestUpdateTimestamp", Value.fromBigInt(value));
   }
 
-  get transactionHash(): string {
-    let value = this.get("transactionHash");
+  get latestUpdateHash(): string {
+    let value = this.get("latestUpdateHash");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -8340,12 +8340,12 @@ export class BlockIntervalUpdated extends Entity {
     }
   }
 
-  set transactionHash(value: string) {
-    this.set("transactionHash", Value.fromString(value));
+  set latestUpdateHash(value: string) {
+    this.set("latestUpdateHash", Value.fromString(value));
   }
 }
 
-export class HistoryBlockSaved extends Entity {
+export class HistoryBlocksRootSaved extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -8353,25 +8353,28 @@ export class HistoryBlockSaved extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save HistoryBlockSaved entity without an ID");
+    assert(
+      id != null,
+      "Cannot save HistoryBlocksRootSaved entity without an ID"
+    );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type HistoryBlockSaved must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type HistoryBlocksRootSaved must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("HistoryBlockSaved", id.toString(), this);
+      store.set("HistoryBlocksRootSaved", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): HistoryBlockSaved | null {
-    return changetype<HistoryBlockSaved | null>(
-      store.get_in_block("HistoryBlockSaved", id)
+  static loadInBlock(id: string): HistoryBlocksRootSaved | null {
+    return changetype<HistoryBlocksRootSaved | null>(
+      store.get_in_block("HistoryBlocksRootSaved", id)
     );
   }
 
-  static load(id: string): HistoryBlockSaved | null {
-    return changetype<HistoryBlockSaved | null>(
-      store.get("HistoryBlockSaved", id)
+  static load(id: string): HistoryBlocksRootSaved | null {
+    return changetype<HistoryBlocksRootSaved | null>(
+      store.get("HistoryBlocksRootSaved", id)
     );
   }
 
@@ -8388,8 +8391,8 @@ export class HistoryBlockSaved extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get blockHash(): string {
-    let value = this.get("blockHash");
+  get blocksRoot(): string {
+    let value = this.get("blocksRoot");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -8397,8 +8400,117 @@ export class HistoryBlockSaved extends Entity {
     }
   }
 
-  set blockHash(value: string) {
-    this.set("blockHash", Value.fromString(value));
+  set blocksRoot(value: string) {
+    this.set("blocksRoot", Value.fromString(value));
+  }
+
+  get blockInterval(): BigInt {
+    let value = this.get("blockInterval");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set blockInterval(value: BigInt) {
+    this.set("blockInterval", Value.fromBigInt(value));
+  }
+
+  get latestUpdateBlockNumber(): BigInt {
+    let value = this.get("latestUpdateBlockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestUpdateBlockNumber(value: BigInt) {
+    this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
+  }
+
+  get latestUpdateTimestamp(): BigInt {
+    let value = this.get("latestUpdateTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestUpdateTimestamp(value: BigInt) {
+    this.set("latestUpdateTimestamp", Value.fromBigInt(value));
+  }
+
+  get latestUpdateHash(): string {
+    let value = this.get("latestUpdateHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set latestUpdateHash(value: string) {
+    this.set("latestUpdateHash", Value.fromString(value));
+  }
+}
+
+export class InjectOwnerUpdated extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save InjectOwnerUpdated entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type InjectOwnerUpdated must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("InjectOwnerUpdated", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): InjectOwnerUpdated | null {
+    return changetype<InjectOwnerUpdated | null>(
+      store.get_in_block("InjectOwnerUpdated", id)
+    );
+  }
+
+  static load(id: string): InjectOwnerUpdated | null {
+    return changetype<InjectOwnerUpdated | null>(
+      store.get("InjectOwnerUpdated", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get injectOwner(): Bytes {
+    let value = this.get("injectOwner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set injectOwner(value: Bytes) {
+    this.set("injectOwner", Value.fromBytes(value));
   }
 
   get latestUpdateBlockNumber(): BigInt {

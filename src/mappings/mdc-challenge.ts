@@ -16,7 +16,8 @@ import { BigInt, Bytes, ethereum } from "@graphprotocol/graph-ts"
 
 export function getChallengeManagerEntity(
     mdc: MDC,
-    challengeId: string
+    challengeId: string,
+    event: ethereum.Event
 ): challengeManager {
     let manager = challengeManager.load(
         challengeId
@@ -34,6 +35,9 @@ export function getChallengeManagerEntity(
             mdc.challengeManager,
             challengeId)
     }
+    manager.latestUpdateHash = event.transaction.hash.toHexString()
+    manager.latestUpdateBlockNumber = event.block.number
+    manager.latestUpdateTimestamp = event.block.timestamp
     return manager as challengeManager
 }
 

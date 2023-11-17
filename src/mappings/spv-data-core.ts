@@ -1,28 +1,30 @@
 import { BigInt, ethereum } from "@graphprotocol/graph-ts";
-import { HistoryBlockSaved } from "../types/schema";
+import { HistoryBlocksRootSaved } from "../types/schema";
 
 
 function getHistoryBlockSavedEntity(
     event: ethereum.Event,
     blockNumber: BigInt
-): HistoryBlockSaved {
+): HistoryBlocksRootSaved {
     const id = blockNumber.toString()
-    let entity = HistoryBlockSaved.load(id)
+    let entity = HistoryBlocksRootSaved.load(id)
     if (entity == null) {
-        entity = new HistoryBlockSaved(id)
+        entity = new HistoryBlocksRootSaved(id)
     }
     entity.latestUpdateBlockNumber = blockNumber
     entity.latestUpdateTimestamp = event.block.timestamp
     entity.latestUpdateHash = event.transaction.hash.toHexString()
-    return entity as HistoryBlockSaved
+    return entity as HistoryBlocksRootSaved
 }
 
-export function handleHistoryBlockSavedEvent(
+export function handleHistoryBlocksRootSavedEvent(
     event: ethereum.Event,
-    blockNumber: BigInt,
-    blockHash: string,
+    startBlockNumber: BigInt,
+    blocksRoot: string,
+    blockInterval: BigInt
 ): void {
-    let historyBlockSaved = getHistoryBlockSavedEntity(event, blockNumber)
-    historyBlockSaved.blockHash = blockHash
+    let historyBlockSaved = getHistoryBlockSavedEntity(event, startBlockNumber)
+    historyBlockSaved.blocksRoot = blocksRoot
+    historyBlockSaved.blockInterval = blockInterval
     historyBlockSaved.save()
 }

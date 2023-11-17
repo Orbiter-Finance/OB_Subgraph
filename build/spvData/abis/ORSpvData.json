@@ -29,41 +29,41 @@
       {
         "indexed": true,
         "internalType": "uint256",
-        "name": "blkNumber",
+        "name": "startBlockNumber",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "bytes32",
-        "name": "blockHash",
+        "name": "blocksRoot",
         "type": "bytes32"
-      }
-    ],
-    "name": "HistoryBlockSaved",
-    "type": "event"
-  },
-  {
-    "inputs": [
+      },
       {
+        "indexed": false,
         "internalType": "uint256",
-        "name": "blkNumber",
+        "name": "blockInterval",
         "type": "uint256"
       }
     ],
-    "name": "getBlockHash",
-    "outputs": [
+    "name": "HistoryBlocksRootSaved",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "",
-        "type": "bytes32"
+        "indexed": false,
+        "internalType": "address",
+        "name": "injectOwner",
+        "type": "address"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
+    "name": "InjectOwnerUpdated",
+    "type": "event"
   },
   {
     "inputs": [],
-    "name": "getBlockInterval",
+    "name": "blockInterval",
     "outputs": [
       {
         "internalType": "uint64",
@@ -80,38 +80,70 @@
         "internalType": "uint256",
         "name": "startBlockNumber",
         "type": "uint256"
+      }
+    ],
+    "name": "getBlocksRoot",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "blockNumber0",
+        "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "endBlockNumber",
+        "name": "blockNumber1",
         "type": "uint256"
       },
       {
         "components": [
           {
             "internalType": "uint256",
-            "name": "blkNumber",
+            "name": "startBlockNumber",
             "type": "uint256"
           },
           {
             "internalType": "bytes32",
-            "name": "blockHash",
+            "name": "blocksRoot",
             "type": "bytes32"
           }
         ],
-        "internalType": "struct IORSpvData.InjectionBlock[]",
-        "name": "injectionBlocks",
+        "internalType": "struct IORSpvData.InjectionBlocksRoot[]",
+        "name": "injectionBlocksRoots",
         "type": "tuple[]"
       }
     ],
-    "name": "injectBlocksByManager",
+    "name": "injectBlocksRoots",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
   {
     "inputs": [],
-    "name": "saveHistoryBlocks",
+    "name": "injectOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "saveHistoryBlocksRoots",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -120,11 +152,24 @@
     "inputs": [
       {
         "internalType": "uint64",
-        "name": "blockInterval",
+        "name": "blockInterval_",
         "type": "uint64"
       }
     ],
     "name": "updateBlockInterval",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "injectOwner_",
+        "type": "address"
+      }
+    ],
+    "name": "updateInjectOwner",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

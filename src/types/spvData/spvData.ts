@@ -28,25 +28,47 @@ export class BlockIntervalUpdated__Params {
   }
 }
 
-export class HistoryBlockSaved extends ethereum.Event {
-  get params(): HistoryBlockSaved__Params {
-    return new HistoryBlockSaved__Params(this);
+export class HistoryBlocksRootSaved extends ethereum.Event {
+  get params(): HistoryBlocksRootSaved__Params {
+    return new HistoryBlocksRootSaved__Params(this);
   }
 }
 
-export class HistoryBlockSaved__Params {
-  _event: HistoryBlockSaved;
+export class HistoryBlocksRootSaved__Params {
+  _event: HistoryBlocksRootSaved;
 
-  constructor(event: HistoryBlockSaved) {
+  constructor(event: HistoryBlocksRootSaved) {
     this._event = event;
   }
 
-  get blkNumber(): BigInt {
+  get startBlockNumber(): BigInt {
     return this._event.parameters[0].value.toBigInt();
   }
 
-  get blockHash(): Bytes {
+  get blocksRoot(): Bytes {
     return this._event.parameters[1].value.toBytes();
+  }
+
+  get blockInterval(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
+export class InjectOwnerUpdated extends ethereum.Event {
+  get params(): InjectOwnerUpdated__Params {
+    return new InjectOwnerUpdated__Params(this);
+  }
+}
+
+export class InjectOwnerUpdated__Params {
+  _event: InjectOwnerUpdated;
+
+  constructor(event: InjectOwnerUpdated) {
+    this._event = event;
+  }
+
+  get injectOwner(): Address {
+    return this._event.parameters[0].value.toAddress();
   }
 }
 
@@ -55,19 +77,36 @@ export class spvData extends ethereum.SmartContract {
     return new spvData("spvData", address);
   }
 
-  getBlockHash(blkNumber: BigInt): Bytes {
-    let result = super.call("getBlockHash", "getBlockHash(uint256):(bytes32)", [
-      ethereum.Value.fromUnsignedBigInt(blkNumber)
-    ]);
+  blockInterval(): BigInt {
+    let result = super.call("blockInterval", "blockInterval():(uint64)", []);
+
+    return result[0].toBigInt();
+  }
+
+  try_blockInterval(): ethereum.CallResult<BigInt> {
+    let result = super.tryCall("blockInterval", "blockInterval():(uint64)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBigInt());
+  }
+
+  getBlocksRoot(startBlockNumber: BigInt): Bytes {
+    let result = super.call(
+      "getBlocksRoot",
+      "getBlocksRoot(uint256):(bytes32)",
+      [ethereum.Value.fromUnsignedBigInt(startBlockNumber)]
+    );
 
     return result[0].toBytes();
   }
 
-  try_getBlockHash(blkNumber: BigInt): ethereum.CallResult<Bytes> {
+  try_getBlocksRoot(startBlockNumber: BigInt): ethereum.CallResult<Bytes> {
     let result = super.tryCall(
-      "getBlockHash",
-      "getBlockHash(uint256):(bytes32)",
-      [ethereum.Value.fromUnsignedBigInt(blkNumber)]
+      "getBlocksRoot",
+      "getBlocksRoot(uint256):(bytes32)",
+      [ethereum.Value.fromUnsignedBigInt(startBlockNumber)]
     );
     if (result.reverted) {
       return new ethereum.CallResult();
@@ -76,27 +115,19 @@ export class spvData extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBytes());
   }
 
-  getBlockInterval(): BigInt {
-    let result = super.call(
-      "getBlockInterval",
-      "getBlockInterval():(uint64)",
-      []
-    );
+  injectOwner(): Address {
+    let result = super.call("injectOwner", "injectOwner():(address)", []);
 
-    return result[0].toBigInt();
+    return result[0].toAddress();
   }
 
-  try_getBlockInterval(): ethereum.CallResult<BigInt> {
-    let result = super.tryCall(
-      "getBlockInterval",
-      "getBlockInterval():(uint64)",
-      []
-    );
+  try_injectOwner(): ethereum.CallResult<Address> {
+    let result = super.tryCall("injectOwner", "injectOwner():(address)", []);
     if (result.reverted) {
       return new ethereum.CallResult();
     }
     let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBigInt());
+    return ethereum.CallResult.fromValue(value[0].toAddress());
   }
 }
 
@@ -130,78 +161,80 @@ export class ConstructorCall__Outputs {
   }
 }
 
-export class InjectBlocksByManagerCall extends ethereum.Call {
-  get inputs(): InjectBlocksByManagerCall__Inputs {
-    return new InjectBlocksByManagerCall__Inputs(this);
+export class InjectBlocksRootsCall extends ethereum.Call {
+  get inputs(): InjectBlocksRootsCall__Inputs {
+    return new InjectBlocksRootsCall__Inputs(this);
   }
 
-  get outputs(): InjectBlocksByManagerCall__Outputs {
-    return new InjectBlocksByManagerCall__Outputs(this);
+  get outputs(): InjectBlocksRootsCall__Outputs {
+    return new InjectBlocksRootsCall__Outputs(this);
   }
 }
 
-export class InjectBlocksByManagerCall__Inputs {
-  _call: InjectBlocksByManagerCall;
+export class InjectBlocksRootsCall__Inputs {
+  _call: InjectBlocksRootsCall;
 
-  constructor(call: InjectBlocksByManagerCall) {
+  constructor(call: InjectBlocksRootsCall) {
     this._call = call;
   }
 
-  get startBlockNumber(): BigInt {
+  get blockNumber0(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 
-  get endBlockNumber(): BigInt {
+  get blockNumber1(): BigInt {
     return this._call.inputValues[1].value.toBigInt();
   }
 
-  get injectionBlocks(): Array<InjectBlocksByManagerCallInjectionBlocksStruct> {
+  get injectionBlocksRoots(): Array<
+    InjectBlocksRootsCallInjectionBlocksRootsStruct
+  > {
     return this._call.inputValues[2].value.toTupleArray<
-      InjectBlocksByManagerCallInjectionBlocksStruct
+      InjectBlocksRootsCallInjectionBlocksRootsStruct
     >();
   }
 }
 
-export class InjectBlocksByManagerCall__Outputs {
-  _call: InjectBlocksByManagerCall;
+export class InjectBlocksRootsCall__Outputs {
+  _call: InjectBlocksRootsCall;
 
-  constructor(call: InjectBlocksByManagerCall) {
+  constructor(call: InjectBlocksRootsCall) {
     this._call = call;
   }
 }
 
-export class InjectBlocksByManagerCallInjectionBlocksStruct extends ethereum.Tuple {
-  get blkNumber(): BigInt {
+export class InjectBlocksRootsCallInjectionBlocksRootsStruct extends ethereum.Tuple {
+  get startBlockNumber(): BigInt {
     return this[0].toBigInt();
   }
 
-  get blockHash(): Bytes {
+  get blocksRoot(): Bytes {
     return this[1].toBytes();
   }
 }
 
-export class SaveHistoryBlocksCall extends ethereum.Call {
-  get inputs(): SaveHistoryBlocksCall__Inputs {
-    return new SaveHistoryBlocksCall__Inputs(this);
+export class SaveHistoryBlocksRootsCall extends ethereum.Call {
+  get inputs(): SaveHistoryBlocksRootsCall__Inputs {
+    return new SaveHistoryBlocksRootsCall__Inputs(this);
   }
 
-  get outputs(): SaveHistoryBlocksCall__Outputs {
-    return new SaveHistoryBlocksCall__Outputs(this);
+  get outputs(): SaveHistoryBlocksRootsCall__Outputs {
+    return new SaveHistoryBlocksRootsCall__Outputs(this);
   }
 }
 
-export class SaveHistoryBlocksCall__Inputs {
-  _call: SaveHistoryBlocksCall;
+export class SaveHistoryBlocksRootsCall__Inputs {
+  _call: SaveHistoryBlocksRootsCall;
 
-  constructor(call: SaveHistoryBlocksCall) {
+  constructor(call: SaveHistoryBlocksRootsCall) {
     this._call = call;
   }
 }
 
-export class SaveHistoryBlocksCall__Outputs {
-  _call: SaveHistoryBlocksCall;
+export class SaveHistoryBlocksRootsCall__Outputs {
+  _call: SaveHistoryBlocksRootsCall;
 
-  constructor(call: SaveHistoryBlocksCall) {
+  constructor(call: SaveHistoryBlocksRootsCall) {
     this._call = call;
   }
 }
@@ -223,7 +256,7 @@ export class UpdateBlockIntervalCall__Inputs {
     this._call = call;
   }
 
-  get blockInterval(): BigInt {
+  get blockInterval_(): BigInt {
     return this._call.inputValues[0].value.toBigInt();
   }
 }
@@ -232,6 +265,36 @@ export class UpdateBlockIntervalCall__Outputs {
   _call: UpdateBlockIntervalCall;
 
   constructor(call: UpdateBlockIntervalCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateInjectOwnerCall extends ethereum.Call {
+  get inputs(): UpdateInjectOwnerCall__Inputs {
+    return new UpdateInjectOwnerCall__Inputs(this);
+  }
+
+  get outputs(): UpdateInjectOwnerCall__Outputs {
+    return new UpdateInjectOwnerCall__Outputs(this);
+  }
+}
+
+export class UpdateInjectOwnerCall__Inputs {
+  _call: UpdateInjectOwnerCall;
+
+  constructor(call: UpdateInjectOwnerCall) {
+    this._call = call;
+  }
+
+  get injectOwner_(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+}
+
+export class UpdateInjectOwnerCall__Outputs {
+  _call: UpdateInjectOwnerCall;
+
+  constructor(call: UpdateInjectOwnerCall) {
     this._call = call;
   }
 }

@@ -1,8 +1,9 @@
 import { newMockEvent } from "matchstick-as"
-import { ethereum, BigInt, Bytes } from "@graphprotocol/graph-ts"
+import { ethereum, BigInt, Bytes, Address } from "@graphprotocol/graph-ts"
 import {
   BlockIntervalUpdated,
-  HistoryBlockSaved
+  HistoryBlocksRootSaved,
+  InjectOwnerUpdated
 } from "../src/types/spvData/spvData"
 
 export function createBlockIntervalUpdatedEvent(
@@ -24,26 +25,52 @@ export function createBlockIntervalUpdatedEvent(
   return blockIntervalUpdatedEvent
 }
 
-export function createHistoryBlockSavedEvent(
-  blockNumber: BigInt,
-  blockHash: Bytes
-): HistoryBlockSaved {
-  let historyBlockSavedEvent = changetype<HistoryBlockSaved>(newMockEvent())
-
-  historyBlockSavedEvent.parameters = new Array()
-
-  historyBlockSavedEvent.parameters.push(
-    new ethereum.EventParam(
-      "blockNumber",
-      ethereum.Value.fromUnsignedBigInt(blockNumber)
-    )
-  )
-  historyBlockSavedEvent.parameters.push(
-    new ethereum.EventParam(
-      "blockHash",
-      ethereum.Value.fromFixedBytes(blockHash)
-    )
+export function createHistoryBlocksRootSavedEvent(
+  startBlockNumber: BigInt,
+  blocksRoot: Bytes,
+  blockInterval: BigInt
+): HistoryBlocksRootSaved {
+  let historyBlocksRootSavedEvent = changetype<HistoryBlocksRootSaved>(
+    newMockEvent()
   )
 
-  return historyBlockSavedEvent
+  historyBlocksRootSavedEvent.parameters = new Array()
+
+  historyBlocksRootSavedEvent.parameters.push(
+    new ethereum.EventParam(
+      "startBlockNumber",
+      ethereum.Value.fromUnsignedBigInt(startBlockNumber)
+    )
+  )
+  historyBlocksRootSavedEvent.parameters.push(
+    new ethereum.EventParam(
+      "blocksRoot",
+      ethereum.Value.fromFixedBytes(blocksRoot)
+    )
+  )
+  historyBlocksRootSavedEvent.parameters.push(
+    new ethereum.EventParam(
+      "blockInterval",
+      ethereum.Value.fromUnsignedBigInt(blockInterval)
+    )
+  )
+
+  return historyBlocksRootSavedEvent
+}
+
+export function createInjectOwnerUpdatedEvent(
+  injectOwner: Address
+): InjectOwnerUpdated {
+  let injectOwnerUpdatedEvent = changetype<InjectOwnerUpdated>(newMockEvent())
+
+  injectOwnerUpdatedEvent.parameters = new Array()
+
+  injectOwnerUpdatedEvent.parameters.push(
+    new ethereum.EventParam(
+      "injectOwner",
+      ethereum.Value.fromAddress(injectOwner)
+    )
+  )
+
+  return injectOwnerUpdatedEvent
 }

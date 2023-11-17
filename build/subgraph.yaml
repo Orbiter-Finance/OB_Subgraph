@@ -6,9 +6,9 @@ dataSources:
     name: MDCFactory
     network: goerli
     source:
-      address: "0xd8f380652a5BC21dbdB788a190FA0cfe0143894D"
+      address: "0x941A9F416480cFE7172949dEd6406Ba7C4F48A3E"
       abi: MDCFactory
-      startBlock: 9967600
+      startBlock: 10053182
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -26,9 +26,9 @@ dataSources:
     name: ORManager
     network: goerli
     source:
-      address: "0x4aa86B397D9A7242cc9F5576b13e830fBC6FfFb6"
+      address: "0x92e8cBe17130fbC876CF07C7E0E1d997a6489f72"
       abi: ORManager
-      startBlock: 9921600
+      startBlock: 10053005
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -79,9 +79,9 @@ dataSources:
     name: FeeManager
     network: goerli
     source:
-      address: "0x7a4f10205Bf1EBc2ffAB75e8795BA2182aC35220"
+      address: "0xcC45c67d121A4BC3BC88Cc5A3099a8F7854f11f6"
       abi: FeeManager
-      startBlock: 99216100
+      startBlock: 18212091
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -114,9 +114,9 @@ dataSources:
     name: spvData
     network: goerli
     source:
-      address: "0xFcCC806cB3D3c2230645Ba762340350d82777b4e"
+      address: "0x685A099D6cAde96364086CEF227598A366BeaE0c"
       abi: spvData
-      startBlock: 9927831
+      startBlock: 10058061
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -130,8 +130,10 @@ dataSources:
       eventHandlers:
         - event: BlockIntervalUpdated(uint64)
           handler: handleBlockIntervalUpdated
-        - event: HistoryBlockSaved(indexed uint256,bytes32)
-          handler: handleHistoryBlockSaved
+        - event: HistoryBlocksRootSaved(indexed uint256,bytes32,uint256)
+          handler: handleHistoryBlocksRootSaved
+        - event: InjectOwnerUpdated(address)
+          handler: handleInjectOwnerUpdated
       file: spvData/spvData.wasm
 templates:
   - kind: ethereum

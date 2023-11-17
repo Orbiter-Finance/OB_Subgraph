@@ -341,7 +341,7 @@ export function handleChallengeInfoUpdatedEvent(
     getMockInput() as Bytes
   const selector: string = calldata.getSelector(inputdata).toHexString()
   let mdc = getMDCEntity(event.address, event)
-  let challengeManager = getChallengeManagerEntity(mdc, challengeId)
+  let challengeManager = getChallengeManagerEntity(mdc, challengeId, event)
   if (selector == function_challenge) {
     log.debug("trigger challenge(), selector: {}", [selector]);
     const sourceChainId = decodeChallengeSourceChainId(inputdata)
