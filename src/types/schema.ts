@@ -80,30 +80,38 @@ export class challengeManager extends Entity {
     this.set("createChallenge", Value.fromStringArray(value));
   }
 
-  get verifyChallengeSource(): string {
+  get verifyChallengeSource(): string | null {
     let value = this.get("verifyChallengeSource");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set verifyChallengeSource(value: string) {
-    this.set("verifyChallengeSource", Value.fromString(value));
+  set verifyChallengeSource(value: string | null) {
+    if (!value) {
+      this.unset("verifyChallengeSource");
+    } else {
+      this.set("verifyChallengeSource", Value.fromString(<string>value));
+    }
   }
 
-  get verifyChallengeDest(): string {
+  get verifyChallengeDest(): string | null {
     let value = this.get("verifyChallengeDest");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set verifyChallengeDest(value: string) {
-    this.set("verifyChallengeDest", Value.fromString(value));
+  set verifyChallengeDest(value: string | null) {
+    if (!value) {
+      this.unset("verifyChallengeDest");
+    } else {
+      this.set("verifyChallengeDest", Value.fromString(<string>value));
+    }
   }
 
   get liquidation(): Array<string> {

@@ -32,8 +32,8 @@ type challengeManager @entity {
   id: ID! #challengeId
   challengeStatues: ChallengeStatues!
   createChallenge: [createChallenge!]!
-  verifyChallengeSource: verifyChallengeSource!
-  verifyChallengeDest: verifyChallengeDest!
+  verifyChallengeSource: verifyChallengeSource
+  verifyChallengeDest: verifyChallengeDest
   liquidation: [liquidation!]!
   # tx info
   latestUpdateHash: String!
@@ -76,8 +76,7 @@ type createChallenge implements ChallengeInfoUpdated @entity(immutable: true) {
   challengeManager: challengeManager! @derivedFrom(field: "createChallenge")
 }
 
-type verifyChallengeSource implements ChallengeInfoUpdated
-  @entity(immutable: true) {
+type verifyChallengeSource @entity(immutable: true) {
   id: ID! #challengeId
   # Challenge statement
   challengeId: String! # bytes32
@@ -111,8 +110,7 @@ type verifyChallengeSource implements ChallengeInfoUpdated
     @derivedFrom(field: "verifyChallengeSource")
 }
 
-type verifyChallengeDest implements ChallengeInfoUpdated
-  @entity(immutable: true) {
+type verifyChallengeDest @entity(immutable: true) {
   id: ID! #challengeId
   # Challenge statement
   challengeId: String! # bytes32
