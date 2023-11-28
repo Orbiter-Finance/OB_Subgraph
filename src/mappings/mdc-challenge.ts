@@ -3,7 +3,6 @@ import {
   MDC,
   challengeManager,
   createChallenge,
-  liquidation,
   verifyChallengeDest,
   verifyChallengeSource,
 } from '../types/schema';
@@ -20,7 +19,7 @@ export function getChallengeManagerEntity(
   if (manager == null) {
     manager = new challengeManager(challengeId);
     manager.createChallenge = [];
-    manager.liquidation = [];
+    // manager.liquidation = [];
     manager.owner = mdc.owner;
     mdc.challengeManager = entity.addRelation(
       mdc.challengeManager,
@@ -70,26 +69,26 @@ export function calChallengeNodeList(
   );
 }
 
-export function getLiquidationEntity(
-  challenger: string,
-  challengeId: string,
-  event: ethereum.Event,
-): liquidation {
-  let _liquidation = liquidation.load(challenger);
-  if (_liquidation == null) {
-    _liquidation = new liquidation(challenger);
-    _liquidation.challengeId = challengeId;
-    _liquidation.liquidators = event.transaction.from.toHexString();
-    _liquidation.latestUpdateBlockNumber = event.block.number;
-    _liquidation.latestUpdateHash = event.transaction.hash.toHexString();
-    log.info('Liquidation! challengeId: {}, challenger: {}, liquidators: {}', [
-      challengeId,
-      challenger,
-      event.transaction.from.toHexString(),
-    ]);
-  }
-  return _liquidation as liquidation;
-}
+// export function getLiquidationEntity(
+//   challenger: string,
+//   challengeId: string,
+//   event: ethereum.Event,
+// ): liquidation {
+//   let _liquidation = liquidation.load(challenger);
+//   if (_liquidation == null) {
+//     _liquidation = new liquidation(challenger);
+//     _liquidation.challengeId = challengeId;
+//     _liquidation.liquidators = event.transaction.from.toHexString();
+//     _liquidation.latestUpdateBlockNumber = event.block.number;
+//     _liquidation.latestUpdateHash = event.transaction.hash.toHexString();
+//     log.info('Liquidation! challengeId: {}, challenger: {}, liquidators: {}', [
+//       challengeId,
+//       challenger,
+//       event.transaction.from.toHexString(),
+//     ]);
+//   }
+//   return _liquidation as liquidation;
+// }
 
 export function getVerifyChallengeSourceEntity(
   challengeManager: challengeManager,
@@ -98,7 +97,7 @@ export function getVerifyChallengeSourceEntity(
   let _entity = verifyChallengeSource.load(challengeId);
   if (_entity == null) {
     _entity = new verifyChallengeSource(challengeId);
-    _entity.challengeId = challengeId;
+    // _entity.challengeId = challengeId;
     challengeManager.verifyChallengeSource = challengeId;
     log.info('create verifySourceEntity! challengeId: {}', [challengeId]);
   }
@@ -112,7 +111,7 @@ export function getVerifyChallengeDestEntity(
   let _entity = verifyChallengeDest.load(challengeId);
   if (_entity == null) {
     _entity = new verifyChallengeDest(challengeId);
-    _entity.challengeId = challengeId;
+    // _entity.challengeId = challengeId;
     challengeManager.verifyChallengeDest = challengeId;
     log.info('create verifyDestEntity! challengeId: {}', [challengeId]);
   }

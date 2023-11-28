@@ -1,28 +1,28 @@
-import { Bytes } from "@graphprotocol/graph-ts"
+import { Bytes } from '@graphprotocol/graph-ts';
 import {
   ChallengeInfoUpdated as ChallengeInfoUpdatedEvent,
   ColumnArrayUpdated as ColumnArrayUpdatedEvent,
   ResponseMakersUpdated as ResponseMakersUpdatedEvent,
   RulesRootUpdated as RulesRootUpdatedEvent,
   SpvUpdated as SpvUpdatedEvent,
-  WithdrawRequested as WithdrawRequestedEvent
-} from "../types/templates/MDC/MDC"
+  WithdrawRequested as WithdrawRequestedEvent,
+} from '../types/templates/MDC/MDC';
 import {
   handleChallengeInfoUpdatedEvent,
   handleColumnArrayUpdatedEvent,
   handleResponseMakersUpdatedEvent,
   handleSpvUpdatedEvent,
   handleWithdrawRequestedEvent,
-  handleupdateRulesRootEvent
-} from "./mdc-core"
+  handleupdateRulesRootEvent,
+} from './mdc-core';
 
 export function handleChallengeInfoUpdated(
-  event: ChallengeInfoUpdatedEvent
+  event: ChallengeInfoUpdatedEvent,
 ): void {
   handleChallengeInfoUpdatedEvent(
     event,
     event.params.challengeId.toHexString(),
-    event.params.statement.sourceTxFrom,
+    event.params.statement.sourceTxFrom.toHexString(),
     event.params.statement.sourceTxTime,
     event.params.statement.freezeToken.toHexString(),
     event.params.statement.challengeUserRatio,
@@ -37,7 +37,7 @@ export function handleChallengeInfoUpdated(
     event.params.result.verifiedTime0,
     event.params.result.verifiedTime1,
     event.params.result.verifiedDataHash0.toHexString(),
-  )
+  );
 }
 
 export function handleColumnArrayUpdated(event: ColumnArrayUpdatedEvent): void {
@@ -47,18 +47,18 @@ export function handleColumnArrayUpdated(event: ColumnArrayUpdatedEvent): void {
     event.params.columnArrayHash,
     event.params.dealers,
     event.params.ebcs,
-    event.params.chainIds
-  )
+    event.params.chainIds,
+  );
 }
 
 export function handleResponseMakersUpdated(
-  event: ResponseMakersUpdatedEvent
+  event: ResponseMakersUpdatedEvent,
 ): void {
   handleResponseMakersUpdatedEvent(
     event,
     event.params.impl,
-    event.params.responseMakers
-  )
+    event.params.responseMakers,
+  );
 }
 
 export function handleRulesRootUpdated(event: RulesRootUpdatedEvent): void {
@@ -67,8 +67,8 @@ export function handleRulesRootUpdated(event: RulesRootUpdatedEvent): void {
     event.params.impl,
     event.params.ebc,
     event.params.rootWithVersion.root,
-    event.params.rootWithVersion.version
-  )
+    event.params.rootWithVersion.version,
+  );
 }
 
 export function handleSpvUpdated(event: SpvUpdatedEvent): void {
@@ -76,8 +76,8 @@ export function handleSpvUpdated(event: SpvUpdatedEvent): void {
     event,
     event.params.impl,
     event.params.chainId,
-    event.params.spv
-  )
+    event.params.spv,
+  );
 }
 
 export function handleWithdrawRequested(event: WithdrawRequestedEvent): void {
@@ -85,7 +85,6 @@ export function handleWithdrawRequested(event: WithdrawRequestedEvent): void {
     event,
     event.params.requestAmount,
     event.params.requestTimestamp,
-    event.params.requestToken.toHexString()
-  )
-
+    event.params.requestToken.toHexString(),
+  );
 }
