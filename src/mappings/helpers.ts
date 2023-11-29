@@ -643,10 +643,13 @@ export function mdcStoreEBCNewMapping(
       newEBCs[mappingIndex],
     ]);
     let _ebcMapping = getEBCMappingEntity(latestMappingId, mdc, event);
-
+    // log.warning('ebcSnapshot.id: {}, newEBCs[mappingIndex]: {}', [
+    //   ebcSnapshot.id.replace('-', '').replace('0x', ''),
+    //   newEBCs[mappingIndex],
+    // ]);
     const snapshotId = entity.createHashID([
-      ebcSnapshot.id,
-      newEBCs[mappingIndex],
+      ebcSnapshot.id.replace('-', '').replace('0x', ''),
+      newEBCs[mappingIndex].replace('-', '').replace('0x', ''),
     ]);
     let _ebcSnapshot = getebcMappingSnapshotEntity(snapshotId, mdc, event);
 
@@ -804,7 +807,11 @@ export function mdcStoreResponseMaker(
   responseMakersArray: string[],
   event: ethereum.Event,
 ): void {
-  const id = entity.createHashID([mdc.id, entity.createEventID(event)]);
+  const id = entity.createHashID([
+    mdc.id,
+    event.transaction.hash.toHexString(),
+    event.logIndex.toHexString(),
+  ]);
   const inputdata = isProduction
     ? event.transaction.input
     : (Bytes.fromHexString(functionrResponseMakerMockinput) as Bytes);
@@ -1274,9 +1281,16 @@ function updateLatestRules(
   }
 
   const _snapshotLatestRuleType = _snapshotLatestRule;
+  const ruleKey = entity.createHashID([
+    rsc.chain0.toHexString(),
+    rsc.chain1.toHexString(),
+    rsc.chain0Token.toHexString(),
+    rsc.chain1Token.toHexString(),
+  ]);
   _snapshotLatestRuleType.owner = mdc.owner;
   _snapshotLatestRuleType.mdcAddr = mdc.id;
   _snapshotLatestRuleType.ebcAddr = ebc.id;
+  _snapshotLatestRuleType.ruleKey = ruleKey;
   _snapshotLatestRuleType.chain0 = rsc.chain0;
   _snapshotLatestRuleType.chain1 = rsc.chain1;
   _snapshotLatestRuleType.chain0Status = rsc.chain0Status.toI32();
@@ -1298,6 +1312,11 @@ function updateLatestRules(
   _snapshotLatestRuleType.chain1CompensationRatio =
     rsc.chain1CompensationRatio.toI32();
   _snapshotLatestRuleType.enableTimestamp = enableTimestamp;
+  _snapshotLatestRuleType.enableBlockNumber = calculateEnableBlockNumber(
+    event.block.timestamp,
+    enableTimestamp,
+    event.block.number,
+  );
   _snapshotLatestRuleType.ruleValidation = validateBool;
   _snapshotLatestRuleType.ruleValidationErrorstatus = validateResult;
   _snapshotLatestRuleType.latestUpdateTimestamp = event.block.timestamp;
@@ -1393,7 +1412,8 @@ function getRuleSnapshotEntity(
   const snapshotId = entity.createHashID([
     mdc.id,
     ebc.id,
-    entity.createEventID(event),
+    event.transaction.hash.toHexString(),
+    event.logIndex.toHexString(),
   ]);
   let ruleSnapshot = ruleRel.load(snapshotId);
   if (ruleSnapshot == null) {
@@ -1711,4 +1731,25 @@ export class mockData {
   static getChallenger(): string {
     return this.challenger;
   }
+}
+
+// 计算enableTimestamp对应的blockNumber
+export function calculateEnableBlockNumber(
+  currentTimestamp: BigInt,
+  enableTimestamp: BigInt,
+  currentBlockNumber: BigInt,
+): BigInt {
+  let enableBlockNumber = BigInt.fromI32(0);
+  if (enableTimestamp > currentTimestamp) {
+    const timestampGap = enableTimestamp.minus(currentTimestamp);
+    const blockGap = timestampGap.div(BigInt.fromI32(12));
+    if (timestampGap.mod(BigInt.fromI32(12)) != BigInt.fromI32(0)) {
+      enableBlockNumber = currentBlockNumber
+        .plus(blockGap)
+        .plus(BigInt.fromI32(1));
+    } else {
+      enableBlockNumber = currentBlockNumber.plus(blockGap);
+    }
+  }
+  return enableBlockNumber;
 }

@@ -49,6 +49,7 @@ type createChallenge @entity {
   # Challenge statement
   challengeId: String! # bytes32
   sourceChainId: BigInt!
+  destChainId: BigInt!
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
   freezeToken: String! # address
@@ -585,6 +586,7 @@ type latestRuleSnapshot
   owner: String! # address
   mdcAddr: String! # address
   ebcAddr: String! # address
+  ruleKey: String! # hash(chain0,chain1,token0,token1)
   type: String # ETH/ERC20
   chain0: BigInt! # uint64
   chain1: BigInt! # uint64
@@ -605,6 +607,7 @@ type latestRuleSnapshot
   chain0CompensationRatio: Int # uint32
   chain1CompensationRatio: Int # uint32
   enableTimestamp: BigInt # uint64
+  enableBlockNumber: BigInt
   latestUpdateVersion: Int # uint32
   latestUpdateTimestamp: BigInt
   latestUpdateBlockNumber: BigInt

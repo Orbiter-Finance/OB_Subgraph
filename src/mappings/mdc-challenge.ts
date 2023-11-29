@@ -46,7 +46,13 @@ export function getCreateChallenge(
       challengeManager.createChallenge,
       id,
     );
-    log.info('create Challenge! challengeId: {}, challenger: {}, ({})', [
+    log.info('create Challenge! managerId: {}, challenger: {}, ({})', [
+      challengeManager.id,
+      challenger,
+      id,
+    ]);
+  } else {
+    log.info('load current Challenge! managerId: {}, challenger: {}, ({})', [
       challengeManager.id,
       challenger,
       id,

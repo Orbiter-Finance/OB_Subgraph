@@ -114,9 +114,9 @@ dataSources:
     name: spvData
     network: goerli
     source:
-      address: "0x685A099D6cAde96364086CEF227598A366BeaE0c"
+      address: "0x218FB5ec42451975f1401b482caF0E10D4b4BC94"
       abi: spvData
-      startBlock: 10058061
+      startBlock: 10125313
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

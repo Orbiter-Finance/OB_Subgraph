@@ -5,6 +5,7 @@ import {
   log,
   ByteArray,
   Address,
+  bigInt,
 } from '@graphprotocol/graph-ts';
 import { MDC as mdcContract } from '../types/templates/MDC/MDC';
 import {
@@ -410,6 +411,7 @@ export function handleChallengeInfoUpdatedEvent(
       : mockData.challenger;
     let createChallenge = getCreateChallenge(challengeManager, challenger);
     createChallenge.sourceChainId = sourceChainId;
+    createChallenge.destChainId = sourceChainId;
     // createChallenge.msgSender = event.transaction.from.toHexString();
     createChallenge.challenger = event.transaction.from.toHexString();
     createChallenge.sourceTxTime = sourceTxTime;
@@ -439,21 +441,10 @@ export function handleChallengeInfoUpdatedEvent(
     log.debug('trigger checkChallenge(), selector: {}', [selector]);
     const challengerArray: string[] = decodeCheckChallenge(inputdata);
     for (let i = 0; i < challengerArray.length; i++) {
-      // let liquidation = getLiquidationEntity(
-      //   challengerArray[i],
-      //   challengeId,
-      //   event,
-      // );
-      // challengeManager.liquidation = entity.addRelation(
-      //   challengeManager.liquidation,
-      //   challengerArray[i],
-      // );
-      // liquidation.abortTime = abortTime;
-      // liquidation.save();
-      createChallenge = getCreateChallenge(
-        challengeManager,
-        challengerArray[i],
-      );
+      const challenger: string = isProduction
+        ? challengerArray[i]
+        : mockData.challenger;
+      createChallenge = getCreateChallenge(challengeManager, challenger);
       createChallenge.abortTime = abortTime;
       createChallenge.liquidator = event.transaction.from.toHexString();
       createChallenge.latestUpdateHash = event.transaction.hash.toHexString();

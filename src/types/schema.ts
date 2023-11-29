@@ -238,6 +238,19 @@ export class createChallenge extends Entity {
     this.set("sourceChainId", Value.fromBigInt(value));
   }
 
+  get destChainId(): BigInt {
+    let value = this.get("destChainId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set destChainId(value: BigInt) {
+    this.set("destChainId", Value.fromBigInt(value));
+  }
+
   get sourceTxTime(): BigInt {
     let value = this.get("sourceTxTime");
     if (!value || value.kind == ValueKind.NULL) {
@@ -5251,6 +5264,19 @@ export class latestRuleSnapshot extends Entity {
     this.set("ebcAddr", Value.fromString(value));
   }
 
+  get ruleKey(): string {
+    let value = this.get("ruleKey");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ruleKey(value: string) {
+    this.set("ruleKey", Value.fromString(value));
+  }
+
   get type(): string | null {
     let value = this.get("type");
     if (!value || value.kind == ValueKind.NULL) {
@@ -5540,6 +5566,23 @@ export class latestRuleSnapshot extends Entity {
       this.unset("enableTimestamp");
     } else {
       this.set("enableTimestamp", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get enableBlockNumber(): BigInt | null {
+    let value = this.get("enableBlockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set enableBlockNumber(value: BigInt | null) {
+    if (!value) {
+      this.unset("enableBlockNumber");
+    } else {
+      this.set("enableBlockNumber", Value.fromBigInt(<BigInt>value));
     }
   }
 
