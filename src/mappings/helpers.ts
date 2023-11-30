@@ -1242,11 +1242,19 @@ function updateLatestRules(
   const _snapshotLatestRule = getLastRulesSnapshotEntity(
     entity.createHashID([snapshot.id, id]),
   );
+  const ruleKey = entity.createHashID([
+    rsc.chain0.toHexString(),
+    rsc.chain1.toHexString(),
+    rsc.chain0Token.toHexString(),
+    rsc.chain1Token.toHexString(),
+  ]);
+
   _rule.latestSnapShotID = _snapshotLatestRule.id;
   const _rscRuleType = _rule;
   _rscRuleType.owner = mdc.owner;
   _rscRuleType.mdcAddr = mdc.id;
   _rscRuleType.ebcAddr = ebc.id;
+  _rscRuleType.ruleKey = ruleKey;
   _rscRuleType.chain0 = rsc.chain0;
   _rscRuleType.chain1 = rsc.chain1;
   _rscRuleType.chain0Status = rsc.chain0Status.toI32();
@@ -1281,12 +1289,6 @@ function updateLatestRules(
   }
 
   const _snapshotLatestRuleType = _snapshotLatestRule;
-  const ruleKey = entity.createHashID([
-    rsc.chain0.toHexString(),
-    rsc.chain1.toHexString(),
-    rsc.chain0Token.toHexString(),
-    rsc.chain1Token.toHexString(),
-  ]);
   _snapshotLatestRuleType.owner = mdc.owner;
   _snapshotLatestRuleType.mdcAddr = mdc.id;
   _snapshotLatestRuleType.ebcAddr = ebc.id;

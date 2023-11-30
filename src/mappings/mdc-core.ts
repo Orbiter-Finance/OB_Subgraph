@@ -412,7 +412,7 @@ export function handleChallengeInfoUpdatedEvent(
     let createChallenge = getCreateChallenge(challengeManager, challenger);
     createChallenge.sourceChainId = sourceChainId;
     createChallenge.destChainId = sourceChainId;
-    // createChallenge.msgSender = event.transaction.from.toHexString();
+    createChallenge.ruleKey = '';
     createChallenge.challenger = event.transaction.from.toHexString();
     createChallenge.sourceTxTime = sourceTxTime;
     createChallenge.freezeToken = freezeToken;

@@ -6,7 +6,6 @@ import {
   EthereumUtils,
   ethereum,
   Address,
-  ByteArray,
   crypto,
   Value,
   ValueKind,

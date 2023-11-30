@@ -251,6 +251,19 @@ export class createChallenge extends Entity {
     this.set("destChainId", Value.fromBigInt(value));
   }
 
+  get ruleKey(): string {
+    let value = this.get("ruleKey");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ruleKey(value: string) {
+    this.set("ruleKey", Value.fromString(value));
+  }
+
   get sourceTxTime(): BigInt {
     let value = this.get("sourceTxTime");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1531,6 +1544,23 @@ export class MDC extends Entity {
 
   set withdrawRequested(value: Array<string>) {
     this.set("withdrawRequested", Value.fromStringArray(value));
+  }
+
+  get manager(): string | null {
+    let value = this.get("manager");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set manager(value: string | null) {
+    if (!value) {
+      this.unset("manager");
+    } else {
+      this.set("manager", Value.fromString(<string>value));
+    }
   }
 
   get createblockNumber(): BigInt {
@@ -4736,6 +4766,23 @@ export class latestRule extends Entity {
     this.set("ebcAddr", Value.fromString(value));
   }
 
+  get ruleKey(): string | null {
+    let value = this.get("ruleKey");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ruleKey(value: string | null) {
+    if (!value) {
+      this.unset("ruleKey");
+    } else {
+      this.set("ruleKey", Value.fromString(<string>value));
+    }
+  }
+
   get type(): string | null {
     let value = this.get("type");
     if (!value || value.kind == ValueKind.NULL) {
@@ -5264,17 +5311,21 @@ export class latestRuleSnapshot extends Entity {
     this.set("ebcAddr", Value.fromString(value));
   }
 
-  get ruleKey(): string {
+  get ruleKey(): string | null {
     let value = this.get("ruleKey");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toString();
     }
   }
 
-  set ruleKey(value: string) {
-    this.set("ruleKey", Value.fromString(value));
+  set ruleKey(value: string | null) {
+    if (!value) {
+      this.unset("ruleKey");
+    } else {
+      this.set("ruleKey", Value.fromString(<string>value));
+    }
   }
 
   get type(): string | null {

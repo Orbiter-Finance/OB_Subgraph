@@ -9,9 +9,6 @@ import {
 import { calcaulateFunctionSelector, entity } from './utils';
 import { ManulDataSource } from './config';
 
-// export const subgraphManagerID: string = entity.createHashID([
-//   'subgraphManager',
-// ]);
 export const subgraphManagerID: string = crypto
   .keccak256(Bytes.fromUTF8('subgraphManager'))
   .toHexString();
