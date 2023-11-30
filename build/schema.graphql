@@ -49,8 +49,8 @@ type createChallenge @entity {
   # Challenge statement
   challengeId: String! # bytes32
   sourceChainId: BigInt!
-  destChainId: BigInt!
-  ruleKey: String! # hash(chain0,chain1,token0,token1)
+  # destChainId: BigInt!
+  # ruleKey: String! # hash(chain0,chain1,token0,token1)
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
   freezeToken: String! # address
@@ -70,7 +70,6 @@ type createChallenge @entity {
   # winner: String # address
   # info
   challengerVerifyTransactionFee: BigInt!
-  # msgSender: String!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!

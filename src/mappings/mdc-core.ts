@@ -72,6 +72,7 @@ import {
 import {
   calldata,
   entity,
+  padZeroToEven,
   padZeroToUint,
   removeDuplicates,
   removeDuplicatesBigInt,
@@ -411,8 +412,8 @@ export function handleChallengeInfoUpdatedEvent(
       : mockData.challenger;
     let createChallenge = getCreateChallenge(challengeManager, challenger);
     createChallenge.sourceChainId = sourceChainId;
-    createChallenge.destChainId = sourceChainId;
-    createChallenge.ruleKey = '';
+    // createChallenge.destChainId = sourceChainId;
+    // createChallenge.ruleKey = '';
     createChallenge.challenger = event.transaction.from.toHexString();
     createChallenge.sourceTxTime = sourceTxTime;
     createChallenge.freezeToken = freezeToken;

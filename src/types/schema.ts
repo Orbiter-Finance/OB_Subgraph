@@ -238,32 +238,6 @@ export class createChallenge extends Entity {
     this.set("sourceChainId", Value.fromBigInt(value));
   }
 
-  get destChainId(): BigInt {
-    let value = this.get("destChainId");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set destChainId(value: BigInt) {
-    this.set("destChainId", Value.fromBigInt(value));
-  }
-
-  get ruleKey(): string {
-    let value = this.get("ruleKey");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toString();
-    }
-  }
-
-  set ruleKey(value: string) {
-    this.set("ruleKey", Value.fromString(value));
-  }
-
   get sourceTxTime(): BigInt {
     let value = this.get("sourceTxTime");
     if (!value || value.kind == ValueKind.NULL) {

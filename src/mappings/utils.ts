@@ -200,7 +200,7 @@ export function padZeroToBytes(BytesNumber: number, hexString: string): string {
     paddedHexString = padding + paddedHexString;
   } else {
     // throw new Error('Invalid hex string length');
-    paddedHexString = hexString;
+    paddedHexString = padZeroToEven(hexString);
     log.warning('paddedHexString: {}', [paddedHexString]);
   }
 
@@ -268,4 +268,12 @@ export function removeDuplicatesBigInt(data: Array<BigInt>): Array<BigInt> {
     }
   }
   return uniques;
+}
+
+export function padZeroToEven(hexString: string): string {
+  let paddedHexString = hexString.replace('0x', '').replace('-', '');
+  if (paddedHexString.length % 2 != 0) {
+    paddedHexString = '0' + paddedHexString;
+  }
+  return paddedHexString;
 }
