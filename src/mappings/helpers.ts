@@ -80,7 +80,8 @@ export const func_updateChainSpvs = '0x434417cf';
 // chalenge related
 export const function_checkChallenge = '0x55027e75';
 export const function_challenge = '0x47062326';
-export const function_verifyChallengeSource = '0xbe828f6c';
+export const function_verifyChallengeSource1 = '0x00';
+export const function_verifyChallengeSource2 = '0xbe828f6c';
 export const function_verifyChallengeDest = '0x557df657';
 /**** function selectors ****/
 
@@ -102,12 +103,22 @@ export const func_checkChallengeName = '(uint64,bytes32,address[])';
 export const func_challengeName =
   '(uint64,uint64,uint64,uint64,bytes32,address,uint256,uint256)';
 export const publicInputDataFmt = `(bytes32,uint64,uint256,uint256,address,address,uint256,uint256,uint256,address,address,address,address,uint256,uint256,uint256,uint8,uint8,uint256,uint256,uint256,uint8,bytes32,uint256,bytes32,uint256,uint64,uint64,uint64,uint64,address,address,uint64,uint256,bytes32)`;
-export const func_verifyChallengeSourceName = `(address,${publicInputDataFmt},bytes,bytes)`;
+export const func_verifyChallengeSourceName1 = `(EMPTY)`;
+export const func_verifyChallengeSourceName2 = `(address,${publicInputDataFmt},bytes,bytes)`;
 
 export const verifiedDataInfoFmt =
   '(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)';
 export const publicInputDataDestFmt =
   '(uint64,uint256,uint256,uint256,uint256,uint64)';
+
+export const func_verifyChallengeSourceNameArray: string[] = [
+  func_verifyChallengeSourceName1,
+  func_verifyChallengeSourceName2,
+];
+export const function_verifyChallengeSourceSelcetorArray: string[] = [
+  function_verifyChallengeSource1,
+  function_verifyChallengeSource2,
+];
 
 // address challenger,
 // uint64 sourceChainId,
@@ -1642,8 +1653,15 @@ export function decodeCheckChallenge(inputData: Bytes): string[] {
   return challenger;
 }
 
-export function decodeVerifyChallengeSource(inputData: Bytes): string {
-  let tuple = calldata.decode(inputData, func_verifyChallengeSourceName);
+export function decodeVerifyChallengeSource(
+  inputData: Bytes,
+  selector: string,
+): string {
+  const index = function_verifyChallengeSourceSelcetorArray.indexOf(selector);
+  let tuple = calldata.decode(
+    inputData,
+    func_verifyChallengeSourceNameArray[index],
+  );
   if (debugLogMapping) {
     for (let i = 0; i < tuple.length; i++) {
       log.debug('tuple[{}].kind:{}', [i.toString(), tuple[i].kind.toString()]);

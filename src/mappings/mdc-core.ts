@@ -40,13 +40,14 @@ import {
   func_challengeName,
   decodeChallengeSourceChainId,
   function_checkChallenge,
-  function_verifyChallengeSource,
+  func_verifyChallengeSourceNameArray,
   function_verifyChallengeDest,
   decodeCheckChallenge,
   decodeVerifyChallengeSource,
   decodeVerifyChallengeDest,
   getMockInput,
   mockData,
+  function_verifyChallengeSourceSelcetorArray,
 } from './helpers';
 import {
   FactoryManager,
@@ -455,13 +456,12 @@ export function handleChallengeInfoUpdatedEvent(
     }
     challengeManager.challengeStatues =
       challengeStatues[challengeENUM.LIQUIDATION];
-  } else if (selector == function_verifyChallengeSource) {
-    log.debug('trigger verifyChallengeSource(), selector: {}', [selector]);
+  } else if (function_verifyChallengeSourceSelcetorArray.includes(selector)) {
     let verifyChallengeSource = getVerifyChallengeSourceEntity(
       challengeManager,
       challengeId,
     );
-    const challenger = decodeVerifyChallengeSource(inputdata);
+    const challenger = decodeVerifyChallengeSource(inputdata, selector);
     // let createChallenge = getCreateChallenge(challengeManager, challenger);
     // verifyChallengeSource.sourceChainId = createChallenge.sourceChainId;
     verifyChallengeSource.sourceTxFrom = sourceTxFrom;
