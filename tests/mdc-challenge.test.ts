@@ -99,7 +99,7 @@ describe('test MDC create Challenge related function', () => {
       'createChallenge',
       CreateChallengeID,
       'challengeNodeNumber',
-      '0x00000000499602d2000000000000000500000000499602d200000000499602d2',
+      '0x00000000499602d200000000000001a400000000499602d200000000499602d2',
     );
   });
 

@@ -66,13 +66,13 @@ export function calChallengeNodeList(
   sourceChainId: BigInt,
   sourceTXBlockNumber: BigInt,
   sourceTxIndex: BigInt,
-): Bytes {
+): string {
   return Bytes.fromHexString(
     padZeroToBytes(16, sourceTxTime.toHexString()) +
       padZeroToBytes(16, sourceChainId.toHexString()).slice(2) +
       padZeroToBytes(16, sourceTXBlockNumber.toHexString()).slice(2) +
       padZeroToBytes(16, sourceTxIndex.toHexString()).slice(2),
-  );
+  ).toHexString();
 }
 
 // export function getLiquidationEntity(

@@ -238,6 +238,19 @@ export class createChallenge extends Entity {
     this.set("sourceChainId", Value.fromBigInt(value));
   }
 
+  get ruleKey(): string {
+    let value = this.get("ruleKey");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ruleKey(value: string) {
+    this.set("ruleKey", Value.fromString(value));
+  }
+
   get sourceTxHash(): string {
     let value = this.get("sourceTxHash");
     if (!value || value.kind == ValueKind.NULL) {
@@ -355,17 +368,30 @@ export class createChallenge extends Entity {
     this.set("sourceTxIndex", Value.fromBigInt(value));
   }
 
-  get challengeNodeNumber(): Bytes {
+  get challengeNodeNumberParent(): string {
+    let value = this.get("challengeNodeNumberParent");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set challengeNodeNumberParent(value: string) {
+    this.set("challengeNodeNumberParent", Value.fromString(value));
+  }
+
+  get challengeNodeNumber(): string {
     let value = this.get("challengeNodeNumber");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set challengeNodeNumber(value: Bytes) {
-    this.set("challengeNodeNumber", Value.fromBytes(value));
+  set challengeNodeNumber(value: string) {
+    this.set("challengeNodeNumber", Value.fromString(value));
   }
 
   get challengerVerifyTransactionFee(): BigInt {

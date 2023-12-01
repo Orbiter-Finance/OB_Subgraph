@@ -18,10 +18,8 @@ export class ContractDeployment {
     let lists = new Array<Address>(0);
     if (ManulDataSource == true) {
       const factoryList: string[] = [
-        '0x3E3A1e7A190E87bf60F3313C174BCc308973826b',
-        '0xd7860BCEBaEc6Bc8dF2C5bD451d8bfc433b6E9D4',
-        '0x5f26A8514b7A7A5fbF2a8a749AEeF06cBa8A00Cb',
-        '0x08d4149CD76c0519Bf97BF5FDb97Aa97CEeF2D9D',
+        '0x414ab2622945dCf473726437aD9d7dFB734db3a6',
+        '0x1752ae0B5d66470EC9e60067B312A57849CF301b',
       ];
       for (let i = 0; i < factoryList.length; i++) {
         lists.push(Address.fromString(factoryList[i]));

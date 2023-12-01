@@ -79,10 +79,11 @@ export const func_registerChains = '0x2e96565f';
 export const func_updateChainSpvs = '0x434417cf';
 // chalenge related
 export const function_checkChallenge = '0x55027e75';
-export const function_challenge = '0x47062326';
+export const function_challenge = '0x4fdea68e';
 export const function_verifyChallengeSource1 = '0x541fb3c4';
-export const function_verifyChallengeSource2 = '0xbe828f6c';
-export const function_verifyChallengeDest = '0x557df657';
+export const function_verifyChallengeSource2 = '0xe50b0a24';
+export const function_verifyChallengeDest1 = '0x00';
+export const function_verifyChallengeDest = '0x84ab57f7';
 /**** function selectors ****/
 
 /**** decode function format ****/
@@ -101,16 +102,19 @@ export const func_updateResponseMakersName = '(uint64,bytes[])';
 // chalenge related
 export const func_checkChallengeName = '(uint64,bytes32,address[])';
 export const func_challengeName =
-  '(uint64,uint64,uint64,uint64,bytes32,address,uint256,uint256)';
-export const publicInputDataFmt = `(bytes32,uint64,uint256,uint256,address,address,uint256,uint256,uint256,address,address,address,address,uint256,uint256,uint256,uint8,uint8,uint256,uint256,uint256,uint8,bytes32,uint256,bytes32,uint256,uint64,uint64,uint64,uint64,address,address,uint64,uint256,bytes32)`;
+  '(uint64,uint64,uint64,uint64,bytes32,bytes32,address,uint256,uint256)';
+export const publicInputDataFmt = `(bytes32,uint64,uint256,uint256,address,address,uint256,uint256,uint256,address,address,address,address,uint256,uint256,uint256,uint8,uint8,uint256,uint256,uint256,uint8,bytes32,uint256,bytes32,uint256,uint64,uint64,uint64,uint64,address,address,uint64,uint256,bytes32,bytes32[])`;
 export const func_verifyChallengeSourceName1 =
   '(address,address,uint64,bytes,bytes,bytes)';
-export const func_verifyChallengeSourceName2 = `(address,${publicInputDataFmt},bytes,bytes)`;
+export const func_verifyChallengeSourceName2 = `(address,address,uint64,${publicInputDataFmt},bytes,bytes)`;
 
 export const verifiedDataInfoFmt =
   '(uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256,uint256)';
 export const publicInputDataDestFmt =
-  '(uint64,uint256,uint256,uint256,uint256,uint64)';
+  '(uint64,uint256,uint256,uint256,uint256,uint64,bytes32[])';
+
+export const func_verifyChallengeDestName1 = `(address,address,uint64,bytes32,bytes,${verifiedDataInfoFmt},bytes)`;
+export const func_verifyChallengeDestName = `(address,address,uint64,bytes32,${verifiedDataInfoFmt},bytes,${publicInputDataDestFmt})`;
 
 export const func_verifyChallengeSourceNameArray: string[] = [
   func_verifyChallengeSourceName1,
@@ -121,14 +125,14 @@ export const function_verifyChallengeSourceSelcetorArray: string[] = [
   function_verifyChallengeSource2,
 ];
 
-// address challenger,
-// uint64 sourceChainId,
-// bytes32 sourceTxHash,
-// // bytes calldata proof,
-// verifiedDataInfo calldata verifiedSourceTxData,
-// bytes calldata rawDatas,
-// HelperLib.PublicInputDataDest calldata publicInputData
-export const func_verifyChallengeDestName = `(address,uint64,bytes32,${verifiedDataInfoFmt},bytes,${publicInputDataDestFmt})`;
+export const func_verifyChallengeDestNameArray: string[] = [
+  func_verifyChallengeDestName1,
+  func_verifyChallengeDestName,
+];
+export const function_verifyChallengeDestSelcetorArray: string[] = [
+  function_verifyChallengeDest1,
+  function_verifyChallengeDest,
+];
 
 /**** decode function format ****/
 
@@ -1625,13 +1629,22 @@ export function decodeEnabletime(inputData: Bytes, type: string): BigInt {
 export class DecodeResult {
   sourceChainId: BigInt;
   sourceTxHash: string;
-  constructor(sourceChainId: BigInt, sourceTxHash: string) {
+  ruleKey: string;
+  challengeNodeNumberParent: string;
+  constructor(
+    sourceChainId: BigInt,
+    sourceTxHash: string,
+    ruleKey: string,
+    challengeNodeNumberParent: string,
+  ) {
     this.sourceChainId = sourceChainId;
     this.sourceTxHash = sourceTxHash;
+    this.ruleKey = ruleKey;
+    this.challengeNodeNumberParent = challengeNodeNumberParent;
   }
 }
 
-export function decodeChallengeSourceChainId(inputData: Bytes): DecodeResult {
+export function decodeCreateChallenge(inputData: Bytes): DecodeResult {
   let tuple = calldata.decodeWOPrefix(inputData, func_challengeName);
   if (debugLogMapping) {
     for (let i = 0; i < tuple.length; i++) {
@@ -1647,9 +1660,26 @@ export function decodeChallengeSourceChainId(inputData: Bytes): DecodeResult {
   let sourceTxHash: string = '';
   if (tuple[4].kind == ethereum.ValueKind.FIXED_BYTES) {
     sourceTxHash = tuple[4].toBytes().toHexString();
+    log.warning('sourceTxHash: {}', [sourceTxHash]);
   }
 
-  let decodeResult = new DecodeResult(sourceChainId, sourceTxHash);
+  let ruleKey: string = '';
+  if (tuple[5].kind == ethereum.ValueKind.FIXED_BYTES) {
+    ruleKey = tuple[5].toBytes().toHexString();
+    log.warning('ruleKey: {}', [ruleKey]);
+  }
+
+  let challengeNodeNumberParent: string = '';
+  if (tuple[8].kind == ethereum.ValueKind.UINT) {
+    challengeNodeNumberParent = tuple[8].toBigInt().toHexString();
+  }
+
+  let decodeResult = new DecodeResult(
+    sourceChainId,
+    sourceTxHash,
+    ruleKey,
+    challengeNodeNumberParent,
+  );
 
   return decodeResult;
 }
@@ -1693,8 +1723,15 @@ export function decodeVerifyChallengeSource(
   return challenger;
 }
 
-export function decodeVerifyChallengeDest(inputData: Bytes): string {
-  let tuple = calldata.decode(inputData, func_verifyChallengeDestName);
+export function decodeVerifyChallengeDest(
+  inputData: Bytes,
+  selector: string,
+): string {
+  const index = function_verifyChallengeDestSelcetorArray.indexOf(selector);
+  let tuple = calldata.decode(
+    inputData,
+    func_verifyChallengeDestNameArray[index],
+  );
   if (debugLogMapping) {
     for (let i = 0; i < tuple.length; i++) {
       log.debug('tuple[{}].kind:{}', [i.toString(), tuple[i].kind.toString()]);
@@ -1753,14 +1790,6 @@ export function handleWithdrawEvent(
   withdraw.save();
 }
 
-// let mockInput: Bytes;
-// export function setMockInput(input: Bytes): void {
-//   mockInput = input;
-// }
-// export function getMockInput(): Bytes {
-//   return mockInput;
-// }
-
 export class customData {
   public static challenger: string = STRING_EMPTY;
   public static input: Bytes = Bytes.fromHexString('0x00000000');
@@ -1773,7 +1802,6 @@ export class customData {
   }
 }
 
-// 计算enableTimestamp对应的blockNumber
 export function calculateEnableBlockNumber(
   currentTimestamp: BigInt,
   enableTimestamp: BigInt,

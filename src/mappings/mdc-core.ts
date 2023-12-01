@@ -38,7 +38,7 @@ import {
   fullfillLatestRuleSnapshot,
   function_challenge,
   func_challengeName,
-  decodeChallengeSourceChainId,
+  decodeCreateChallenge,
   function_checkChallenge,
   func_verifyChallengeSourceNameArray,
   function_verifyChallengeDest,
@@ -47,6 +47,7 @@ import {
   decodeVerifyChallengeDest,
   customData,
   function_verifyChallengeSourceSelcetorArray,
+  function_verifyChallengeDestSelcetorArray,
 } from './helpers';
 import {
   FactoryManager,
@@ -405,7 +406,7 @@ export function handleChallengeInfoUpdatedEvent(
   let challengeManager = getChallengeManagerEntity(mdc, challengeId, event);
   if (selector == function_challenge) {
     log.debug('trigger challenge(), selector: {}', [selector]);
-    const DecodeResult = decodeChallengeSourceChainId(inputdata);
+    const DecodeResult = decodeCreateChallenge(inputdata);
     // log.debug("SourceChainId: {}", [sourceChainId.toString()])
     const challenger: string = isProduction
       ? event.transaction.from.toHexString()
@@ -413,6 +414,7 @@ export function handleChallengeInfoUpdatedEvent(
     let createChallenge = getCreateChallenge(challengeManager, challenger);
     createChallenge.sourceChainId = DecodeResult.sourceChainId;
     createChallenge.sourceTxHash = DecodeResult.sourceTxHash;
+    createChallenge.ruleKey = DecodeResult.ruleKey;
     createChallenge.challenger = event.transaction.from.toHexString();
     createChallenge.sourceTxTime = sourceTxTime;
     createChallenge.freezeToken = freezeToken;
@@ -426,6 +428,8 @@ export function handleChallengeInfoUpdatedEvent(
     createChallenge.latestUpdateHash = event.transaction.hash.toHexString();
     createChallenge.latestUpdateTimestamp = event.block.timestamp;
     createChallenge.latestUpdateBlockNumber = event.block.number;
+    createChallenge.challengeNodeNumberParent =
+      DecodeResult.challengeNodeNumberParent;
     createChallenge.challengeNodeNumber = calChallengeNodeList(
       sourceTxTime,
       DecodeResult.sourceChainId,
@@ -490,14 +494,14 @@ export function handleChallengeInfoUpdatedEvent(
     challengeManager.challengeStatues =
       challengeStatues[challengeENUM.VERIFY_SOURCE];
     verifyChallengeSource.save();
-  } else if (selector == function_verifyChallengeDest) {
+  } else if (function_verifyChallengeDestSelcetorArray.includes(selector)) {
     log.debug('trigger verifyChallengeDest(), selector: {}', [selector]);
     let verifyChallengeDest = getVerifyChallengeDestEntity(
       challengeManager,
       challengeId,
     );
 
-    const challenger = decodeVerifyChallengeDest(inputdata);
+    const challenger = decodeVerifyChallengeDest(inputdata, selector);
     let createChallenge = getCreateChallenge(challengeManager, challenger);
     let verifyChallengeSource = getVerifyChallengeSourceEntity(
       challengeManager,

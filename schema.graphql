@@ -50,7 +50,7 @@ type createChallenge @entity {
   challengeId: String! # bytes32
   sourceChainId: BigInt!
   # destChainId: BigInt!
-  # ruleKey: String! # hash(chain0,chain1,token0,token1)
+  ruleKey: String! # hash(chain0,chain1,token0,token1)
   sourceTxHash: String! # bytes32
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
@@ -60,7 +60,8 @@ type createChallenge @entity {
   challengeTime: BigInt! # uint64
   sourceTxBlockNum: BigInt!
   sourceTxIndex: BigInt!
-  challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
+  challengeNodeNumberParent: String! # challengeNodeNumber last number
+  challengeNodeNumber: String! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   # # challenge result
   # sourceTxFrom: BigInt # uint256
   # challengeUserRatio: BigInt # uint64
