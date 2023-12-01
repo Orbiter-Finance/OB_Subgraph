@@ -6,9 +6,9 @@ dataSources:
     name: MDCFactory
     network: goerli
     source:
-      address: "0x3E3A1e7A190E87bf60F3313C174BCc308973826b"
+      address: "0x08d4149CD76c0519Bf97BF5FDb97Aa97CEeF2D9D"
       abi: MDCFactory
-      startBlock: 10132441
+      startBlock: 10092170
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

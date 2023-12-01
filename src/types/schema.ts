@@ -238,6 +238,19 @@ export class createChallenge extends Entity {
     this.set("sourceChainId", Value.fromBigInt(value));
   }
 
+  get sourceTxHash(): string {
+    let value = this.get("sourceTxHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set sourceTxHash(value: string) {
+    this.set("sourceTxHash", Value.fromString(value));
+  }
+
   get sourceTxTime(): BigInt {
     let value = this.get("sourceTxTime");
     if (!value || value.kind == ValueKind.NULL) {

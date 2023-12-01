@@ -45,8 +45,7 @@ import {
   decodeCheckChallenge,
   decodeVerifyChallengeSource,
   decodeVerifyChallengeDest,
-  getMockInput,
-  mockData,
+  customData,
   function_verifyChallengeSourceSelcetorArray,
 } from './helpers';
 import {
@@ -400,21 +399,20 @@ export function handleChallengeInfoUpdatedEvent(
 ): void {
   const inputdata = isProduction
     ? event.transaction.input
-    : (getMockInput() as Bytes);
+    : (customData.input as Bytes);
   const selector: string = calldata.getSelector(inputdata).toHexString();
   let mdc = getMDCEntity(event.address, event);
   let challengeManager = getChallengeManagerEntity(mdc, challengeId, event);
   if (selector == function_challenge) {
     log.debug('trigger challenge(), selector: {}', [selector]);
-    const sourceChainId = decodeChallengeSourceChainId(inputdata);
+    const DecodeResult = decodeChallengeSourceChainId(inputdata);
     // log.debug("SourceChainId: {}", [sourceChainId.toString()])
     const challenger: string = isProduction
       ? event.transaction.from.toHexString()
-      : mockData.challenger;
+      : customData.challenger;
     let createChallenge = getCreateChallenge(challengeManager, challenger);
-    createChallenge.sourceChainId = sourceChainId;
-    // createChallenge.destChainId = sourceChainId;
-    // createChallenge.ruleKey = '';
+    createChallenge.sourceChainId = DecodeResult.sourceChainId;
+    createChallenge.sourceTxHash = DecodeResult.sourceTxHash;
     createChallenge.challenger = event.transaction.from.toHexString();
     createChallenge.sourceTxTime = sourceTxTime;
     createChallenge.freezeToken = freezeToken;
@@ -430,7 +428,7 @@ export function handleChallengeInfoUpdatedEvent(
     createChallenge.latestUpdateBlockNumber = event.block.number;
     createChallenge.challengeNodeNumber = calChallengeNodeList(
       sourceTxTime,
-      sourceChainId,
+      DecodeResult.sourceChainId,
       sourceTXBlockNumber,
       sourceTxIndex,
     );
@@ -445,7 +443,7 @@ export function handleChallengeInfoUpdatedEvent(
     for (let i = 0; i < challengerArray.length; i++) {
       const challenger: string = isProduction
         ? challengerArray[i]
-        : mockData.challenger;
+        : customData.challenger;
       createChallenge = getCreateChallenge(challengeManager, challenger);
       createChallenge.abortTime = abortTime;
       createChallenge.liquidator = event.transaction.from.toHexString();
@@ -457,6 +455,7 @@ export function handleChallengeInfoUpdatedEvent(
     challengeManager.challengeStatues =
       challengeStatues[challengeENUM.LIQUIDATION];
   } else if (function_verifyChallengeSourceSelcetorArray.includes(selector)) {
+    log.debug('trigger verifyChallengeSource(), selector: {}', [selector]);
     let verifyChallengeSource = getVerifyChallengeSourceEntity(
       challengeManager,
       challengeId,

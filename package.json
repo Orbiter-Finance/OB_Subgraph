@@ -10,7 +10,7 @@
     "create-local": "graph create --node http://localhost:8020/ OBCabin",
     "remove-local": "graph remove --node http://localhost:8020/ OBCabin",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 OBCabin",
-    "test": "mustache configurations/graph-test.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph test"
+    "test": "mustache configurations/configTemplate/graph-test.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph test"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.51.2",

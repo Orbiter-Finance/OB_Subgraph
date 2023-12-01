@@ -201,7 +201,6 @@ export function padZeroToBytes(BytesNumber: number, hexString: string): string {
   } else {
     // throw new Error('Invalid hex string length');
     paddedHexString = padZeroToEven(hexString);
-    log.warning('paddedHexString: {}', [paddedHexString]);
   }
 
   return '0x' + paddedHexString;

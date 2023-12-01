@@ -80,7 +80,7 @@ export const func_updateChainSpvs = '0x434417cf';
 // chalenge related
 export const function_checkChallenge = '0x55027e75';
 export const function_challenge = '0x47062326';
-export const function_verifyChallengeSource1 = '0x00';
+export const function_verifyChallengeSource1 = '0x541fb3c4';
 export const function_verifyChallengeSource2 = '0xbe828f6c';
 export const function_verifyChallengeDest = '0x557df657';
 /**** function selectors ****/
@@ -103,7 +103,8 @@ export const func_checkChallengeName = '(uint64,bytes32,address[])';
 export const func_challengeName =
   '(uint64,uint64,uint64,uint64,bytes32,address,uint256,uint256)';
 export const publicInputDataFmt = `(bytes32,uint64,uint256,uint256,address,address,uint256,uint256,uint256,address,address,address,address,uint256,uint256,uint256,uint8,uint8,uint256,uint256,uint256,uint8,bytes32,uint256,bytes32,uint256,uint64,uint64,uint64,uint64,address,address,uint64,uint256,bytes32)`;
-export const func_verifyChallengeSourceName1 = `(EMPTY)`;
+export const func_verifyChallengeSourceName1 =
+  '(address,address,uint64,bytes,bytes,bytes)';
 export const func_verifyChallengeSourceName2 = `(address,${publicInputDataFmt},bytes,bytes)`;
 
 export const verifiedDataInfoFmt =
@@ -1621,7 +1622,16 @@ export function decodeEnabletime(inputData: Bytes, type: string): BigInt {
   return enableTimestamp;
 }
 
-export function decodeChallengeSourceChainId(inputData: Bytes): BigInt {
+export class DecodeResult {
+  sourceChainId: BigInt;
+  sourceTxHash: string;
+  constructor(sourceChainId: BigInt, sourceTxHash: string) {
+    this.sourceChainId = sourceChainId;
+    this.sourceTxHash = sourceTxHash;
+  }
+}
+
+export function decodeChallengeSourceChainId(inputData: Bytes): DecodeResult {
   let tuple = calldata.decodeWOPrefix(inputData, func_challengeName);
   if (debugLogMapping) {
     for (let i = 0; i < tuple.length; i++) {
@@ -1633,7 +1643,15 @@ export function decodeChallengeSourceChainId(inputData: Bytes): BigInt {
   if (tuple[1].kind == ethereum.ValueKind.UINT) {
     sourceChainId = tuple[1].toBigInt();
   }
-  return sourceChainId;
+
+  let sourceTxHash: string = '';
+  if (tuple[4].kind == ethereum.ValueKind.FIXED_BYTES) {
+    sourceTxHash = tuple[4].toBytes().toHexString();
+  }
+
+  let decodeResult = new DecodeResult(sourceChainId, sourceTxHash);
+
+  return decodeResult;
 }
 
 export function decodeCheckChallenge(inputData: Bytes): string[] {
@@ -1735,21 +1753,23 @@ export function handleWithdrawEvent(
   withdraw.save();
 }
 
-let mockInput: Bytes;
-export function setMockInput(input: Bytes): void {
-  mockInput = input;
-}
-export function getMockInput(): Bytes {
-  return mockInput;
-}
+// let mockInput: Bytes;
+// export function setMockInput(input: Bytes): void {
+//   mockInput = input;
+// }
+// export function getMockInput(): Bytes {
+//   return mockInput;
+// }
 
-export class mockData {
+export class customData {
   public static challenger: string = STRING_EMPTY;
+  public static input: Bytes = Bytes.fromHexString('0x00000000');
   static setChallenger(challenger: string): void {
     this.challenger = challenger;
   }
-  static getChallenger(): string {
-    return this.challenger;
+
+  static setInput(input: Bytes): void {
+    this.input = input;
   }
 }
 

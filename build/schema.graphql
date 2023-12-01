@@ -51,6 +51,7 @@ type createChallenge @entity {
   sourceChainId: BigInt!
   # destChainId: BigInt!
   # ruleKey: String! # hash(chain0,chain1,token0,token1)
+  sourceTxHash: String! # bytes32
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
   freezeToken: String! # address

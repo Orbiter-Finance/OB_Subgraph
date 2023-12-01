@@ -17,7 +17,7 @@ import {
   mockChallengeFunctionSelector,
 } from './mock-data';
 import { challengeENUM, challengeStatues } from '../src/mappings/mdc-core';
-import { mockData, setMockInput } from '../src/mappings/helpers';
+import { customData } from '../src/mappings/helpers';
 
 // Tests structure (matchstick-as >=0.5.0)
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
@@ -73,8 +73,8 @@ describe('test MDC create Challenge related function', () => {
       statementInfo,
       resultInfo,
     );
-    setMockInput(mockChallengeInput);
-    mockData.setChallenger(Challenger);
+    customData.setInput(mockChallengeInput);
+    customData.setChallenger(Challenger);
     handleChallengeInfoUpdated(newChallengeInfoUpdatedEvent);
   });
 
@@ -149,7 +149,7 @@ describe('test MDC create Challenge related function', () => {
         statementInfo,
         resultInfo,
       );
-      setMockInput(mockChallengeInput);
+      customData.setInput(mockChallengeInput);
       handleChallengeInfoUpdated(newChallengeInfoUpdatedEvent);
     });
 
@@ -213,7 +213,7 @@ describe('test MDC create Challenge related function', () => {
         statementInfo,
         resultInfo,
       );
-      setMockInput(mockChallengeInput);
+      customData.setInput(mockChallengeInput);
       handleChallengeInfoUpdated(newChallengeInfoUpdatedEvent);
     });
 
@@ -283,7 +283,7 @@ describe('test MDC create Challenge related function', () => {
         statementInfo,
         resultInfo,
       );
-      setMockInput(mockChallengeInput);
+      customData.setInput(mockChallengeInput);
       handleChallengeInfoUpdated(newChallengeInfoUpdatedEvent);
     });
 
