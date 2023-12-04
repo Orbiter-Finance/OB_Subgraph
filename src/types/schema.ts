@@ -394,17 +394,24 @@ export class createChallenge extends Entity {
     this.set("challengeNodeNumber", Value.fromString(value));
   }
 
-  get challengerVerifyTransactionFee(): BigInt {
+  get challengerVerifyTransactionFee(): BigInt | null {
     let value = this.get("challengerVerifyTransactionFee");
     if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
+      return null;
     } else {
       return value.toBigInt();
     }
   }
 
-  set challengerVerifyTransactionFee(value: BigInt) {
-    this.set("challengerVerifyTransactionFee", Value.fromBigInt(value));
+  set challengerVerifyTransactionFee(value: BigInt | null) {
+    if (!value) {
+      this.unset("challengerVerifyTransactionFee");
+    } else {
+      this.set(
+        "challengerVerifyTransactionFee",
+        Value.fromBigInt(<BigInt>value)
+      );
+    }
   }
 
   get latestUpdateHash(): string {
@@ -778,19 +785,6 @@ export class verifyChallengeDest extends Entity {
     } else {
       this.set("verifiedTime1", Value.fromBigInt(<BigInt>value));
     }
-  }
-
-  get challengerVerifyTransactionFee(): BigInt {
-    let value = this.get("challengerVerifyTransactionFee");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set challengerVerifyTransactionFee(value: BigInt) {
-    this.set("challengerVerifyTransactionFee", Value.fromBigInt(value));
   }
 
   get verifier(): string {

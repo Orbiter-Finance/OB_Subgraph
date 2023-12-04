@@ -398,20 +398,17 @@ export function handleChallengeInfoUpdatedEvent(
   verifiedTime1: BigInt,
   verifiedDataHash0: string,
 ): void {
-  const inputdata = isProduction
-    ? event.transaction.input
-    : (customData.input as Bytes);
+  const inputdata = isProduction ? event.transaction.input : customData.input;
   const selector: string = calldata.getSelector(inputdata).toHexString();
   let mdc = getMDCEntity(event.address, event);
   let challengeManager = getChallengeManagerEntity(mdc, challengeId, event);
   if (selector == function_challenge) {
-    log.debug('trigger challenge(), selector: {}', [selector]);
+    log.info('trigger challenge(), selector: {}', [selector]);
     const DecodeResult = decodeCreateChallenge(inputdata);
-    // log.debug("SourceChainId: {}", [sourceChainId.toString()])
     const challenger: string = isProduction
       ? event.transaction.from.toHexString()
       : customData.challenger;
-    let createChallenge = getCreateChallenge(challengeManager, challenger);
+    let createChallenge = getCreateChallenge(challengeManager, challenger, mdc);
     createChallenge.sourceChainId = DecodeResult.sourceChainId;
     createChallenge.sourceTxHash = DecodeResult.sourceTxHash;
     createChallenge.ruleKey = DecodeResult.ruleKey;
@@ -442,15 +439,17 @@ export function handleChallengeInfoUpdatedEvent(
     createChallenge.save();
   } else if (selector == function_checkChallenge) {
     let createChallenge: createChallenge;
-    log.debug('trigger checkChallenge(), selector: {}', [selector]);
+    log.info('trigger checkChallenge(), selector: {}', [selector]);
     const challengerArray: string[] = decodeCheckChallenge(inputdata);
     for (let i = 0; i < challengerArray.length; i++) {
       const challenger: string = isProduction
         ? challengerArray[i]
         : customData.challenger;
-      createChallenge = getCreateChallenge(challengeManager, challenger);
+      createChallenge = getCreateChallenge(challengeManager, challenger, mdc);
       createChallenge.abortTime = abortTime;
       createChallenge.liquidator = event.transaction.from.toHexString();
+      createChallenge.challengerVerifyTransactionFee =
+        challengerVerifyTransactionFee;
       createChallenge.latestUpdateHash = event.transaction.hash.toHexString();
       createChallenge.latestUpdateTimestamp = event.block.timestamp;
       createChallenge.latestUpdateBlockNumber = event.block.number;
@@ -459,7 +458,7 @@ export function handleChallengeInfoUpdatedEvent(
     challengeManager.challengeStatues =
       challengeStatues[challengeENUM.LIQUIDATION];
   } else if (function_verifyChallengeSourceSelcetorArray.includes(selector)) {
-    log.debug('trigger verifyChallengeSource(), selector: {}', [selector]);
+    log.info('trigger verifyChallengeSource(), selector: {}', [selector]);
     let verifyChallengeSource = getVerifyChallengeSourceEntity(
       challengeManager,
       challengeId,
@@ -495,18 +494,18 @@ export function handleChallengeInfoUpdatedEvent(
       challengeStatues[challengeENUM.VERIFY_SOURCE];
     verifyChallengeSource.save();
   } else if (function_verifyChallengeDestSelcetorArray.includes(selector)) {
-    log.debug('trigger verifyChallengeDest(), selector: {}', [selector]);
+    log.info('trigger verifyChallengeDest(), selector: {}', [selector]);
     let verifyChallengeDest = getVerifyChallengeDestEntity(
       challengeManager,
       challengeId,
     );
 
     const challenger = decodeVerifyChallengeDest(inputdata, selector);
-    let createChallenge = getCreateChallenge(challengeManager, challenger);
-    let verifyChallengeSource = getVerifyChallengeSourceEntity(
-      challengeManager,
-      challengeId,
-    );
+    // let createChallenge = getCreateChallenge(challengeManager, challenger, mdc);
+    // let verifyChallengeSource = getVerifyChallengeSourceEntity(
+    //   challengeManager,
+    //   challengeId,
+    // );
     // verifyChallengeDest.sourceChainId = createChallenge.sourceChainId;
     // verifyChallengeDest.sourceTxFrom = sourceTxFrom;
     // verifyChallengeDest.sourceTxTime = sourceTxTime;
@@ -518,8 +517,7 @@ export function handleChallengeInfoUpdatedEvent(
     // verifyChallengeDest.challengeTime = challengeTime;
     // verifyChallengeDest.sourceTxBlockNum = sourceTXBlockNumber;
     // verifyChallengeDest.sourceTxIndex = sourceTxIndex;
-    verifyChallengeDest.challengerVerifyTransactionFee =
-      challengerVerifyTransactionFee;
+    // verifyChallengeDest.challengerVerifyTransactionFee = challengerVerifyTransactionFee;
     // verifyChallengeDest.verifiedTime0 = verifiedTime0;
     verifyChallengeDest.verifiedTime1 = verifiedTime1;
     // verifyChallengeDest.abortTime = abortTime;

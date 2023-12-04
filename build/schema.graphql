@@ -45,7 +45,7 @@ type challengeManager @entity {
 }
 
 type createChallenge @entity {
-  id: ID! #hash(challengeId, challengerAddress)
+  id: ID! #hash(challengeId, challengerAddress, mdcAddress)
   # Challenge statement
   challengeId: String! # bytes32
   sourceChainId: BigInt!
@@ -71,7 +71,7 @@ type createChallenge @entity {
   # abortTime: BigInt # uint64
   # winner: String # address
   # info
-  challengerVerifyTransactionFee: BigInt!
+  challengerVerifyTransactionFee: BigInt
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
@@ -139,7 +139,7 @@ type verifyChallengeDest @entity(immutable: true) {
   # abortTime: BigInt # uint64
   # winner: String # address
   # info
-  challengerVerifyTransactionFee: BigInt!
+  # challengerVerifyTransactionFee: BigInt!
   verifier: String!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!

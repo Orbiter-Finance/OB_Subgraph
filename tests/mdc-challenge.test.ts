@@ -26,7 +26,7 @@ describe('test MDC create Challenge related function', () => {
   const ChallengeId: string = '0x123456';
   const Challenger: string = '0xc3c7a782dda00a8e61cb9ba0ea8680bb3f3b9d10';
   const CreateChallengeID: string =
-    '0x1f40af08306a52bcf7b55797391c7406336f9f3e4efa3767e768b8718db14278';
+    '0xdb7a2a51019d786377e1fceeb3c2e1caf928f436a330eb2585e6fd2057100387';
   const mdcAddr: string = '0xa16081f360e3847006db660bae1c6d1b2e17ec2a';
   const checkChallenge_mockChallenger: string =
     '0xafcfbb382b28dae47b76224f24ee29be2c823648';
@@ -236,7 +236,7 @@ describe('test MDC create Challenge related function', () => {
     const ChallengeId: string = '0x123456';
     const Challenger: string = '0xa16081f360e3847006db660bae1c6d1b2e17ec2a';
     const CreateChallengeID: string =
-      '0x1f40af08306a52bcf7b55797391c7406336f9f3e4efa3767e768b8718db14278';
+      '0xdb7a2a51019d786377e1fceeb3c2e1caf928f436a330eb2585e6fd2057100387';
     const mdcAddr: string = '0xa16081f360e3847006db660bae1c6d1b2e17ec2a';
     const checkChallenge_mockChallenger: string =
       '0xafcfbb382b28dae47b76224f24ee29be2c823648';

@@ -82,7 +82,7 @@ export const function_checkChallenge = '0x55027e75';
 export const function_challenge = '0x4fdea68e';
 export const function_verifyChallengeSource1 = '0x541fb3c4';
 export const function_verifyChallengeSource2 = '0xe50b0a24';
-export const function_verifyChallengeDest1 = '0x00';
+export const function_verifyChallengeDest1 = '0x0e030d98';
 export const function_verifyChallengeDest = '0x84ab57f7';
 /**** function selectors ****/
 
@@ -1660,13 +1660,11 @@ export function decodeCreateChallenge(inputData: Bytes): DecodeResult {
   let sourceTxHash: string = '';
   if (tuple[4].kind == ethereum.ValueKind.FIXED_BYTES) {
     sourceTxHash = tuple[4].toBytes().toHexString();
-    log.warning('sourceTxHash: {}', [sourceTxHash]);
   }
 
   let ruleKey: string = '';
   if (tuple[5].kind == ethereum.ValueKind.FIXED_BYTES) {
     ruleKey = tuple[5].toBytes().toHexString();
-    log.warning('ruleKey: {}', [ruleKey]);
   }
 
   let challengeNodeNumberParent: string = '';

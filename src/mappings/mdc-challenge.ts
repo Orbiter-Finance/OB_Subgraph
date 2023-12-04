@@ -35,8 +35,9 @@ export function getChallengeManagerEntity(
 export function getCreateChallenge(
   challengeManager: challengeManager,
   challenger: string,
+  mdc: MDC,
 ): createChallenge {
-  let id = entity.createHashID([challengeManager.id, challenger]);
+  let id = entity.createHashID([challengeManager.id, challenger, mdc.id]);
   let _createChallenge = createChallenge.load(id);
   if (_createChallenge == null) {
     _createChallenge = new createChallenge(id);
