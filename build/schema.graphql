@@ -71,7 +71,7 @@ type createChallenge @entity {
   # abortTime: BigInt # uint64
   # winner: String # address
   # info
-  challengerVerifyTransactionFee: BigInt
+  challengerVerifyTransactionFee: BigInt!
   latestUpdateHash: String!
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!

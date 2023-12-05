@@ -446,14 +446,17 @@ export function handleChallengeInfoUpdatedEvent(
         ? challengerArray[i]
         : customData.challenger;
       createChallenge = getCreateChallenge(challengeManager, challenger, mdc);
-      createChallenge.abortTime = abortTime;
-      createChallenge.liquidator = event.transaction.from.toHexString();
-      createChallenge.challengerVerifyTransactionFee =
-        challengerVerifyTransactionFee;
-      createChallenge.latestUpdateHash = event.transaction.hash.toHexString();
-      createChallenge.latestUpdateTimestamp = event.block.timestamp;
-      createChallenge.latestUpdateBlockNumber = event.block.number;
-      createChallenge.save();
+      if (createChallenge.liquidator == ETH_ZERO_ADDRESS) {
+        createChallenge.abortTime = abortTime;
+        createChallenge.liquidator = event.transaction.from.toHexString();
+        createChallenge.challengerVerifyTransactionFee =
+          challengerVerifyTransactionFee;
+        createChallenge.latestUpdateHash = event.transaction.hash.toHexString();
+        createChallenge.latestUpdateTimestamp = event.block.timestamp;
+        createChallenge.latestUpdateBlockNumber = event.block.number;
+        createChallenge.save();
+        break;
+      }
     }
     challengeManager.challengeStatues =
       challengeStatues[challengeENUM.LIQUIDATION];

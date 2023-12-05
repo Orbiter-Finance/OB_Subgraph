@@ -394,24 +394,17 @@ export class createChallenge extends Entity {
     this.set("challengeNodeNumber", Value.fromString(value));
   }
 
-  get challengerVerifyTransactionFee(): BigInt | null {
+  get challengerVerifyTransactionFee(): BigInt {
     let value = this.get("challengerVerifyTransactionFee");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
       return value.toBigInt();
     }
   }
 
-  set challengerVerifyTransactionFee(value: BigInt | null) {
-    if (!value) {
-      this.unset("challengerVerifyTransactionFee");
-    } else {
-      this.set(
-        "challengerVerifyTransactionFee",
-        Value.fromBigInt(<BigInt>value)
-      );
-    }
+  set challengerVerifyTransactionFee(value: BigInt) {
+    this.set("challengerVerifyTransactionFee", Value.fromBigInt(value));
   }
 
   get latestUpdateHash(): string {

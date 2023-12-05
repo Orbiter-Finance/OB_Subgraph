@@ -32,6 +32,20 @@ export function getChallengeManagerEntity(
   return manager as challengeManager;
 }
 
+export function checkCreateChallengeExit(
+  challengeManager: challengeManager,
+  challenger: string,
+  mdc: MDC,
+): boolean {
+  let id = entity.createHashID([challengeManager.id, challenger, mdc.id]);
+  let _createChallenge = createChallenge.load(id);
+  if (_createChallenge == null) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 export function getCreateChallenge(
   challengeManager: challengeManager,
   challenger: string,
