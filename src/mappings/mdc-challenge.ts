@@ -23,7 +23,8 @@ export function getChallengeManagerEntity(
       mdc.challengeManager,
       challengeManagerId,
     );
-    log.warning('create challengeManager: {}', [challengeManagerId]);
+    manager.owner = mdc.owner;
+    log.info('create challengeManager: {}', [challengeManagerId]);
     manager.challengeStatues = challengeStatues[challengeENUM.CREATE];
     manager.challengeId = challengeId;
     manager.sourceTxFrom = stringInitStatues[stringInitENUM.EMPTY];

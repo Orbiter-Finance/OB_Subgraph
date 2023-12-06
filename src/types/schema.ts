@@ -67,6 +67,19 @@ export class challengeManager extends Entity {
     this.set("challengeId", Value.fromString(value));
   }
 
+  get owner(): string {
+    let value = this.get("owner");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set owner(value: string) {
+    this.set("owner", Value.fromString(value));
+  }
+
   get challengeStatues(): string {
     let value = this.get("challengeStatues");
     if (!value || value.kind == ValueKind.NULL) {

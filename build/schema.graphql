@@ -36,6 +36,7 @@ enum StringInit {
 type challengeManager @entity {
   id: ID! #hash(challengeId, mdcAddress)
   challengeId: String! # bytes32
+  owner: String! # address of maker
   challengeStatues: ChallengeStatues!
   createChallenge: [createChallenge!]!
   # verifyChallengeSource result
@@ -87,35 +88,6 @@ type createChallenge @entity {
   # Rel
   challengeManager: challengeManager! @derivedFrom(field: "createChallenge")
 }
-
-# type verifyChallengeSource @entity(immutable: true) {
-#   id: ID! # hash(challengeId, challengerAddress, mdcAddress, verifyChallengeSourceTimestamp)
-#   challenger: String! # address
-#   sourceTxFrom: String # address
-#   challengeUserRatio: BigInt # uint64
-#   verifyChallengeSourceTimestamp: BigInt # uint64
-#   verifiedDataHash0: String
-#   verifyPassChallenger: String # address who create this challenge
-#   # info
-#   challengerVerifyTransactionFee: BigInt!
-#   verifier: String! # address who verified this challenge
-#   verifyChallengeSourceHash: String!
-#   verifyChallengeSourceNumber: BigInt!
-#   # Rel
-#   challengeManager: challengeManager!
-#     @derivedFrom(field: "verifyChallengeSource")
-# }
-
-# type verifyChallengeDest @entity(immutable: true) {
-#   id: ID! # hash(challengeId, challengerAddress, mdcAddress, verifyChallengeDestTimestamp)
-#   challenger: String! # address
-#   verifier: String! # address who verified this challenge
-#   verifyChallengeDestTimestamp: BigInt # uint64
-#   verifyChallengeDestHash: String!
-#   verifyChallengeDestNumber: BigInt!
-#   # Rel
-#   challengeManager: challengeManager! @derivedFrom(field: "verifyChallengeDest")
-# }
 
 type WithdrawRequested @entity(immutable: true) {
   id: ID! # log-index
