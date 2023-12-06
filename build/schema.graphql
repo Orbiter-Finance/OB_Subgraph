@@ -28,135 +28,93 @@ enum ChallengeStatues {
   LIQUIDATION
 }
 
+enum StringInit {
+  EMPTY
+  INVALID
+}
+
 type challengeManager @entity {
-  id: ID! #challengeId
+  id: ID! #hash(challengeId, mdcAddress)
+  challengeId: String! # bytes32
   challengeStatues: ChallengeStatues!
   createChallenge: [createChallenge!]!
-  verifyChallengeSource: verifyChallengeSource
-  verifyChallengeDest: verifyChallengeDest
-  # liquidation: [liquidation!]!
-  # tx info
-  latestUpdateHash: String!
-  latestUpdateTimestamp: BigInt!
-  latestUpdateBlockNumber: BigInt!
-  # Rel
-  owner: String! # address
+  # verifyChallengeSource result
+  sourceTxFrom: String! # address
+  challengeUserRatio: BigInt! # uint64
+  verifyChallengeSourceTimestamp: BigInt! # uint64
+  verifiedDataHash0: String!
+  verifyPassChallenger: String! # address who create this challenge
+  # verifyChallengeSource info
+  challengerVerifyTransactionFee: BigInt!
+  challengeSourceVerifier: String! # address who verified this challenge
+  verifyChallengeSourceHash: String!
+  verifyChallengeSourceNumber: BigInt!
+  # verifyChallengeDest result
+  challengeDestVerifier: String! # address who verified this challenge
+  verifyChallengeDestTimestamp: BigInt! # uint64
+  verifyChallengeDestHash: String!
+  verifyChallengeDestNumber: BigInt!
+
   mdc: MDC! @derivedFrom(field: "challengeManager")
 }
 
 type createChallenge @entity {
-  id: ID! #hash(challengeId, challengerAddress, mdcAddress)
+  id: ID! #hash(challengeId, challengerAddress, mdcAddress, createChallengeTimestamp)
   # Challenge statement
-  challengeId: String! # bytes32
+  challengeId: String! # bytes32 hash(sourceChainId, sourceTxHash)
   sourceChainId: BigInt!
-  # destChainId: BigInt!
   ruleKey: String! # hash(chain0,chain1,token0,token1)
   sourceTxHash: String! # bytes32
   sourceTxTime: BigInt! # uint64
   challenger: String! # address
   freezeToken: String! # address
-  freezeAmount0: BigInt! # uint256
-  freezeAmount1: BigInt! # uint256
-  challengeTime: BigInt! # uint64
-  sourceTxBlockNum: BigInt!
-  sourceTxIndex: BigInt!
+  freezeAmountMaker: BigInt! # uint256
+  freezeAmountChallenger: BigInt! # uint256
+  createChallengeTimestamp: BigInt! # uint64 timestamp of createChallenge
+  sourceTxBlockNum: BigInt! # uint64 challenge tx block number
+  sourceTxIndex: BigInt! # uint64 challenge tx index
   challengeNodeNumberParent: String! # challengeNodeNumber last number
   challengeNodeNumber: String! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
-  # # challenge result
-  # sourceTxFrom: BigInt # uint256
-  # challengeUserRatio: BigInt # uint64
-  # verifiedTime0: BigInt # uint64
-  # verifiedTime1: BigInt # uint64
-  # verifiedDataHash0: String
-  # abortTime: BigInt # uint64
-  # winner: String # address
   # info
-  challengerVerifyTransactionFee: BigInt!
-  latestUpdateHash: String!
-  latestUpdateTimestamp: BigInt!
-  latestUpdateBlockNumber: BigInt!
-
+  totalChallengeVerifyCost: BigInt! # uint: WEI
+  createChallengeHash: String! # txHash of createChallenge
+  createChallengeBlockNumber: BigInt! # blockNumber of createChallenge
   # liquidation
-  liquidator: String
-  abortTime: BigInt
+  liquidator: String # address who liquidated this challenge
+  liquidationTimestamp: BigInt #timestamp of liquidation this challenge of challenger
+  liquidationHash: String # txHash of liquidation this challenge of challenger
+  liquidationBlockNumber: BigInt
   # Rel
   challengeManager: challengeManager! @derivedFrom(field: "createChallenge")
 }
 
-type verifyChallengeSource @entity(immutable: true) {
-  id: ID! #challengeId
-  # Challenge statement
-  # challengeId: String! # bytes32
-  # sourceChainId: BigInt!
-  # sourceTxTime: BigInt! # uint64
-  challenger: String! # address
-  # freezeToken: String! # address
-  # freezeAmount0: BigInt! # uint256
-  # freezeAmount1: BigInt! # uint256
-  # challengeTime: BigInt! # uint64
-  # sourceTxBlockNum: BigInt!
-  # sourceTxIndex: BigInt!
-  # challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
-  # challenge result
-  sourceTxFrom: String # address
-  challengeUserRatio: BigInt # uint64
-  verifiedTime0: BigInt # uint64
-  # verifiedTime1: BigInt # uint64
-  verifiedDataHash0: String
-  # abortTime: BigInt # uint64
-  winner: String # address
-  # info
-  challengerVerifyTransactionFee: BigInt!
-  verifier: String!
-  latestUpdateHash: String!
-  latestUpdateTimestamp: BigInt!
-  latestUpdateBlockNumber: BigInt!
-  # Rel
-  challengeManager: challengeManager!
-    @derivedFrom(field: "verifyChallengeSource")
-}
+# type verifyChallengeSource @entity(immutable: true) {
+#   id: ID! # hash(challengeId, challengerAddress, mdcAddress, verifyChallengeSourceTimestamp)
+#   challenger: String! # address
+#   sourceTxFrom: String # address
+#   challengeUserRatio: BigInt # uint64
+#   verifyChallengeSourceTimestamp: BigInt # uint64
+#   verifiedDataHash0: String
+#   verifyPassChallenger: String # address who create this challenge
+#   # info
+#   challengerVerifyTransactionFee: BigInt!
+#   verifier: String! # address who verified this challenge
+#   verifyChallengeSourceHash: String!
+#   verifyChallengeSourceNumber: BigInt!
+#   # Rel
+#   challengeManager: challengeManager!
+#     @derivedFrom(field: "verifyChallengeSource")
+# }
 
-type verifyChallengeDest @entity(immutable: true) {
-  id: ID! #challengeId
-  # Challenge statement
-  # challengeId: String! # bytes32
-  # sourceChainId: BigInt!
-  # sourceTxTime: BigInt! # uint64
-  challenger: String! # address
-  # freezeToken: String! # address
-  # freezeAmount0: BigInt! # uint256
-  # freezeAmount1: BigInt! # uint256
-  # challengeTime: BigInt! # uint64
-  # sourceTxBlockNum: BigInt!
-  # sourceTxIndex: BigInt!
-  # challengeNodeNumber: Bytes! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
-  # # challenge result
-  # sourceTxFrom: String # address
-  # challengeUserRatio: BigInt # uint64
-  # verifiedTime0: BigInt # uint64
-  verifiedTime1: BigInt # uint64
-  # verifiedDataHash0: String
-  # abortTime: BigInt # uint64
-  # winner: String # address
-  # info
-  # challengerVerifyTransactionFee: BigInt!
-  verifier: String!
-  latestUpdateHash: String!
-  latestUpdateTimestamp: BigInt!
-  latestUpdateBlockNumber: BigInt!
-  # Rel
-  challengeManager: challengeManager! @derivedFrom(field: "verifyChallengeDest")
-}
-
-# type liquidation @entity(immutable: true) {
-#   id: ID! #challenger
-#   challengeId: String!
-#   liquidators: String!
-#   abortTime: BigInt!
-
-#   latestUpdateHash: String!
-#   latestUpdateBlockNumber: BigInt!
-#   challengeManager: challengeManager! @derivedFrom(field: "liquidation")
+# type verifyChallengeDest @entity(immutable: true) {
+#   id: ID! # hash(challengeId, challengerAddress, mdcAddress, verifyChallengeDestTimestamp)
+#   challenger: String! # address
+#   verifier: String! # address who verified this challenge
+#   verifyChallengeDestTimestamp: BigInt # uint64
+#   verifyChallengeDestHash: String!
+#   verifyChallengeDestNumber: BigInt!
+#   # Rel
+#   challengeManager: challengeManager! @derivedFrom(field: "verifyChallengeDest")
 # }
 
 type WithdrawRequested @entity(immutable: true) {

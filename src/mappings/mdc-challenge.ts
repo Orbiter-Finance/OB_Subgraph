@@ -1,73 +1,77 @@
 import { log } from 'matchstick-as';
-import {
-  MDC,
-  challengeManager,
-  createChallenge,
-  verifyChallengeDest,
-  verifyChallengeSource,
-} from '../types/schema';
+import { MDC, challengeManager, createChallenge } from '../types/schema';
 import { entity, padZeroToBytes } from './utils';
 import { STRING_EMPTY } from './helpers';
 import { BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts';
+import {
+  challengeStatues,
+  challengeENUM,
+  stringInitENUM,
+  stringInitStatues,
+} from './mdc-core';
 
 export function getChallengeManagerEntity(
   mdc: MDC,
   challengeId: string,
-  event: ethereum.Event,
 ): challengeManager {
-  let manager = challengeManager.load(challengeId);
+  const challengeManagerId = entity.createHashID([challengeId, mdc.id]);
+  let manager = challengeManager.load(challengeManagerId);
   if (manager == null) {
-    manager = new challengeManager(challengeId);
+    manager = new challengeManager(challengeManagerId);
     manager.createChallenge = [];
-    // manager.liquidation = [];
-    manager.owner = mdc.owner;
     mdc.challengeManager = entity.addRelation(
       mdc.challengeManager,
-      challengeId,
+      challengeManagerId,
     );
+    log.warning('create challengeManager: {}', [challengeManagerId]);
+    manager.challengeStatues = challengeStatues[challengeENUM.CREATE];
+    manager.challengeId = challengeId;
+    manager.sourceTxFrom = stringInitStatues[stringInitENUM.EMPTY];
+    manager.challengeUserRatio = BigInt.fromI32(0);
+    manager.verifyChallengeSourceTimestamp = BigInt.fromI32(0);
+    manager.verifiedDataHash0 = stringInitStatues[stringInitENUM.EMPTY];
+    manager.verifyPassChallenger = stringInitStatues[stringInitENUM.EMPTY];
+    manager.challengerVerifyTransactionFee = BigInt.fromI32(0);
+    manager.challengeSourceVerifier = stringInitStatues[stringInitENUM.EMPTY];
+    manager.verifyChallengeSourceHash = stringInitStatues[stringInitENUM.EMPTY];
+    manager.verifyChallengeSourceNumber = BigInt.fromI32(0);
+    manager.challengeDestVerifier = stringInitStatues[stringInitENUM.EMPTY];
+    manager.verifyChallengeDestTimestamp = BigInt.fromI32(0);
+    manager.verifyChallengeDestHash = stringInitStatues[stringInitENUM.EMPTY];
+    manager.verifyChallengeDestNumber = BigInt.fromI32(0);
   }
-  manager.latestUpdateHash = event.transaction.hash.toHexString();
-  manager.latestUpdateBlockNumber = event.block.number;
-  manager.latestUpdateTimestamp = event.block.timestamp;
   return manager as challengeManager;
-}
-
-export function checkCreateChallengeExit(
-  challengeManager: challengeManager,
-  challenger: string,
-  mdc: MDC,
-): boolean {
-  let id = entity.createHashID([challengeManager.id, challenger, mdc.id]);
-  let _createChallenge = createChallenge.load(id);
-  if (_createChallenge == null) {
-    return false;
-  } else {
-    return true;
-  }
 }
 
 export function getCreateChallenge(
   challengeManager: challengeManager,
   challenger: string,
   mdc: MDC,
+  createChallengeTimestamp: BigInt,
 ): createChallenge {
-  let id = entity.createHashID([challengeManager.id, challenger, mdc.id]);
+  let id = entity.createHashID([
+    challengeManager.challengeId,
+    challenger,
+    mdc.id,
+    createChallengeTimestamp.toHexString(),
+  ]);
   let _createChallenge = createChallenge.load(id);
   if (_createChallenge == null) {
     _createChallenge = new createChallenge(id);
     _createChallenge.challengeId = challengeManager.id;
     _createChallenge.challenger = challenger;
-    challengeManager.createChallenge = entity.addRelation(
-      challengeManager.createChallenge,
-      id,
-    );
-    log.info('create Challenge! managerId: {}, challenger: {}, ({})', [
+    log.info('new_CreateChallenge, managerId: {}, challenger: {}, id: {}', [
       challengeManager.id,
       challenger,
       id,
     ]);
+    challengeManager.createChallenge = entity.addRelation(
+      challengeManager.createChallenge,
+      id,
+    );
+    challengeManager.save();
   } else {
-    log.info('load current Challenge! managerId: {}, challenger: {}, ({})', [
+    log.info('load_CreateChallenge, managerId: {}, challenger: {}, id: {}', [
       challengeManager.id,
       challenger,
       id,
@@ -111,30 +115,50 @@ export function calChallengeNodeList(
 //   return _liquidation as liquidation;
 // }
 
-export function getVerifyChallengeSourceEntity(
-  challengeManager: challengeManager,
-  challengeId: string,
-): verifyChallengeSource {
-  let _entity = verifyChallengeSource.load(challengeId);
-  if (_entity == null) {
-    _entity = new verifyChallengeSource(challengeId);
-    // _entity.challengeId = challengeId;
-    challengeManager.verifyChallengeSource = challengeId;
-    log.info('create verifySourceEntity! challengeId: {}', [challengeId]);
-  }
-  return _entity as verifyChallengeSource;
-}
+// export function getVerifyChallengeSourceEntity(
+//   challengeManager: challengeManager,
+//   challengeId: string,
+//   challengerAddress: string,
+//   mdcAddress: string,
+//   verifyChallengeSourceTimestamp: BigInt,
+// ): verifyChallengeSource {
+//   const verifyChallengeSourceId = entity.createHashID([
+//     challengeId,
+//     challengerAddress,
+//     mdcAddress,
+//     verifyChallengeSourceTimestamp.toHexString(),
+//   ]);
+//   let _entity = verifyChallengeSource.load(verifyChallengeSourceId);
+//   if (_entity == null) {
+//     _entity = new verifyChallengeSource(verifyChallengeSourceId);
+//     challengeManager.verifyChallengeSource = verifyChallengeSourceId;
+//     log.info('create verifySourceEntity! challengeId: {}', [
+//       verifyChallengeSourceId,
+//     ]);
+//   }
+//   return _entity as verifyChallengeSource;
+// }
 
-export function getVerifyChallengeDestEntity(
-  challengeManager: challengeManager,
-  challengeId: string,
-): verifyChallengeDest {
-  let _entity = verifyChallengeDest.load(challengeId);
-  if (_entity == null) {
-    _entity = new verifyChallengeDest(challengeId);
-    // _entity.challengeId = challengeId;
-    challengeManager.verifyChallengeDest = challengeId;
-    log.info('create verifyDestEntity! challengeId: {}', [challengeId]);
-  }
-  return _entity as verifyChallengeDest;
-}
+// export function getVerifyChallengeDestEntity(
+//   challengeManager: challengeManager,
+//   challengeId: string,
+//   challengerAddress: string,
+//   mdcAddress: string,
+//   verifyChallengeDestTimestamp: BigInt,
+// ): verifyChallengeDest {
+//   const verifyChallengeDestId = entity.createHashID([
+//     challengeId,
+//     challengerAddress,
+//     mdcAddress,
+//     verifyChallengeDestTimestamp.toHexString(),
+//   ]);
+//   let _entity = verifyChallengeDest.load(verifyChallengeDestId);
+//   if (_entity == null) {
+//     _entity = new verifyChallengeDest(verifyChallengeDestId);
+//     challengeManager.verifyChallengeDest = verifyChallengeDestId;
+//     log.info('create verifyDestEntity! challengeId: {}', [
+//       verifyChallengeDestId,
+//     ]);
+//   }
+//   return _entity as verifyChallengeDest;
+// }

@@ -23,10 +23,12 @@ import { customData } from '../src/mappings/helpers';
 // https://thegraph.com/docs/en/developer/matchstick/#tests-structure-0-5-0
 
 describe('test MDC create Challenge related function', () => {
+  const challengeManagerId =
+    '0xb947c0a815de61139a784d0ba7b127a5cdbf799ad8adf3ee3f02374418fb78b0';
   const ChallengeId: string = '0x123456';
   const Challenger: string = '0xc3c7a782dda00a8e61cb9ba0ea8680bb3f3b9d10';
   const CreateChallengeID: string =
-    '0xdb7a2a51019d786377e1fceeb3c2e1caf928f436a330eb2585e6fd2057100387';
+    '0x31a96bafce95b2a2bce07a0deb4d63c5a5fe8addb6b09d28d8d51f3def93d343';
   const mdcAddr: string = '0xa16081f360e3847006db660bae1c6d1b2e17ec2a';
   const checkChallenge_mockChallenger: string =
     '0xafcfbb382b28dae47b76224f24ee29be2c823648';
@@ -83,14 +85,19 @@ describe('test MDC create Challenge related function', () => {
     assert.entityCount('createChallenge', 1);
 
     // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
-    assert.fieldEquals('challengeManager', ChallengeId, 'id', ChallengeId);
+    assert.fieldEquals(
+      'challengeManager',
+      challengeManagerId,
+      'challengeId',
+      ChallengeId,
+    );
 
     let createChallengeIdList = new Array<string>();
     createChallengeIdList.push(CreateChallengeID);
 
     assert.fieldEquals(
       'challengeManager',
-      ChallengeId,
+      challengeManagerId,
       'createChallenge',
       `[${createChallengeIdList}\]`,
     );
@@ -104,6 +111,8 @@ describe('test MDC create Challenge related function', () => {
   });
 
   describe('test MDC verifySource related function', () => {
+    const challengeManagerId =
+      '0xb947c0a815de61139a784d0ba7b127a5cdbf799ad8adf3ee3f02374418fb78b0';
     const ChallengeId: string = '0x123456';
     const Challenger: string = '0xc3c7a782dda00a8e61cb9ba0ea8680bb3f3b9d10';
     beforeAll(() => {
@@ -115,7 +124,7 @@ describe('test MDC create Challenge related function', () => {
         '0x5f9204bc7402d77d8c9baa97d8f225e85347961e',
       );
       let statementTuple: Array<ethereum.Value> = [
-        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1111111111)),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
         ethereum.Value.fromAddress(freezeToken),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
@@ -156,18 +165,19 @@ describe('test MDC create Challenge related function', () => {
     test('verifySource related entities created and stored', () => {
       assert.entityCount('challengeManager', 1);
       assert.entityCount('createChallenge', 1);
-      assert.entityCount('verifyChallengeSource', 1);
 
       assert.fieldEquals(
-        'verifyChallengeSource',
-        ChallengeId,
-        'challenger',
-        Challenger,
+        'challengeManager',
+        challengeManagerId,
+        'sourceTxFrom',
+        BigInt.fromI32(1111111111).toHexString(),
       );
     });
   });
 
   describe('test MDC verifyDest related function', () => {
+    const challengeManagerId =
+      '0xb947c0a815de61139a784d0ba7b127a5cdbf799ad8adf3ee3f02374418fb78b0';
     const ChallengeId: string = '0x123456';
     const Challenger: string = '0xc3c7a782dda00a8e61cb9ba0ea8680bb3f3b9d10';
     beforeAll(() => {
@@ -220,23 +230,23 @@ describe('test MDC create Challenge related function', () => {
     test('verifySource related entities created and stored', () => {
       assert.entityCount('challengeManager', 1);
       assert.entityCount('createChallenge', 1);
-      assert.entityCount('verifyChallengeSource', 1);
-      assert.entityCount('verifyChallengeDest', 1);
 
       assert.fieldEquals(
-        'verifyChallengeDest',
-        ChallengeId,
-        'challenger',
-        Challenger,
+        'challengeManager',
+        challengeManagerId,
+        'challengeDestVerifier',
+        '0xa16081f360e3847006db660bae1c6d1b2e17ec2a',
       );
     });
   });
 
   describe('test MDC challenge Liquidation related function', () => {
+    const challengeManagerId =
+      '0xb947c0a815de61139a784d0ba7b127a5cdbf799ad8adf3ee3f02374418fb78b0';
     const ChallengeId: string = '0x123456';
     const Challenger: string = '0xa16081f360e3847006db660bae1c6d1b2e17ec2a';
     const CreateChallengeID: string =
-      '0xdb7a2a51019d786377e1fceeb3c2e1caf928f436a330eb2585e6fd2057100387';
+      '0x31a96bafce95b2a2bce07a0deb4d63c5a5fe8addb6b09d28d8d51f3def93d343';
     const mdcAddr: string = '0xa16081f360e3847006db660bae1c6d1b2e17ec2a';
     const checkChallenge_mockChallenger: string =
       '0xafcfbb382b28dae47b76224f24ee29be2c823648';
@@ -291,34 +301,12 @@ describe('test MDC create Challenge related function', () => {
       assert.entityCount('challengeManager', 1);
       assert.entityCount('createChallenge', 1);
 
-      // 0xa16081f360e3847006db660bae1c6d1b2e17ec2a is the default address used in newMockEvent() function
-      // assert.fieldEquals(
-      //   'liquidation',
-      //   checkChallenge_mockChallenger,
-      //   'id',
-      //   checkChallenge_mockChallenger,
-      // );
-
-      // assert.fieldEquals(
-      //   'liquidation',
-      //   checkChallenge_mockChallenger,
-      //   'challengeId',
-      //   ChallengeId,
-      // );
-
       assert.fieldEquals(
         'createChallenge',
         CreateChallengeID,
         'liquidator',
-        Challenger,
+        '0xa16081f360e3847006db660bae1c6d1b2e17ec2a',
       );
-
-      // assert.fieldEquals(
-      //   'challengeManager',
-      //   ChallengeId,
-      //   'liquidation',
-      //   `[${checkChallenge_mockChallenger}\]`,
-      // );
     });
   });
 });

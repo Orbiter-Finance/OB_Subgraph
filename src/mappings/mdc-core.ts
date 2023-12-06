@@ -89,8 +89,6 @@ import {
   calChallengeNodeList,
   getChallengeManagerEntity,
   getCreateChallenge,
-  getVerifyChallengeDestEntity,
-  getVerifyChallengeSourceEntity,
 } from './mdc-challenge';
 
 export enum challengeENUM {
@@ -106,6 +104,13 @@ export const challengeStatues: string[] = [
   'VERIFY_DEST',
   'LIQUIDATION',
 ];
+
+export enum stringInitENUM {
+  EMPTY = 0,
+  INVALID = 1,
+}
+
+export const stringInitStatues: string[] = ['EMPTY', 'INVALID'];
 
 export function handleupdateRulesRootEvent(
   event: ethereum.Event,
@@ -401,30 +406,33 @@ export function handleChallengeInfoUpdatedEvent(
   const inputdata = isProduction ? event.transaction.input : customData.input;
   const selector: string = calldata.getSelector(inputdata).toHexString();
   let mdc = getMDCEntity(event.address, event);
-  let challengeManager = getChallengeManagerEntity(mdc, challengeId, event);
+  let challengeManager = getChallengeManagerEntity(mdc, challengeId);
   if (selector == function_challenge) {
     log.info('trigger challenge(), selector: {}', [selector]);
     const DecodeResult = decodeCreateChallenge(inputdata);
     const challenger: string = isProduction
       ? event.transaction.from.toHexString()
       : customData.challenger;
-    let createChallenge = getCreateChallenge(challengeManager, challenger, mdc);
+    let createChallenge = getCreateChallenge(
+      challengeManager,
+      challenger,
+      mdc,
+      challengeTime,
+    );
     createChallenge.sourceChainId = DecodeResult.sourceChainId;
     createChallenge.sourceTxHash = DecodeResult.sourceTxHash;
     createChallenge.ruleKey = DecodeResult.ruleKey;
     createChallenge.challenger = event.transaction.from.toHexString();
     createChallenge.sourceTxTime = sourceTxTime;
     createChallenge.freezeToken = freezeToken;
-    createChallenge.freezeAmount0 = freezeAmount0;
-    createChallenge.freezeAmount1 = freezeAmount1;
-    createChallenge.challengeTime = challengeTime;
+    createChallenge.freezeAmountMaker = freezeAmount0;
+    createChallenge.freezeAmountChallenger = freezeAmount1;
+    createChallenge.createChallengeTimestamp = challengeTime;
     createChallenge.sourceTxBlockNum = sourceTXBlockNumber;
     createChallenge.sourceTxIndex = sourceTxIndex;
-    createChallenge.challengerVerifyTransactionFee =
-      challengerVerifyTransactionFee;
-    createChallenge.latestUpdateHash = event.transaction.hash.toHexString();
-    createChallenge.latestUpdateTimestamp = event.block.timestamp;
-    createChallenge.latestUpdateBlockNumber = event.block.number;
+    createChallenge.totalChallengeVerifyCost = challengerVerifyTransactionFee;
+    createChallenge.createChallengeHash = event.transaction.hash.toHexString();
+    createChallenge.createChallengeBlockNumber = event.block.number;
     createChallenge.challengeNodeNumberParent =
       DecodeResult.challengeNodeNumberParent;
     createChallenge.challengeNodeNumber = calChallengeNodeList(
@@ -433,27 +441,43 @@ export function handleChallengeInfoUpdatedEvent(
       sourceTXBlockNumber,
       sourceTxIndex,
     );
-    createChallenge.abortTime = BigInt.fromI32(0);
-    createChallenge.liquidator = ETH_ZERO_ADDRESS;
+    createChallenge.liquidationTimestamp = BigInt.fromI32(0);
+    createChallenge.liquidator = stringInitStatues[stringInitENUM.EMPTY];
+    createChallenge.liquidationHash = stringInitStatues[stringInitENUM.EMPTY];
+    createChallenge.liquidationBlockNumber = BigInt.fromI32(0);
     challengeManager.challengeStatues = challengeStatues[challengeENUM.CREATE];
     createChallenge.save();
   } else if (selector == function_checkChallenge) {
     let createChallenge: createChallenge;
-    log.info('trigger checkChallenge(), selector: {}', [selector]);
     const challengerArray: string[] = decodeCheckChallenge(inputdata);
     for (let i = 0; i < challengerArray.length; i++) {
       const challenger: string = isProduction
         ? challengerArray[i]
         : customData.challenger;
-      createChallenge = getCreateChallenge(challengeManager, challenger, mdc);
-      if (createChallenge.liquidator == ETH_ZERO_ADDRESS) {
-        createChallenge.abortTime = abortTime;
+      createChallenge = getCreateChallenge(
+        challengeManager,
+        challenger,
+        mdc,
+        challengeTime,
+      );
+      log.info(
+        'trigger checkChallenge(), selector: {}, id:{}, hash{}, index:{}',
+        [
+          selector,
+          createChallenge.id,
+          event.transaction.hash.toHexString(),
+          i.toString(),
+        ],
+      );
+      if (
+        createChallenge.liquidator == stringInitStatues[stringInitENUM.EMPTY]
+      ) {
+        createChallenge.liquidationTimestamp = abortTime;
         createChallenge.liquidator = event.transaction.from.toHexString();
-        createChallenge.challengerVerifyTransactionFee =
+        createChallenge.totalChallengeVerifyCost =
           challengerVerifyTransactionFee;
-        createChallenge.latestUpdateHash = event.transaction.hash.toHexString();
-        createChallenge.latestUpdateTimestamp = event.block.timestamp;
-        createChallenge.latestUpdateBlockNumber = event.block.number;
+        createChallenge.liquidationHash = event.transaction.hash.toHexString();
+        createChallenge.liquidationBlockNumber = event.block.number;
         createChallenge.save();
         break;
       }
@@ -462,48 +486,54 @@ export function handleChallengeInfoUpdatedEvent(
       challengeStatues[challengeENUM.LIQUIDATION];
   } else if (function_verifyChallengeSourceSelcetorArray.includes(selector)) {
     log.info('trigger verifyChallengeSource(), selector: {}', [selector]);
-    let verifyChallengeSource = getVerifyChallengeSourceEntity(
-      challengeManager,
-      challengeId,
-    );
-    const challenger = decodeVerifyChallengeSource(inputdata, selector);
+    // const challenger = decodeVerifyChallengeSource(inputdata, selector);
+    // let verifyChallengeSource = getVerifyChallengeSourceEntity(
+    //   challengeManager,
+    //   challengeId,
+    //   challenger,
+    //   mdc.id,
+    //   verifiedTime0,
+    // );
     // let createChallenge = getCreateChallenge(challengeManager, challenger);
     // verifyChallengeSource.sourceChainId = createChallenge.sourceChainId;
-    verifyChallengeSource.sourceTxFrom = sourceTxFrom;
+    challengeManager.sourceTxFrom = sourceTxFrom;
     // verifyChallengeSource.sourceTxTime = sourceTxTime;
-    verifyChallengeSource.challenger = challenger;
+    // challengeManager.challenger = challenger;
     // verifyChallengeSource.freezeToken = freezeToken;
-    verifyChallengeSource.challengeUserRatio = challengeUserRatio;
+    challengeManager.challengeUserRatio = challengeUserRatio;
     // verifyChallengeSource.freezeAmount0 = freezeAmount0;
     // verifyChallengeSource.freezeAmount1 = freezeAmount1;
     // verifyChallengeSource.challengeTime = challengeTime;
     // verifyChallengeSource.sourceTxBlockNum = sourceTXBlockNumber;
     // verifyChallengeSource.sourceTxIndex = sourceTxIndex;
-    verifyChallengeSource.challengerVerifyTransactionFee =
+    challengeManager.challengerVerifyTransactionFee =
       challengerVerifyTransactionFee;
-    verifyChallengeSource.verifiedTime0 = verifiedTime0;
+    challengeManager.verifyChallengeSourceTimestamp = verifiedTime0;
     // verifyChallengeSource.verifiedTime1 = verifiedTime1;
     // verifyChallengeSource.abortTime = abortTime;
-    verifyChallengeSource.verifiedDataHash0 = verifiedDataHash0;
+    challengeManager.verifiedDataHash0 = verifiedDataHash0;
     // verifyChallengeSource.challengeNodeNumber =createChallenge.challengeNodeNumber;
     // verifyChallengeSource.createChallenge = createChallenge.id;
-    verifyChallengeSource.winner = winner;
-    verifyChallengeSource.verifier = event.transaction.from.toHexString();
-    verifyChallengeSource.latestUpdateHash =
+    challengeManager.verifyPassChallenger = winner;
+    challengeManager.challengeSourceVerifier =
+      event.transaction.from.toHexString();
+    challengeManager.verifyChallengeSourceHash =
       event.transaction.hash.toHexString();
-    verifyChallengeSource.latestUpdateTimestamp = event.block.timestamp;
-    verifyChallengeSource.latestUpdateBlockNumber = event.block.number;
+    challengeManager.verifyChallengeSourceNumber = event.block.number;
     challengeManager.challengeStatues =
       challengeStatues[challengeENUM.VERIFY_SOURCE];
-    verifyChallengeSource.save();
+    // verifyChallengeSource.save();
   } else if (function_verifyChallengeDestSelcetorArray.includes(selector)) {
     log.info('trigger verifyChallengeDest(), selector: {}', [selector]);
-    let verifyChallengeDest = getVerifyChallengeDestEntity(
-      challengeManager,
-      challengeId,
-    );
 
-    const challenger = decodeVerifyChallengeDest(inputdata, selector);
+    // const challenger = decodeVerifyChallengeDest(inputdata, selector);
+    // let verifyChallengeDest = getVerifyChallengeDestEntity(
+    //   challengeManager,
+    //   challengeId,
+    //   challenger,
+    //   mdc.id,
+    //   verifiedTime1,
+    // );
     // let createChallenge = getCreateChallenge(challengeManager, challenger, mdc);
     // let verifyChallengeSource = getVerifyChallengeSourceEntity(
     //   challengeManager,
@@ -512,7 +542,7 @@ export function handleChallengeInfoUpdatedEvent(
     // verifyChallengeDest.sourceChainId = createChallenge.sourceChainId;
     // verifyChallengeDest.sourceTxFrom = sourceTxFrom;
     // verifyChallengeDest.sourceTxTime = sourceTxTime;
-    verifyChallengeDest.challenger = challenger;
+    // challengeManager.challenger = challenger;
     // verifyChallengeDest.freezeToken = freezeToken;
     // verifyChallengeDest.challengeUserRatio = challengeUserRatio;
     // verifyChallengeDest.freezeAmount0 = freezeAmount0;
@@ -522,20 +552,21 @@ export function handleChallengeInfoUpdatedEvent(
     // verifyChallengeDest.sourceTxIndex = sourceTxIndex;
     // verifyChallengeDest.challengerVerifyTransactionFee = challengerVerifyTransactionFee;
     // verifyChallengeDest.verifiedTime0 = verifiedTime0;
-    verifyChallengeDest.verifiedTime1 = verifiedTime1;
+    challengeManager.verifyChallengeDestTimestamp = verifiedTime1;
     // verifyChallengeDest.abortTime = abortTime;
     // verifyChallengeDest.verifiedDataHash0 = verifiedDataHash0;
     // verifyChallengeDest.challengeNodeNumber = createChallenge.challengeNodeNumber;
     // verifyChallengeDest.createChallenge = createChallenge.id;
     // verifyChallengeDest.verifyChallengeSource = verifyChallengeSource.id;
     // verifyChallengeDest.winner = winner;
-    verifyChallengeDest.verifier = event.transaction.from.toHexString();
-    verifyChallengeDest.latestUpdateHash = event.transaction.hash.toHexString();
-    verifyChallengeDest.latestUpdateTimestamp = event.block.timestamp;
-    verifyChallengeDest.latestUpdateBlockNumber = event.block.number;
+    challengeManager.challengeDestVerifier =
+      event.transaction.from.toHexString();
+    challengeManager.verifyChallengeDestHash =
+      event.transaction.hash.toHexString();
+    challengeManager.verifyChallengeDestNumber = event.block.number;
     challengeManager.challengeStatues =
       challengeStatues[challengeENUM.VERIFY_DEST];
-    verifyChallengeDest.save();
+    // verifyChallengeDest.save();
   } else {
     log.error('challenge function selector mismatch: {}', [selector]);
   }
