@@ -19,7 +19,7 @@ import {
   parseChainInfoUpdatedInputData,
   getTokenEntity,
   getColumnArrayUpdatedEntity,
-  getMDCBindSPVEntity,
+  getcurrBoundSpvInfoEntity,
   getdealerSnapshotEntity,
   mdcStoreEBCNewMapping,
   mdcStoreDealerNewMapping,
@@ -373,7 +373,7 @@ export function handleSpvUpdatedEvent(
   let mdc = isProduction
     ? getMDCEntity(event.address, event)
     : getMDCEntity(Address.fromString(mockMdcAddr), event);
-  let _spv = getMDCBindSPVEntity(mdc, chainId);
+  let _spv = getcurrBoundSpvInfoEntity(mdc, chainId);
   _spv.spv = spv.toHexString();
   _spv.save();
   mdc.save();

@@ -116,7 +116,7 @@ type ColumnArrayUpdated @entity(immutable: true) {
   transactionHash: String!
 }
 
-type responseMakersMapping @entity {
+type responseMakersSnapshot @entity {
   id: ID! # hash(mdc address - txHash - logIndex)
   responseMakerList: [String!]! # responseMaker address array
   enableTimestamp: BigInt
@@ -133,13 +133,13 @@ type MDC @entity {
   owner: String! # address
   factoryAddr: String! # address
   ruleUpdateRel: [ruleUpdateRel!]!
-  responseMakersSnapshot: [responseMakersMapping!]! #snapshot
+  responseMakersSnapshot: [responseMakersSnapshot!]! #snapshot
   dealerSnapshot: [dealerSnapshot!]! #snapshot
   ebcSnapshot: [ebcSnapshot!]! #snapshot
   chainIdSnapshot: [chainIdSnapshot!]! #snapshot
   ruleSnapshot: [ruleRel!]! #snapshot
   ruleLatest: [latestRule!]! #latestData
-  bindSPVs: [MDCBindSPV!]! # MDCBindSPV
+  currBoundSpvInfo: [currBoundSpvInfo!]! # currBoundSpvInfo
   columnArrayUpdated: [ColumnArrayUpdated!]! # ColumnArrayUpdated
   mapping: MDCMapping # dealer/ebc/chainId mapping
   challengeManager: [challengeManager!]!
@@ -317,12 +317,12 @@ type ebcMappingSnapshot @entity {
 }
 
 # customed using entity
-type MDCBindSPV @entity {
+type currBoundSpvInfo @entity {
   id: ID! # mdc address - ChainId
   chainId: BigInt # uint64 - the index of state varible "_spvs[]" in MDC contract
   spv: String # spv address - the value of state varible "_spvs[]" in MDC contract
   enableTimestamp: BigInt
-  mdc: MDC! @derivedFrom(field: "bindSPVs") # MDC
+  mdc: MDC! @derivedFrom(field: "currBoundSpvInfo") # MDC
 }
 
 # customed using entity

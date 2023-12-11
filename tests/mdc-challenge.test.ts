@@ -24,7 +24,7 @@ import { customData } from '../src/mappings/helpers';
 
 describe('test MDC create Challenge related function', () => {
   const challengeManagerId =
-    '0xb947c0a815de61139a784d0ba7b127a5cdbf799ad8adf3ee3f02374418fb78b0';
+    '0xedc3c682acd3f5ced9441e7581543e5caea5b0a2f7074749980b688659bc88ef';
   const ChallengeId: string = '0x123456';
   const Challenger: string = '0xc3c7a782dda00a8e61cb9ba0ea8680bb3f3b9d10';
   const CreateChallengeID: string =
@@ -112,7 +112,7 @@ describe('test MDC create Challenge related function', () => {
 
   describe('test MDC verifySource related function', () => {
     const challengeManagerId =
-      '0xb947c0a815de61139a784d0ba7b127a5cdbf799ad8adf3ee3f02374418fb78b0';
+      '0xedc3c682acd3f5ced9441e7581543e5caea5b0a2f7074749980b688659bc88ef';
     const ChallengeId: string = '0x123456';
     const Challenger: string = '0xc3c7a782dda00a8e61cb9ba0ea8680bb3f3b9d10';
     beforeAll(() => {
@@ -177,7 +177,7 @@ describe('test MDC create Challenge related function', () => {
 
   describe('test MDC verifyDest related function', () => {
     const challengeManagerId =
-      '0xb947c0a815de61139a784d0ba7b127a5cdbf799ad8adf3ee3f02374418fb78b0';
+      '0xedc3c682acd3f5ced9441e7581543e5caea5b0a2f7074749980b688659bc88ef';
     const ChallengeId: string = '0x123456';
     const Challenger: string = '0xc3c7a782dda00a8e61cb9ba0ea8680bb3f3b9d10';
     beforeAll(() => {
@@ -242,7 +242,7 @@ describe('test MDC create Challenge related function', () => {
 
   describe('test MDC challenge Liquidation related function', () => {
     const challengeManagerId =
-      '0xb947c0a815de61139a784d0ba7b127a5cdbf799ad8adf3ee3f02374418fb78b0';
+      '0xedc3c682acd3f5ced9441e7581543e5caea5b0a2f7074749980b688659bc88ef';
     const ChallengeId: string = '0x123456';
     const Challenger: string = '0xa16081f360e3847006db660bae1c6d1b2e17ec2a';
     const CreateChallengeID: string =

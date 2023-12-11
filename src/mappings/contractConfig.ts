@@ -20,6 +20,7 @@ export class ContractDeployment {
       const factoryList: string[] = [
         '0xc1FbA31aACBD4A4f7B6b6B9620BE93fcF47e8f36',
         '0x362927553E49A4c260084EcaFeacFEcb9A92cA83',
+        '0x414ab2622945dCf473726437aD9d7dFB734db3a6',
       ];
       for (let i = 0; i < factoryList.length; i++) {
         lists.push(Address.fromString(factoryList[i]));

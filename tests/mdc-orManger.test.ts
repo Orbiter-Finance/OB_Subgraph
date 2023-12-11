@@ -47,7 +47,7 @@ describe('Describe check responseMakers Event', () => {
   // ]
   const responseMakers1 = '186258217070866900924478871193601082399096503291';
   const responseMakers2 = '905852841822203005801390459791760958298983703480';
-  const responseMakersMappingHashId =
+  const responseMakersSnapshotHashId =
     '0x6d354027a8504c84c1e6f33b1678c7b8257e01ef23addf06e9cf7e2311e3d7e2';
 
   beforeAll(() => {
@@ -90,16 +90,16 @@ describe('Describe check responseMakers Event', () => {
       'MDC',
       mockMdcAddr.toLowerCase(),
       'responseMakersSnapshot',
-      `[${responseMakersMappingHashId}]`,
+      `[${responseMakersSnapshotHashId}]`,
     );
   });
 
-  test('responseMakersMapping created and stored', () => {
-    assert.entityCount('responseMakersMapping', 1);
+  test('responseMakersSnapshot created and stored', () => {
+    assert.entityCount('responseMakersSnapshot', 1);
 
     assert.fieldEquals(
-      'responseMakersMapping',
-      responseMakersMappingHashId.toLowerCase(),
+      'responseMakersSnapshot',
+      responseMakersSnapshotHashId.toLowerCase(),
       'responseMakerList',
       '[0x20a01b78e7100a16ce9171730e1f2eb081a6fbfb, 0x9eabd8a598857fc4238899d6edd42d6158ab23b8]',
     );

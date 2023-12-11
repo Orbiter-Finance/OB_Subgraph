@@ -20,9 +20,9 @@ import {
   ebcRel,
   MDC,
   dealerSnapshot,
-  MDCBindSPV,
+  currBoundSpvInfo,
   MDCMapping,
-  responseMakersMapping,
+  responseMakersSnapshot,
   chainIdMapping,
   ebcMapping,
   latestRule,
@@ -211,7 +211,7 @@ export function getMDCEntity(mdcAddress: Address, event: ethereum.Event): MDC {
     mdc.columnArrayUpdated = [];
     mdc.ruleUpdateRel = [];
     mdc.responseMakersSnapshot = [];
-    mdc.bindSPVs = [];
+    mdc.currBoundSpvInfo = [];
     mdc.dealerSnapshot = [];
     mdc.ebcSnapshot = [];
     mdc.chainIdSnapshot = [];
@@ -333,16 +333,19 @@ export function getColumnArrayUpdatedEntity(
   return _columnArrayUpdated as ColumnArrayUpdated;
 }
 
-export function getMDCBindSPVEntity(mdc: MDC, chainId: BigInt): MDCBindSPV {
+export function getcurrBoundSpvInfoEntity(
+  mdc: MDC,
+  chainId: BigInt,
+): currBoundSpvInfo {
   const id = mdc.id + '-' + chainId.toString();
-  let _MDCBindSPV = MDCBindSPV.load(id);
-  if (_MDCBindSPV == null) {
-    _MDCBindSPV = new MDCBindSPV(id);
-    _MDCBindSPV.chainId = chainId;
-    saveSPV2MDC(mdc, _MDCBindSPV);
+  let _currBoundSpvInfo = currBoundSpvInfo.load(id);
+  if (_currBoundSpvInfo == null) {
+    _currBoundSpvInfo = new currBoundSpvInfo(id);
+    _currBoundSpvInfo.chainId = chainId;
+    saveSPV2MDC(mdc, _currBoundSpvInfo);
   }
 
-  return _MDCBindSPV as MDCBindSPV;
+  return _currBoundSpvInfo as currBoundSpvInfo;
 }
 
 export function getdealerSnapshotEntity(
@@ -835,14 +838,14 @@ export function mdcStoreResponseMaker(
     inputdata,
     func_updateResponseMakersName,
   );
-  let responseMakers = responseMakersMapping.load(id);
+  let responseMakers = responseMakersSnapshot.load(id);
   if (responseMakers == null) {
-    responseMakers = new responseMakersMapping(id);
+    responseMakers = new responseMakersSnapshot(id);
     responseMakers.owner = mdc.owner;
     responseMakers.responseMakerList = [];
     mdc.responseMakersSnapshot = [responseMakers.id];
     responseMakers.enableTimestamp = enableTimestamp;
-    log.info('mdc: {} create new responseMakersMapping, id: {}', [mdc.id, id]);
+    log.info('mdc: {} create new responseMakersSnapshot, id: {}', [mdc.id, id]);
   }
   responseMakers.responseMakerList = responseMakersArray;
   responseMakers.latestUpdateBlockNumber = event.block.number;
@@ -932,11 +935,11 @@ function saveLatestRule2MDCEBC(
   }
 }
 
-function saveSPV2MDC(mdc: MDC, spv: MDCBindSPV): void {
-  if (mdc.bindSPVs == null) {
-    mdc.bindSPVs = [spv.id];
-  } else if (!mdc.bindSPVs.includes(spv.id)) {
-    mdc.bindSPVs = mdc.bindSPVs.concat([spv.id]);
+function saveSPV2MDC(mdc: MDC, spv: currBoundSpvInfo): void {
+  if (mdc.currBoundSpvInfo == null) {
+    mdc.currBoundSpvInfo = [spv.id];
+  } else if (!mdc.currBoundSpvInfo.includes(spv.id)) {
+    mdc.currBoundSpvInfo = mdc.currBoundSpvInfo.concat([spv.id]);
   }
 }
 
