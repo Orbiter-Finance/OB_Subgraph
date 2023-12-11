@@ -192,7 +192,8 @@ export function handleColumnArrayUpdatedEvent(
   for (let i = 0; i < uniqueDealers.length; i++) {
     dealerArray.push(uniqueDealers[i].toHexString());
   }
-  const dealerSnapshot = getdealerSnapshotEntity(mdc, event);
+  let dealerSnapshot = getdealerSnapshotEntity(mdc, event);
+  dealerSnapshot.columnArrayHash = columnArrayHash.toHexString();
   mdcStoreDealerNewMapping(
     mdc,
     dealerSnapshot,
@@ -204,7 +205,8 @@ export function handleColumnArrayUpdatedEvent(
 
   // process chainIds
   let uniqueChainIds = removeDuplicatesBigInt(chainIds);
-  const chainIdSnapshot = getChainIdSnapshotEntity(mdc, event);
+  let chainIdSnapshot = getChainIdSnapshotEntity(mdc, event);
+  chainIdSnapshot.columnArrayHash = columnArrayHash.toHexString();
   mdcStoreChainIdNewMapping(
     mdc,
     chainIdSnapshot,
@@ -220,24 +222,26 @@ export function handleColumnArrayUpdatedEvent(
   for (let i = 0; i < uniqueEbcs.length; i++) {
     ebcsArray.push(uniqueEbcs[i].toHexString());
   }
-  const ebcSnapshot = getEBCSnapshotEntity(mdc, event);
+  let ebcSnapshot = getEBCSnapshotEntity(mdc, event);
+  ebcSnapshot.columnArrayHash = columnArrayHash.toHexString();
   mdcStoreEBCNewMapping(mdc, ebcSnapshot, ebcsArray, event, enableTimestamp);
   ebcSnapshot.save();
 
   // process ColumnArray
-  let columnArrayUpdated = getColumnArrayUpdatedEntity(event, mdc);
-  columnArrayUpdated.impl = impl.toHexString();
-  columnArrayUpdated.columnArrayHash = columnArrayHash.toHexString();
+  let columnArraySnapshot = getColumnArrayUpdatedEntity(event, mdc);
+  columnArraySnapshot.enableTimestamp = enableTimestamp;
+  columnArraySnapshot.impl = impl.toHexString();
+  columnArraySnapshot.columnArrayHash = columnArrayHash.toHexString();
   if (dealerArray.length > 0) {
-    columnArrayUpdated.dealers = dealerArray;
+    columnArraySnapshot.dealers = dealerArray;
   }
   if (ebcsArray.length > 0) {
-    columnArrayUpdated.ebcs = dealerArray;
+    columnArraySnapshot.ebcs = dealerArray;
   }
   if (uniqueChainIds.length > 0) {
-    columnArrayUpdated.chainIds = uniqueChainIds;
+    columnArraySnapshot.chainIds = uniqueChainIds;
   }
-  columnArrayUpdated.save();
+  columnArraySnapshot.save();
 
   mdc.save();
 }

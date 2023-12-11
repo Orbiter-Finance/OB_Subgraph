@@ -8,7 +8,7 @@ import {
   afterAll,
 } from 'matchstick-as/assembly/index';
 import { Address, BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts';
-import { ColumnArrayUpdated } from '../src/types/schema';
+import { columnArraySnapshot } from '../src/types/schema';
 import { ColumnArrayUpdated as ColumnArrayUpdatedEvent } from '../src/types/templates/MDC/MDC';
 import {
   handleColumnArrayUpdated,

@@ -14,7 +14,7 @@ import {
 import {
   chainRel,
   tokenRel,
-  ColumnArrayUpdated,
+  columnArraySnapshot,
   Dealer,
   DealerMapping,
   ebcRel,
@@ -208,7 +208,7 @@ export function getMDCEntity(mdcAddress: Address, event: ethereum.Event): MDC {
     ]);
     mdc = new MDC(mdcAddress.toHexString());
     mdc.owner = STRING_EMPTY;
-    mdc.columnArrayUpdated = [];
+    mdc.columnArraySnapshot = [];
     mdc.ruleUpdateRel = [];
     mdc.responseMakersSnapshot = [];
     mdc.currBoundSpvInfo = [];
@@ -312,25 +312,25 @@ export function getTokenEntity(
 export function getColumnArrayUpdatedEntity(
   event: ethereum.Event,
   mdc: MDC,
-): ColumnArrayUpdated {
-  let _columnArrayUpdated = ColumnArrayUpdated.load(
+): columnArraySnapshot {
+  let _columnArrayUpdated = columnArraySnapshot.load(
     entity.createEventID(event),
   );
   if (_columnArrayUpdated == null) {
-    log.info('create new ColumnArrayUpdated, id: {}', [
+    log.info('create new columnArraySnapshot, id: {}', [
       entity.createEventID(event),
     ]);
-    _columnArrayUpdated = new ColumnArrayUpdated(entity.createEventID(event));
+    _columnArrayUpdated = new columnArraySnapshot(entity.createEventID(event));
     _columnArrayUpdated.dealers = [];
     _columnArrayUpdated.ebcs = [];
     _columnArrayUpdated.chainIds = [];
-    _columnArrayUpdated.blockNumber = event.block.number;
-    _columnArrayUpdated.blockTimestamp = event.block.timestamp;
-    _columnArrayUpdated.transactionHash = event.transaction.hash.toHexString();
+    _columnArrayUpdated.latestUpdateBlockNumber = event.block.number;
+    _columnArrayUpdated.latestUpdateTimestamp = event.block.timestamp;
+    _columnArrayUpdated.latestUpdateHash = event.transaction.hash.toHexString();
     saveColumnArray2MDC(mdc, _columnArrayUpdated);
   }
 
-  return _columnArrayUpdated as ColumnArrayUpdated;
+  return _columnArrayUpdated as columnArraySnapshot;
 }
 
 export function getcurrBoundSpvInfoEntity(
@@ -522,6 +522,7 @@ export function mdcStoreDealerNewMapping(
   removeMDCFromDealer(mdc, event);
   mdcMapping.dealerMapping = [];
   _MDCBindDealer.dealerList = newDealers;
+  _MDCBindDealer.enableTimestamp = enableTimestamp;
   _MDCBindDealer.dealerMappingSnapshot = [];
   for (let mappingIndex = 0; mappingIndex < newDealers.length; mappingIndex++) {
     // const latestMappingId = mdc.id + "-" + newDealers[mappingIndex].toHexString()
@@ -551,14 +552,14 @@ export function mdcStoreDealerNewMapping(
       newDealers[mappingIndex];
     _MDCBindDealerSnapshot.dealerIndex = _dealerMapping.dealerIndex =
       BigInt.fromI32(mappingIndex + 1);
-    _MDCBindDealerSnapshot.latestUpdateBlockNumber =
-      _dealerMapping.latestUpdateBlockNumber = event.block.number;
-    _MDCBindDealerSnapshot.latestUpdateTimestamp =
-      _dealerMapping.latestUpdateTimestamp = event.block.timestamp;
-    _MDCBindDealerSnapshot.latestUpdateHash = _dealerMapping.latestUpdateHash =
-      event.transaction.hash.toHexString();
-    _MDCBindDealerSnapshot.enableTimestamp = _dealerMapping.enableTimestamp =
-      enableTimestamp;
+    // _MDCBindDealerSnapshot.latestUpdateBlockNumber =
+    //   _dealerMapping.latestUpdateBlockNumber = event.block.number;
+    // _MDCBindDealerSnapshot.latestUpdateTimestamp =
+    //   _dealerMapping.latestUpdateTimestamp = event.block.timestamp;
+    // _MDCBindDealerSnapshot.latestUpdateHash = _dealerMapping.latestUpdateHash =
+    //   event.transaction.hash.toHexString();
+    // _MDCBindDealerSnapshot.enableTimestamp = _dealerMapping.enableTimestamp =
+    //   enableTimestamp;
     snapshotMappingTmp = snapshotMappingTmp.concat([snapshotId]);
     latesMappingTmp = latesMappingTmp.concat([latestMappingId]);
 
@@ -636,9 +637,6 @@ function getebcMappingSnapshotEntity(
     _ebcMapping.ebcAddr = STRING_EMPTY;
     _ebcMapping.owner = mdc.owner;
   }
-  _ebcMapping.latestUpdateBlockNumber = event.block.number;
-  _ebcMapping.latestUpdateTimestamp = event.block.timestamp;
-  _ebcMapping.latestUpdateHash = event.transaction.hash.toHexString();
   return _ebcMapping as ebcMappingSnapshot;
 }
 
@@ -656,6 +654,7 @@ export function mdcStoreEBCNewMapping(
   mdcMapping.ebcMapping = [];
   ebcSnapshot.ebcList = newEBCs;
   ebcSnapshot.ebcMappingSnapshot = [];
+  ebcSnapshot.enableTimestamp = enableTimestamp;
   for (let mappingIndex = 0; mappingIndex < newEBCs.length; mappingIndex++) {
     const latestMappingId = entity.createBindID([
       mdc.id,
@@ -677,8 +676,8 @@ export function mdcStoreEBCNewMapping(
     _ebcSnapshot.ebcIndex = _ebcMapping.ebcIndex = BigInt.fromI32(
       mappingIndex + 1,
     );
-    _ebcSnapshot.enableTimestamp = _ebcMapping.enableTimestamp =
-      enableTimestamp;
+    // _ebcSnapshot.enableTimestamp = _ebcMapping.enableTimestamp =
+    //   enableTimestamp;
     snapshotMappingTmp = snapshotMappingTmp.concat([snapshotId]);
     latesMappingTmp = latesMappingTmp.concat([latestMappingId]);
 
@@ -722,9 +721,9 @@ function getchainIdMappingSnapshotEntity(
     _chainIdMapping.chainId = new BigInt(0);
     _chainIdMapping.owner = mdc.owner;
   }
-  _chainIdMapping.latestUpdateBlockNumber = event.block.number;
-  _chainIdMapping.latestUpdateTimestamp = event.block.timestamp;
-  _chainIdMapping.latestUpdateHash = event.transaction.hash.toHexString();
+  // _chainIdMapping.latestUpdateBlockNumber = event.block.number;
+  // _chainIdMapping.latestUpdateTimestamp = event.block.timestamp;
+  // _chainIdMapping.latestUpdateHash = event.transaction.hash.toHexString();
   return _chainIdMapping as chainIdMappingSnapshot;
 }
 
@@ -741,6 +740,7 @@ export function mdcStoreChainIdNewMapping(
   mdcMapping.chainIdMapping = [];
   chainIdSnapshot.chainIdList = newChainIds;
   chainIdSnapshot.chainIdMappingSnapshot = [];
+  chainIdSnapshot.enableTimestamp = enableTimestamp;
 
   for (let i = 0; i < newChainIds.length; i++) {
     const chainId = newChainIds[i];
@@ -760,14 +760,14 @@ export function mdcStoreChainIdNewMapping(
     latestMapping.chainIdIndex = snapshotMapping.chainIdIndex = BigInt.fromI32(
       i + 1,
     );
-    latestMapping.latestUpdateBlockNumber =
-      snapshotMapping.latestUpdateBlockNumber = event.block.number;
-    latestMapping.latestUpdateTimestamp =
-      snapshotMapping.latestUpdateTimestamp = event.block.timestamp;
-    latestMapping.latestUpdateHash = snapshotMapping.latestUpdateHash =
-      event.transaction.hash.toHexString();
-    latestMapping.enableTimestamp = snapshotMapping.enableTimestamp =
-      enableTimestamp;
+    // latestMapping.latestUpdateBlockNumber =
+    //   snapshotMapping.latestUpdateBlockNumber = event.block.number;
+    // latestMapping.latestUpdateTimestamp =
+    //   snapshotMapping.latestUpdateTimestamp = event.block.timestamp;
+    // latestMapping.latestUpdateHash = snapshotMapping.latestUpdateHash =
+    //   event.transaction.hash.toHexString();
+    // latestMapping.enableTimestamp = snapshotMapping.enableTimestamp =
+    //   enableTimestamp;
     latestMapping.save();
     snapshotMapping.save();
 
@@ -863,11 +863,11 @@ export function mdcStoreResponseMaker(
   }
 }
 
-function saveColumnArray2MDC(mdc: MDC, columnArray: ColumnArrayUpdated): void {
-  if (mdc.columnArrayUpdated == null) {
-    mdc.columnArrayUpdated = [columnArray.id];
-  } else if (!mdc.columnArrayUpdated.includes(columnArray.id)) {
-    mdc.columnArrayUpdated = mdc.columnArrayUpdated.concat([columnArray.id]);
+function saveColumnArray2MDC(mdc: MDC, columnArray: columnArraySnapshot): void {
+  if (mdc.columnArraySnapshot == null) {
+    mdc.columnArraySnapshot = [columnArray.id];
+  } else if (!mdc.columnArraySnapshot.includes(columnArray.id)) {
+    mdc.columnArraySnapshot = mdc.columnArraySnapshot.concat([columnArray.id]);
   }
 }
 

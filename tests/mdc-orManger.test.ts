@@ -7,7 +7,7 @@ import {
   afterAll,
 } from 'matchstick-as/assembly/index';
 import { Bytes, Address, BigInt, ethereum, log } from '@graphprotocol/graph-ts';
-import { ColumnArrayUpdated } from '../src/types/schema';
+import { columnArraySnapshot } from '../src/types/schema';
 import {
   ChallengeInfoUpdated as ChallengeInfoUpdatedEvent,
   ColumnArrayUpdated as ColumnArrayUpdatedEvent,
