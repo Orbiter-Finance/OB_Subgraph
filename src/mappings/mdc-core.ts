@@ -236,13 +236,12 @@ export function handleColumnArrayUpdatedEvent(
     columnArraySnapshot.dealers = dealerArray;
   }
   if (ebcsArray.length > 0) {
-    columnArraySnapshot.ebcs = dealerArray;
+    columnArraySnapshot.ebcs = ebcsArray;
   }
   if (uniqueChainIds.length > 0) {
     columnArraySnapshot.chainIds = uniqueChainIds;
   }
   columnArraySnapshot.save();
-
   mdc.save();
 }
 
