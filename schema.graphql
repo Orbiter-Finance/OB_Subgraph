@@ -102,19 +102,26 @@ type WithdrawRequested @entity(immutable: true) {
   mdc: MDC! @derivedFrom(field: "withdrawRequested") # MDC
 }
 
-# using entity, binding in contract Event
+enum columnArrayStatues {
+  PARAMETER_DUPLICATION
+  ALL_CLEAR
+}
+
 type columnArraySnapshot @entity(immutable: true) {
-  id: ID!
-  impl: String # address
-  columnArrayHash: String # bytes32
+  id: ID! # hash(txHash - logIndex)
+  columnArrayHash: String! # bytes32
   dealers: [String!]! # address[]
+  dealerMappingSnapshot: [DealerMappingSnapshot!]! # dealer address mapping, defined by maker
   ebcs: [String!]! # address[]
+  ebcMappingSnapshot: [ebcMappingSnapshot!]! # ebc address mapping, defined by maker
   chainIds: [BigInt!]! # uint64[]
+  chainIdMappingSnapshot: [chainIdMappingSnapshot!]! # chainId mapping, defined by maker
+  columnArrayStatues: columnArrayStatues!
   # Time
-  enableTimestamp: BigInt # uint64
-  latestUpdateHash: String
-  latestUpdateTimestamp: BigInt
-  latestUpdateBlockNumber: BigInt
+  enableTimestamp: BigInt! # uint64
+  latestUpdateHash: String!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateBlockNumber: BigInt!
   # Rel
   mdc: MDC! @derivedFrom(field: "columnArraySnapshot") # MDC
 }

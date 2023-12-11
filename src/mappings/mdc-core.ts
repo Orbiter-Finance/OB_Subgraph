@@ -110,6 +110,16 @@ export enum stringInitENUM {
   INVALID = 1,
 }
 
+export const columnArrayStatues: string[] = [
+  'PARAMETER_DUPLICATION',
+  'ALL_CLEAR',
+];
+
+export enum columnArrayENUM {
+  PARAMETER_DUPLICATION = 0,
+  ALL_CLEAR = 1,
+}
+
 export const stringInitStatues: string[] = ['EMPTY', 'INVALID'];
 
 export function handleupdateRulesRootEvent(
@@ -174,6 +184,7 @@ export function handleColumnArrayUpdatedEvent(
   ebcs: Array<Address>,
   chainIds: Array<BigInt>,
 ): void {
+  let parameterDuplication: bool = false;
   const mdcAddress = isProduction
     ? event.address
     : Address.fromString(mockMdcAddr);
@@ -188,59 +199,81 @@ export function handleColumnArrayUpdatedEvent(
 
   // process dealers
   let uniqueDealers = removeDuplicates(dealers);
+  if (dealers.length != uniqueDealers.length) {
+    parameterDuplication = true;
+  }
   let dealerArray = new Array<string>();
   for (let i = 0; i < uniqueDealers.length; i++) {
     dealerArray.push(uniqueDealers[i].toHexString());
   }
   let dealerSnapshot = getdealerSnapshotEntity(mdc, event);
   dealerSnapshot.columnArrayHash = columnArrayHash.toHexString();
-  mdcStoreDealerNewMapping(
-    mdc,
-    dealerSnapshot,
-    dealerArray,
-    event,
-    enableTimestamp,
-  );
-  dealerSnapshot.save();
 
   // process chainIds
   let uniqueChainIds = removeDuplicatesBigInt(chainIds);
+  if (chainIds.length != uniqueChainIds.length) {
+    parameterDuplication = true;
+  }
   let chainIdSnapshot = getChainIdSnapshotEntity(mdc, event);
   chainIdSnapshot.columnArrayHash = columnArrayHash.toHexString();
-  mdcStoreChainIdNewMapping(
-    mdc,
-    chainIdSnapshot,
-    uniqueChainIds,
-    event,
-    enableTimestamp,
-  );
-  chainIdSnapshot.save();
 
   // process ebcs
   let uniqueEbcs = removeDuplicates(ebcs);
+  if (ebcs.length != uniqueEbcs.length) {
+    parameterDuplication = true;
+  }
   let ebcsArray = new Array<string>();
   for (let i = 0; i < uniqueEbcs.length; i++) {
     ebcsArray.push(uniqueEbcs[i].toHexString());
   }
   let ebcSnapshot = getEBCSnapshotEntity(mdc, event);
   ebcSnapshot.columnArrayHash = columnArrayHash.toHexString();
-  mdcStoreEBCNewMapping(mdc, ebcSnapshot, ebcsArray, event, enableTimestamp);
-  ebcSnapshot.save();
 
   // process ColumnArray
   let columnArraySnapshot = getColumnArrayUpdatedEntity(event, mdc);
   columnArraySnapshot.enableTimestamp = enableTimestamp;
-  columnArraySnapshot.impl = impl.toHexString();
   columnArraySnapshot.columnArrayHash = columnArrayHash.toHexString();
-  if (dealerArray.length > 0) {
-    columnArraySnapshot.dealers = dealerArray;
+  columnArraySnapshot.dealers = dealerArray;
+  columnArraySnapshot.ebcs = ebcsArray;
+  columnArraySnapshot.chainIds = uniqueChainIds;
+  if (parameterDuplication) {
+    columnArraySnapshot.columnArrayStatues =
+      columnArrayStatues[columnArrayENUM.PARAMETER_DUPLICATION];
+  } else {
+    columnArraySnapshot.columnArrayStatues =
+      columnArrayStatues[columnArrayENUM.ALL_CLEAR];
   }
-  if (ebcsArray.length > 0) {
-    columnArraySnapshot.ebcs = ebcsArray;
-  }
-  if (uniqueChainIds.length > 0) {
-    columnArraySnapshot.chainIds = uniqueChainIds;
-  }
+
+  mdcStoreDealerNewMapping(
+    mdc,
+    dealerSnapshot,
+    dealerArray,
+    event,
+    enableTimestamp,
+    columnArraySnapshot,
+  );
+  dealerSnapshot.save();
+
+  mdcStoreChainIdNewMapping(
+    mdc,
+    chainIdSnapshot,
+    uniqueChainIds,
+    event,
+    enableTimestamp,
+    columnArraySnapshot,
+  );
+  chainIdSnapshot.save();
+
+  mdcStoreEBCNewMapping(
+    mdc,
+    ebcSnapshot,
+    ebcsArray,
+    event,
+    enableTimestamp,
+    columnArraySnapshot,
+  );
+  ebcSnapshot.save();
+
   columnArraySnapshot.save();
   mdc.save();
 }

@@ -805,38 +805,17 @@ export class columnArraySnapshot extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get impl(): string | null {
-    let value = this.get("impl");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set impl(value: string | null) {
-    if (!value) {
-      this.unset("impl");
-    } else {
-      this.set("impl", Value.fromString(<string>value));
-    }
-  }
-
-  get columnArrayHash(): string | null {
+  get columnArrayHash(): string {
     let value = this.get("columnArrayHash");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
       return value.toString();
     }
   }
 
-  set columnArrayHash(value: string | null) {
-    if (!value) {
-      this.unset("columnArrayHash");
-    } else {
-      this.set("columnArrayHash", Value.fromString(<string>value));
-    }
+  set columnArrayHash(value: string) {
+    this.set("columnArrayHash", Value.fromString(value));
   }
 
   get dealers(): Array<string> {
@@ -852,6 +831,19 @@ export class columnArraySnapshot extends Entity {
     this.set("dealers", Value.fromStringArray(value));
   }
 
+  get dealerMappingSnapshot(): Array<string> {
+    let value = this.get("dealerMappingSnapshot");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set dealerMappingSnapshot(value: Array<string>) {
+    this.set("dealerMappingSnapshot", Value.fromStringArray(value));
+  }
+
   get ebcs(): Array<string> {
     let value = this.get("ebcs");
     if (!value || value.kind == ValueKind.NULL) {
@@ -863,6 +855,19 @@ export class columnArraySnapshot extends Entity {
 
   set ebcs(value: Array<string>) {
     this.set("ebcs", Value.fromStringArray(value));
+  }
+
+  get ebcMappingSnapshot(): Array<string> {
+    let value = this.get("ebcMappingSnapshot");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set ebcMappingSnapshot(value: Array<string>) {
+    this.set("ebcMappingSnapshot", Value.fromStringArray(value));
   }
 
   get chainIds(): Array<BigInt> {
@@ -878,72 +883,82 @@ export class columnArraySnapshot extends Entity {
     this.set("chainIds", Value.fromBigIntArray(value));
   }
 
-  get enableTimestamp(): BigInt | null {
-    let value = this.get("enableTimestamp");
+  get chainIdMappingSnapshot(): Array<string> {
+    let value = this.get("chainIdMappingSnapshot");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBigInt();
+      return value.toStringArray();
     }
   }
 
-  set enableTimestamp(value: BigInt | null) {
-    if (!value) {
-      this.unset("enableTimestamp");
-    } else {
-      this.set("enableTimestamp", Value.fromBigInt(<BigInt>value));
-    }
+  set chainIdMappingSnapshot(value: Array<string>) {
+    this.set("chainIdMappingSnapshot", Value.fromStringArray(value));
   }
 
-  get latestUpdateHash(): string | null {
-    let value = this.get("latestUpdateHash");
+  get columnArrayStatues(): string {
+    let value = this.get("columnArrayStatues");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
       return value.toString();
     }
   }
 
-  set latestUpdateHash(value: string | null) {
-    if (!value) {
-      this.unset("latestUpdateHash");
+  set columnArrayStatues(value: string) {
+    this.set("columnArrayStatues", Value.fromString(value));
+  }
+
+  get enableTimestamp(): BigInt {
+    let value = this.get("enableTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
     } else {
-      this.set("latestUpdateHash", Value.fromString(<string>value));
+      return value.toBigInt();
     }
   }
 
-  get latestUpdateTimestamp(): BigInt | null {
+  set enableTimestamp(value: BigInt) {
+    this.set("enableTimestamp", Value.fromBigInt(value));
+  }
+
+  get latestUpdateHash(): string {
+    let value = this.get("latestUpdateHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set latestUpdateHash(value: string) {
+    this.set("latestUpdateHash", Value.fromString(value));
+  }
+
+  get latestUpdateTimestamp(): BigInt {
     let value = this.get("latestUpdateTimestamp");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
       return value.toBigInt();
     }
   }
 
-  set latestUpdateTimestamp(value: BigInt | null) {
-    if (!value) {
-      this.unset("latestUpdateTimestamp");
-    } else {
-      this.set("latestUpdateTimestamp", Value.fromBigInt(<BigInt>value));
-    }
+  set latestUpdateTimestamp(value: BigInt) {
+    this.set("latestUpdateTimestamp", Value.fromBigInt(value));
   }
 
-  get latestUpdateBlockNumber(): BigInt | null {
+  get latestUpdateBlockNumber(): BigInt {
     let value = this.get("latestUpdateBlockNumber");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
       return value.toBigInt();
     }
   }
 
-  set latestUpdateBlockNumber(value: BigInt | null) {
-    if (!value) {
-      this.unset("latestUpdateBlockNumber");
-    } else {
-      this.set("latestUpdateBlockNumber", Value.fromBigInt(<BigInt>value));
-    }
+  set latestUpdateBlockNumber(value: BigInt) {
+    this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
   }
 
   get mdc(): MDCLoader {

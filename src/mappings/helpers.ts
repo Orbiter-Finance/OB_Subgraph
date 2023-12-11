@@ -313,17 +313,21 @@ export function getColumnArrayUpdatedEntity(
   event: ethereum.Event,
   mdc: MDC,
 ): columnArraySnapshot {
-  let _columnArrayUpdated = columnArraySnapshot.load(
-    entity.createEventID(event),
-  );
+  const id = entity.createHashID([
+    mdc.id,
+    event.transaction.hash.toHexString(),
+    event.logIndex.toString(),
+  ]);
+  let _columnArrayUpdated = columnArraySnapshot.load(id);
   if (_columnArrayUpdated == null) {
-    log.info('create new columnArraySnapshot, id: {}', [
-      entity.createEventID(event),
-    ]);
-    _columnArrayUpdated = new columnArraySnapshot(entity.createEventID(event));
+    log.info('create new columnArraySnapshot, id: {}', [id]);
+    _columnArrayUpdated = new columnArraySnapshot(id);
     _columnArrayUpdated.dealers = [];
     _columnArrayUpdated.ebcs = [];
     _columnArrayUpdated.chainIds = [];
+    _columnArrayUpdated.dealerMappingSnapshot = [];
+    _columnArrayUpdated.ebcMappingSnapshot = [];
+    _columnArrayUpdated.chainIdMappingSnapshot = [];
     _columnArrayUpdated.latestUpdateBlockNumber = event.block.number;
     _columnArrayUpdated.latestUpdateTimestamp = event.block.timestamp;
     _columnArrayUpdated.latestUpdateHash = event.transaction.hash.toHexString();
@@ -515,6 +519,7 @@ export function mdcStoreDealerNewMapping(
   newDealers: string[],
   event: ethereum.Event,
   enableTimestamp: BigInt,
+  columnArraySnapshot: columnArraySnapshot,
 ): void {
   let mdcMapping = getMDCMappingEntity(mdc, event);
   let latesMappingTmp = [] as string[];
@@ -568,6 +573,10 @@ export function mdcStoreDealerNewMapping(
     let _dealer = getDealerEntity(newDealers[mappingIndex], event);
     _dealer.mdcs = entity.addRelation(_dealer.mdcs, mdc.id);
     _dealer.save();
+    columnArraySnapshot.dealerMappingSnapshot = entity.addRelation(
+      columnArraySnapshot.dealerMappingSnapshot,
+      snapshotId,
+    );
   }
   mdcMapping.dealerMapping = latesMappingTmp;
   _MDCBindDealer.dealerMappingSnapshot = snapshotMappingTmp;
@@ -646,6 +655,7 @@ export function mdcStoreEBCNewMapping(
   newEBCs: string[],
   event: ethereum.Event,
   enableTimestamp: BigInt,
+  columnArraySnapshot: columnArraySnapshot,
 ): void {
   let mdcMapping = getMDCMappingEntity(mdc, event);
   let latesMappingTmp = [] as string[];
@@ -687,6 +697,10 @@ export function mdcStoreEBCNewMapping(
     _ebc.mdcList = entity.addRelation(_ebc.mdcList, mdc.id);
     _ebc.save();
     mdc.save();
+    columnArraySnapshot.ebcMappingSnapshot = entity.addRelation(
+      columnArraySnapshot.ebcMappingSnapshot,
+      snapshotId,
+    );
   }
   mdcMapping.ebcMapping = latesMappingTmp;
   ebcSnapshot.ebcMappingSnapshot = snapshotMappingTmp;
@@ -733,6 +747,7 @@ export function mdcStoreChainIdNewMapping(
   newChainIds: BigInt[],
   event: ethereum.Event,
   enableTimestamp: BigInt,
+  columnArraySnapshot: columnArraySnapshot,
 ): void {
   let mdcMapping = getMDCMappingEntity(mdc, event);
   let latestMappingIds: string[] = [];
@@ -773,6 +788,10 @@ export function mdcStoreChainIdNewMapping(
 
     latestMappingIds.push(latestMappingId);
     snapshotMappingIds.push(snapshotMappingId);
+    columnArraySnapshot.chainIdMappingSnapshot = entity.addRelation(
+      columnArraySnapshot.chainIdMappingSnapshot,
+      snapshotMappingId,
+    );
   }
 
   mdcMapping.chainIdMapping = latestMappingIds;
