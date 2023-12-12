@@ -619,7 +619,7 @@ export class createChallenge extends Entity {
   }
 }
 
-export class WithdrawRequested extends Entity {
+export class withdrawRequestList extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -627,25 +627,25 @@ export class WithdrawRequested extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save WithdrawRequested entity without an ID");
+    assert(id != null, "Cannot save withdrawRequestList entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type WithdrawRequested must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type withdrawRequestList must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("WithdrawRequested", id.toString(), this);
+      store.set("withdrawRequestList", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): WithdrawRequested | null {
-    return changetype<WithdrawRequested | null>(
-      store.get_in_block("WithdrawRequested", id)
+  static loadInBlock(id: string): withdrawRequestList | null {
+    return changetype<withdrawRequestList | null>(
+      store.get_in_block("withdrawRequestList", id)
     );
   }
 
-  static load(id: string): WithdrawRequested | null {
-    return changetype<WithdrawRequested | null>(
-      store.get("WithdrawRequested", id)
+  static load(id: string): withdrawRequestList | null {
+    return changetype<withdrawRequestList | null>(
+      store.get("withdrawRequestList", id)
     );
   }
 
@@ -755,7 +755,7 @@ export class WithdrawRequested extends Entity {
 
   get mdc(): MDCLoader {
     return new MDCLoader(
-      "WithdrawRequested",
+      "withdrawRequestList",
       this.get("id")!.toString(),
       "mdc"
     );
@@ -1292,8 +1292,8 @@ export class MDC extends Entity {
     this.set("challengeManager", Value.fromStringArray(value));
   }
 
-  get withdrawRequested(): Array<string> {
-    let value = this.get("withdrawRequested");
+  get withdrawRequestList(): Array<string> {
+    let value = this.get("withdrawRequestList");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1301,8 +1301,8 @@ export class MDC extends Entity {
     }
   }
 
-  set withdrawRequested(value: Array<string>) {
-    this.set("withdrawRequested", Value.fromStringArray(value));
+  set withdrawRequestList(value: Array<string>) {
+    this.set("withdrawRequestList", Value.fromStringArray(value));
   }
 
   get factory(): FactoryManagerLoader {

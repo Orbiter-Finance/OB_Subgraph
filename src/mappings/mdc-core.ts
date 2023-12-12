@@ -51,7 +51,7 @@ import {
 } from './helpers';
 import {
   FactoryManager,
-  WithdrawRequested,
+  withdrawRequestList,
   ebcRel,
   createChallenge,
 } from '../types/schema';
@@ -615,16 +615,16 @@ export function handleWithdrawRequestedEvent(
   requestToken: string,
 ): void {
   let Id = entity.createHashEventID(event);
-  let withdrawEntity = new WithdrawRequested(Id);
+  let withdrawEntity = new withdrawRequestList(Id);
   if (withdrawEntity == null) {
-    withdrawEntity = new WithdrawRequested(Id);
+    withdrawEntity = new withdrawRequestList(Id);
   }
   withdrawEntity.requestAmount = requestAmount;
   withdrawEntity.minWithdrawTimestamp = minWithdrawTimestamp;
   withdrawEntity.requestToken = requestToken;
   let mdc = getMDCEntity(event.address, event);
   withdrawEntity.owner = mdc.owner;
-  mdc.withdrawRequested = entity.addRelation(mdc.withdrawRequested, Id);
+  mdc.withdrawRequestList = entity.addRelation(mdc.withdrawRequestList, Id);
   withdrawEntity.latestUpdateHash = event.transaction.hash.toHexString();
   withdrawEntity.latestUpdateTimestamp = event.block.timestamp;
   withdrawEntity.latestUpdateBlockNumber = event.block.number;

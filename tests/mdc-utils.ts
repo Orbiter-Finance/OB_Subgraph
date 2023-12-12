@@ -1,39 +1,39 @@
-import { newMockEvent } from "matchstick-as"
-import { ethereum, Address, Bytes, BigInt } from "@graphprotocol/graph-ts"
+import { newMockEvent } from 'matchstick-as';
+import { ethereum, Address, Bytes, BigInt } from '@graphprotocol/graph-ts';
 import {
   ChallengeInfoUpdated,
   ColumnArrayUpdated,
   ResponseMakersUpdated,
   RulesRootUpdated,
   SpvUpdated,
-  WithdrawRequested
-} from "../src/types/templates/MDC/MDC"
+  WithdrawRequested,
+} from '../src/types/templates/MDC/MDC';
 
 export function createChallengeInfoUpdatedEvent(
   challengeId: Bytes,
   statement: ethereum.Tuple,
-  result: ethereum.Tuple
+  result: ethereum.Tuple,
 ): ChallengeInfoUpdated {
   let challengeInfoUpdatedEvent = changetype<ChallengeInfoUpdated>(
-    newMockEvent()
-  )
+    newMockEvent(),
+  );
 
-  challengeInfoUpdatedEvent.parameters = new Array()
+  challengeInfoUpdatedEvent.parameters = new Array();
 
   challengeInfoUpdatedEvent.parameters.push(
     new ethereum.EventParam(
-      "challengeId",
-      ethereum.Value.fromFixedBytes(challengeId)
-    )
-  )
+      'challengeId',
+      ethereum.Value.fromFixedBytes(challengeId),
+    ),
+  );
   challengeInfoUpdatedEvent.parameters.push(
-    new ethereum.EventParam("statement", ethereum.Value.fromTuple(statement))
-  )
+    new ethereum.EventParam('statement', ethereum.Value.fromTuple(statement)),
+  );
   challengeInfoUpdatedEvent.parameters.push(
-    new ethereum.EventParam("result", ethereum.Value.fromTuple(result))
-  )
+    new ethereum.EventParam('result', ethereum.Value.fromTuple(result)),
+  );
 
-  return challengeInfoUpdatedEvent
+  return challengeInfoUpdatedEvent;
 }
 
 export function createColumnArrayUpdatedEvent(
@@ -41,137 +41,140 @@ export function createColumnArrayUpdatedEvent(
   columnArrayHash: Bytes,
   dealers: Array<Address>,
   ebcs: Array<Address>,
-  chainIds: Array<BigInt>
+  chainIds: Array<BigInt>,
 ): ColumnArrayUpdated {
-  let columnArrayUpdatedEvent = changetype<ColumnArrayUpdated>(newMockEvent())
+  let columnArrayUpdatedEvent = changetype<ColumnArrayUpdated>(newMockEvent());
 
-  columnArrayUpdatedEvent.parameters = new Array()
+  columnArrayUpdatedEvent.parameters = new Array();
 
   columnArrayUpdatedEvent.parameters.push(
-    new ethereum.EventParam("impl", ethereum.Value.fromAddress(impl))
-  )
+    new ethereum.EventParam('impl', ethereum.Value.fromAddress(impl)),
+  );
   columnArrayUpdatedEvent.parameters.push(
     new ethereum.EventParam(
-      "columnArrayHash",
-      ethereum.Value.fromFixedBytes(columnArrayHash)
-    )
-  )
-  columnArrayUpdatedEvent.parameters.push(
-    new ethereum.EventParam("dealers", ethereum.Value.fromAddressArray(dealers))
-  )
-  columnArrayUpdatedEvent.parameters.push(
-    new ethereum.EventParam("ebcs", ethereum.Value.fromAddressArray(ebcs))
-  )
+      'columnArrayHash',
+      ethereum.Value.fromFixedBytes(columnArrayHash),
+    ),
+  );
   columnArrayUpdatedEvent.parameters.push(
     new ethereum.EventParam(
-      "chainIds",
-      ethereum.Value.fromUnsignedBigIntArray(chainIds)
-    )
-  )
+      'dealers',
+      ethereum.Value.fromAddressArray(dealers),
+    ),
+  );
+  columnArrayUpdatedEvent.parameters.push(
+    new ethereum.EventParam('ebcs', ethereum.Value.fromAddressArray(ebcs)),
+  );
+  columnArrayUpdatedEvent.parameters.push(
+    new ethereum.EventParam(
+      'chainIds',
+      ethereum.Value.fromUnsignedBigIntArray(chainIds),
+    ),
+  );
 
-  return columnArrayUpdatedEvent
+  return columnArrayUpdatedEvent;
 }
 
 export function createResponseMakersUpdatedEvent(
   impl: Address,
-  responseMakers: Array<BigInt>
+  responseMakers: Array<BigInt>,
 ): ResponseMakersUpdated {
   let responseMakersUpdatedEvent = changetype<ResponseMakersUpdated>(
-    newMockEvent()
-  )
+    newMockEvent(),
+  );
 
-  responseMakersUpdatedEvent.parameters = new Array()
+  responseMakersUpdatedEvent.parameters = new Array();
 
   responseMakersUpdatedEvent.parameters.push(
-    new ethereum.EventParam("impl", ethereum.Value.fromAddress(impl))
-  )
+    new ethereum.EventParam('impl', ethereum.Value.fromAddress(impl)),
+  );
   responseMakersUpdatedEvent.parameters.push(
     new ethereum.EventParam(
-      "responseMakers",
-      ethereum.Value.fromUnsignedBigIntArray(responseMakers)
-    )
-  )
+      'responseMakers',
+      ethereum.Value.fromUnsignedBigIntArray(responseMakers),
+    ),
+  );
 
-  return responseMakersUpdatedEvent
+  return responseMakersUpdatedEvent;
 }
 
 export function createRulesRootUpdatedEvent(
   impl: Address,
   ebc: Address,
-  rootWithVersion: ethereum.Tuple
+  rootWithVersion: ethereum.Tuple,
 ): RulesRootUpdated {
-  let rulesRootUpdatedEvent = changetype<RulesRootUpdated>(newMockEvent())
+  let rulesRootUpdatedEvent = changetype<RulesRootUpdated>(newMockEvent());
 
-  rulesRootUpdatedEvent.parameters = new Array()
+  rulesRootUpdatedEvent.parameters = new Array();
 
   rulesRootUpdatedEvent.parameters.push(
-    new ethereum.EventParam("impl", ethereum.Value.fromAddress(impl))
-  )
+    new ethereum.EventParam('impl', ethereum.Value.fromAddress(impl)),
+  );
   rulesRootUpdatedEvent.parameters.push(
-    new ethereum.EventParam("ebc", ethereum.Value.fromAddress(ebc))
-  )
+    new ethereum.EventParam('ebc', ethereum.Value.fromAddress(ebc)),
+  );
   rulesRootUpdatedEvent.parameters.push(
     new ethereum.EventParam(
-      "rootWithVersion",
-      ethereum.Value.fromTuple(rootWithVersion)
-    )
-  )
+      'rootWithVersion',
+      ethereum.Value.fromTuple(rootWithVersion),
+    ),
+  );
 
-  return rulesRootUpdatedEvent
+  return rulesRootUpdatedEvent;
 }
 
 export function createSpvUpdatedEvent(
   impl: Address,
   chainId: BigInt,
-  spv: Address
+  spv: Address,
 ): SpvUpdated {
-  let spvUpdatedEvent = changetype<SpvUpdated>(newMockEvent())
+  let spvUpdatedEvent = changetype<SpvUpdated>(newMockEvent());
 
-  spvUpdatedEvent.parameters = new Array()
+  spvUpdatedEvent.parameters = new Array();
 
   spvUpdatedEvent.parameters.push(
-    new ethereum.EventParam("impl", ethereum.Value.fromAddress(impl))
-  )
+    new ethereum.EventParam('impl', ethereum.Value.fromAddress(impl)),
+  );
   spvUpdatedEvent.parameters.push(
     new ethereum.EventParam(
-      "chainId",
-      ethereum.Value.fromUnsignedBigInt(chainId)
-    )
-  )
+      'chainId',
+      ethereum.Value.fromUnsignedBigInt(chainId),
+    ),
+  );
   spvUpdatedEvent.parameters.push(
-    new ethereum.EventParam("spv", ethereum.Value.fromAddress(spv))
-  )
+    new ethereum.EventParam('spv', ethereum.Value.fromAddress(spv)),
+  );
 
-  return spvUpdatedEvent
+  return spvUpdatedEvent;
 }
 
 export function createWithdrawRequestedEvent(
   requestAmount: BigInt,
   requestTimestamp: BigInt,
-  requestToken: Address
+  requestToken: Address,
 ): WithdrawRequested {
-  let withdrawRequestedEvent = changetype<WithdrawRequested>(newMockEvent())
+  let withdrawRequestedEvent = changetype<WithdrawRequested>(newMockEvent());
 
-  withdrawRequestedEvent.parameters = new Array()
+  withdrawRequestedEvent.parameters = new Array();
 
   withdrawRequestedEvent.parameters.push(
     new ethereum.EventParam(
-      "requestAmount",
-      ethereum.Value.fromUnsignedBigInt(requestAmount)
-    )
-  )
+      'requestAmount',
+      ethereum.Value.fromUnsignedBigInt(requestAmount),
+    ),
+  );
   withdrawRequestedEvent.parameters.push(
     new ethereum.EventParam(
-      "requestTimestamp",
-      ethereum.Value.fromUnsignedBigInt(requestTimestamp)
-    )
-  )
+      'requestTimestamp',
+      ethereum.Value.fromUnsignedBigInt(requestTimestamp),
+    ),
+  );
   withdrawRequestedEvent.parameters.push(
     new ethereum.EventParam(
-      "requestToken",
-      ethereum.Value.fromAddress(requestToken)
-    )
-  )
+      'requestToken',
+      ethereum.Value.fromAddress(requestToken),
+    ),
+  );
 
-  return withdrawRequestedEvent
+  return withdrawRequestedEvent;
 }

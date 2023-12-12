@@ -218,7 +218,7 @@ export function getMDCEntity(mdcAddress: Address, event: ethereum.Event): MDC {
     mdc.ruleSnapshot = [];
     mdc.ruleLatest = [];
     mdc.challengeManager = [];
-    mdc.withdrawRequested = [];
+    mdc.withdrawRequestList = [];
     mdc.factoryAddr = event.address.toHexString();
     mdc.createblockNumber = event.block.number;
     mdc.createblockTimestamp = event.block.timestamp;

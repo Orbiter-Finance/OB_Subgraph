@@ -89,7 +89,7 @@ type createChallenge @entity {
   challengeManager: challengeManager! @derivedFrom(field: "createChallenge")
 }
 
-type WithdrawRequested @entity(immutable: true) {
+type withdrawRequestList @entity(immutable: true) {
   id: ID! # log-index
   owner: String!
   requestAmount: BigInt! # uint256
@@ -99,7 +99,7 @@ type WithdrawRequested @entity(immutable: true) {
   latestUpdateTimestamp: BigInt!
   latestUpdateBlockNumber: BigInt!
   # Rel
-  mdc: MDC! @derivedFrom(field: "withdrawRequested") # MDC
+  mdc: MDC! @derivedFrom(field: "withdrawRequestList") # MDC
 }
 
 enum columnArrayStatues {
@@ -152,7 +152,7 @@ type MDC @entity {
   currBoundSpvInfo: [currBoundSpvInfo!]! # currBoundSpvInfo
   columnArraySnapshot: [columnArraySnapshot!]! # columnArraySnapshot
   challengeManager: [challengeManager!]!
-  withdrawRequested: [WithdrawRequested!]!
+  withdrawRequestList: [withdrawRequestList!]!
   # derived info
   factory: [FactoryManager!]! @derivedFrom(field: "mdcs")
   ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
