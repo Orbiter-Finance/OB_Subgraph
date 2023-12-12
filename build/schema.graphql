@@ -111,7 +111,7 @@ type columnArraySnapshot @entity(immutable: true) {
   id: ID! # hash(txHash - logIndex)
   columnArrayHash: String! # bytes32
   dealers: [String!]! # address[]
-  dealerMappingSnapshot: [DealerMappingSnapshot!]! # dealer address mapping, defined by maker
+  dealerMappingSnapshot: [dealerMappingSnapshot!]! # dealer address mapping, defined by maker
   ebcs: [String!]! # address[]
   ebcMappingSnapshot: [ebcMappingSnapshot!]! # ebc address mapping, defined by maker
   chainIds: [BigInt!]! # uint64[]
@@ -335,7 +335,7 @@ type currBoundSpvInfo @entity {
 type dealerSnapshot @entity {
   id: ID! # txHash - logIndex
   dealerList: [String!]! # dealer address array
-  dealerMappingSnapshot: [DealerMappingSnapshot!]! # dealer address mapping, defined by maker
+  dealerMappingSnapshot: [dealerMappingSnapshot!]! # dealer address mapping, defined by maker
   columnArrayHash: String
   enableTimestamp: BigInt
   latestUpdateHash: String
@@ -386,7 +386,7 @@ type DealerMapping @entity {
 }
 
 # customed using entity
-type DealerMappingSnapshot @entity {
+type dealerMappingSnapshot @entity {
   id: ID! # hash(mdc address - dealer address - txHash - logIndex)
   owner: String! # address
   dealerAddr: String! # dealer address

@@ -250,7 +250,7 @@ describe('Describe ColumnArrayUpdated assertions', () => {
 
   test('DealerMapping created and stored', () => {
     assert.entityCount('DealerMapping', 4);
-    assert.entityCount('DealerMappingSnapshot', 4);
+    assert.entityCount('dealerMappingSnapshot', 4);
 
     assert.fieldEquals(
       'DealerMapping',
@@ -274,7 +274,7 @@ describe('Describe ColumnArrayUpdated assertions', () => {
     );
 
     assert.fieldEquals(
-      'DealerMappingSnapshot',
+      'dealerMappingSnapshot',
       '0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-0x230b33bdcbd07f10ffaa8251fc843ed293495feb',
       'owner',
       makerAddress.toLowerCase(),

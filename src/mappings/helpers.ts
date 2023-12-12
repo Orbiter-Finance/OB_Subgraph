@@ -32,7 +32,7 @@ import {
   responseMaker,
   FactoryManager,
   ebcMappingSnapshot,
-  DealerMappingSnapshot,
+  dealerMappingSnapshot,
   chainIdMappingSnapshot,
   latestRuleSnapshot,
   Withdraw,
@@ -545,9 +545,9 @@ export function mdcStoreDealerNewMapping(
       _MDCBindDealer.id,
       newDealers[mappingIndex],
     ]);
-    let _MDCBindDealerSnapshot = DealerMappingSnapshot.load(snapshotId);
+    let _MDCBindDealerSnapshot = dealerMappingSnapshot.load(snapshotId);
     if (_MDCBindDealerSnapshot == null) {
-      _MDCBindDealerSnapshot = new DealerMappingSnapshot(snapshotId);
+      _MDCBindDealerSnapshot = new dealerMappingSnapshot(snapshotId);
       _MDCBindDealerSnapshot.owner = mdc.owner;
     }
 

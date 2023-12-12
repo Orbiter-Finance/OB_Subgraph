@@ -3860,7 +3860,7 @@ export class DealerMapping extends Entity {
   }
 }
 
-export class DealerMappingSnapshot extends Entity {
+export class dealerMappingSnapshot extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -3870,26 +3870,26 @@ export class DealerMappingSnapshot extends Entity {
     let id = this.get("id");
     assert(
       id != null,
-      "Cannot save DealerMappingSnapshot entity without an ID"
+      "Cannot save dealerMappingSnapshot entity without an ID"
     );
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type DealerMappingSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type dealerMappingSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("DealerMappingSnapshot", id.toString(), this);
+      store.set("dealerMappingSnapshot", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): DealerMappingSnapshot | null {
-    return changetype<DealerMappingSnapshot | null>(
-      store.get_in_block("DealerMappingSnapshot", id)
+  static loadInBlock(id: string): dealerMappingSnapshot | null {
+    return changetype<dealerMappingSnapshot | null>(
+      store.get_in_block("dealerMappingSnapshot", id)
     );
   }
 
-  static load(id: string): DealerMappingSnapshot | null {
-    return changetype<DealerMappingSnapshot | null>(
-      store.get("DealerMappingSnapshot", id)
+  static load(id: string): dealerMappingSnapshot | null {
+    return changetype<dealerMappingSnapshot | null>(
+      store.get("dealerMappingSnapshot", id)
     );
   }
 
@@ -3951,7 +3951,7 @@ export class DealerMappingSnapshot extends Entity {
 
   get dealerSnapshot(): dealerSnapshotLoader {
     return new dealerSnapshotLoader(
-      "DealerMappingSnapshot",
+      "dealerMappingSnapshot",
       this.get("id")!.toString(),
       "dealerSnapshot"
     );
