@@ -113,12 +113,12 @@ describe('Describe ColumnArrayUpdated assertions', () => {
     //   mdcAddress.toLowerCase()
     // )
 
-    assert.fieldEquals(
-      'MDC',
-      mdcAddress.toLowerCase(),
-      'dealerSnapshot',
-      '[0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1]',
-    );
+    // assert.fieldEquals(
+    //   'MDC',
+    //   mdcAddress.toLowerCase(),
+    //   'dealerSnapshot',
+    //   '[0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1]',
+    // );
   });
 
   // test("MDCBindEBC created and stored", () => {
@@ -151,30 +151,30 @@ describe('Describe ColumnArrayUpdated assertions', () => {
     assert.entityCount('columnArraySnapshot', 1);
   });
 
-  test('dealerSnapshot created and stored', () => {
-    assert.entityCount('dealerSnapshot', 1);
+  // test('dealerSnapshot created and stored', () => {
+  //   assert.entityCount('dealerSnapshot', 1);
 
-    assert.fieldEquals(
-      'dealerSnapshot',
-      MDCBindDealerId,
-      'id',
-      MDCBindDealerId,
-    );
+  //   assert.fieldEquals(
+  //     'dealerSnapshot',
+  //     MDCBindDealerId,
+  //     'id',
+  //     MDCBindDealerId,
+  //   );
 
-    assert.fieldEquals(
-      'dealerSnapshot',
-      MDCBindDealerId,
-      'dealerList',
-      '[0xa1ae843d71ef6843137f70d6e93c5d143c1843e4, 0x230b33bdcbd07f10ffaa8251fc843ed293495feb]',
-    );
+  //   assert.fieldEquals(
+  //     'dealerSnapshot',
+  //     MDCBindDealerId,
+  //     'dealerList',
+  //     '[0xa1ae843d71ef6843137f70d6e93c5d143c1843e4, 0x230b33bdcbd07f10ffaa8251fc843ed293495feb]',
+  //   );
 
-    assert.fieldEquals(
-      'dealerSnapshot',
-      MDCBindDealerId,
-      'dealerMappingSnapshot',
-      '[0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-0xa1ae843d71ef6843137f70d6e93c5d143c1843e4, 0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-0x230b33bdcbd07f10ffaa8251fc843ed293495feb]',
-    );
-  });
+  //   assert.fieldEquals(
+  //     'dealerSnapshot',
+  //     MDCBindDealerId,
+  //     'dealerMappingSnapshot',
+  //     '[0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-0xa1ae843d71ef6843137f70d6e93c5d143c1843e4, 0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-0x230b33bdcbd07f10ffaa8251fc843ed293495feb]',
+  //   );
+  // });
 
   // test("MDCBindChainId created and stored", () => {
   //   assert.entityCount("MDCBindChainId", 1)
@@ -266,12 +266,12 @@ describe('Describe ColumnArrayUpdated assertions', () => {
       '[0x7a0b33bdcbd07f10ffaa8251fc843ed293495feb-0xa1ae843d71ef6843137f70d6e93c5d143c1843e4, 0x7a0b33bdcbd07f10ffaa8251fc843ed293495feb-0x230b33bdcbd07f10ffaa8251fc843ed293495feb]',
     );
 
-    assert.fieldEquals(
-      'dealerSnapshot',
-      '0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1',
-      'dealerMappingSnapshot',
-      '[0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-0xa1ae843d71ef6843137f70d6e93c5d143c1843e4, 0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-0x230b33bdcbd07f10ffaa8251fc843ed293495feb]',
-    );
+    // assert.fieldEquals(
+    //   'dealerSnapshot',
+    //   '0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1',
+    //   'dealerMappingSnapshot',
+    //   '[0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-0xa1ae843d71ef6843137f70d6e93c5d143c1843e4, 0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1-0x230b33bdcbd07f10ffaa8251fc843ed293495feb]',
+    // );
 
     assert.fieldEquals(
       'dealerMappingSnapshot',
@@ -362,14 +362,14 @@ describe('Describe ColumnArrayUpdated assertions', () => {
     // )
   });
 
-  test('ebcSnapshot created and stored', () => {
-    assert.entityCount('ebcSnapshot', 1);
+  // test('ebcSnapshot created and stored', () => {
+  //   assert.entityCount('ebcSnapshot', 1);
 
-    assert.fieldEquals(
-      'MDC',
-      mdcAddress.toLowerCase(),
-      'ebcSnapshot',
-      '[0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1]',
-    );
-  });
+  //   assert.fieldEquals(
+  //     'MDC',
+  //     mdcAddress.toLowerCase(),
+  //     'ebcSnapshot',
+  //     '[0xa16081f360e3847006db660bae1c6d1b2e17ec2a-1]',
+  //   );
+  // });
 });

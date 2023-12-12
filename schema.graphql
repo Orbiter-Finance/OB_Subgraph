@@ -144,9 +144,9 @@ type MDC @entity {
   factoryAddr: String! # address
   ruleUpdateRel: [ruleUpdateRel!]!
   responseMakersSnapshot: [responseMakersSnapshot!]! #snapshot
-  dealerSnapshot: [dealerSnapshot!]! #snapshot
-  ebcSnapshot: [ebcSnapshot!]! #snapshot
-  chainIdSnapshot: [chainIdSnapshot!]! #snapshot
+  # dealerSnapshot: [dealerSnapshot!]! #snapshot
+  # ebcSnapshot: [ebcSnapshot!]! #snapshot
+  # chainIdSnapshot: [chainIdSnapshot!]! #snapshot
   ruleSnapshot: [ruleRel!]! #snapshot
   ruleLatest: [latestRule!]! #latestData
   currBoundSpvInfo: [currBoundSpvInfo!]! # currBoundSpvInfo
@@ -252,7 +252,7 @@ type mdcLatestColumn @entity {
   dealerMapping: [DealerMapping!]! # dealer address mapping, defined by maker
   ebcMapping: [ebcMapping!]! # ebc address mapping, defined by maker
   chainIdMapping: [chainIdMapping!]! # chainId mapping, defined by maker
-  mdc: [MDC!]! @derivedFrom(field: "mdcLatestColumn") # MDC
+  # mdc: [MDC!]! @derivedFrom(field: "mdcLatestColumn") # MDC
   latestUpdateHash: String
   latestUpdateTimestamp: BigInt
   latestUpdateBlockNumber: BigInt
@@ -320,7 +320,7 @@ type ebcMappingSnapshot @entity {
   owner: String! # address
   ebcAddr: String! # ebc address
   ebcIndex: BigInt # uint64
-  ebcSnapshot: ebcSnapshot! @derivedFrom(field: "ebcMappingSnapshot") # ebcSnapshot
+  # ebcSnapshot: ebcSnapshot! @derivedFrom(field: "ebcMappingSnapshot") # ebcSnapshot
 }
 
 # customed using entity
@@ -332,46 +332,46 @@ type currBoundSpvInfo @entity {
   mdc: MDC! @derivedFrom(field: "currBoundSpvInfo") # MDC
 }
 
-# customed using entity
-type dealerSnapshot @entity {
-  id: ID! # txHash - logIndex
-  dealerList: [String!]! # dealer address array
-  dealerMappingSnapshot: [dealerMappingSnapshot!]! # dealer address mapping, defined by maker
-  columnArrayHash: String
-  enableTimestamp: BigInt
-  latestUpdateHash: String
-  latestUpdateTimestamp: BigInt
-  latestUpdateBlockNumber: BigInt
-  # Rel
-  mdc: MDC! @derivedFrom(field: "dealerSnapshot") # MDC
-}
+# # customed using entity
+# type dealerSnapshot @entity {
+#   id: ID! # txHash - logIndex
+#   dealerList: [String!]! # dealer address array
+#   dealerMappingSnapshot: [dealerMappingSnapshot!]! # dealer address mapping, defined by maker
+#   columnArrayHash: String
+#   enableTimestamp: BigInt
+#   latestUpdateHash: String
+#   latestUpdateTimestamp: BigInt
+#   latestUpdateBlockNumber: BigInt
+#   # Rel
+#   mdc: MDC! @derivedFrom(field: "dealerSnapshot") # MDC
+# }
 
-# customed using entity
-type ebcSnapshot @entity {
-  id: ID! # txHash - logIndex
-  ebcList: [String!]! # ebc address array
-  ebcMappingSnapshot: [ebcMappingSnapshot!]! # ebc address mapping, defined by maker
-  columnArrayHash: String
-  enableTimestamp: BigInt
-  latestUpdateHash: String
-  latestUpdateTimestamp: BigInt
-  latestUpdateBlockNumber: BigInt
-  # Rel
-  mdc: MDC! @derivedFrom(field: "ebcSnapshot") # MDC
-}
+# # customed using entity
+# type ebcSnapshot @entity {
+#   id: ID! # txHash - logIndex
+#   ebcList: [String!]! # ebc address array
+#   ebcMappingSnapshot: [ebcMappingSnapshot!]! # ebc address mapping, defined by maker
+#   columnArrayHash: String
+#   enableTimestamp: BigInt
+#   latestUpdateHash: String
+#   latestUpdateTimestamp: BigInt
+#   latestUpdateBlockNumber: BigInt
+#   # Rel
+#   mdc: MDC! @derivedFrom(field: "ebcSnapshot") # MDC
+# }
 
-type chainIdSnapshot @entity {
-  id: ID! # txHash - logIndex
-  chainIdList: [BigInt!]! # chainId array
-  chainIdMappingSnapshot: [chainIdMappingSnapshot!]! # chainId mapping, defined by maker
-  columnArrayHash: String
-  enableTimestamp: BigInt
-  latestUpdateHash: String
-  latestUpdateTimestamp: BigInt
-  latestUpdateBlockNumber: BigInt
-  # Rel
-  mdc: MDC! @derivedFrom(field: "chainIdSnapshot") # MDC
-}
+# type chainIdSnapshot @entity {
+#   id: ID! # txHash - logIndex
+#   chainIdList: [BigInt!]! # chainId array
+#   chainIdMappingSnapshot: [chainIdMappingSnapshot!]! # chainId mapping, defined by maker
+#   columnArrayHash: String
+#   enableTimestamp: BigInt
+#   latestUpdateHash: String
+#   latestUpdateTimestamp: BigInt
+#   latestUpdateBlockNumber: BigInt
+#   # Rel
+#   mdc: MDC! @derivedFrom(field: "chainIdSnapshot") # MDC
+# }
 
 # customed using entity
 type DealerMapping @entity {
@@ -392,7 +392,7 @@ type dealerMappingSnapshot @entity {
   owner: String! # address
   dealerAddr: String! # dealer address
   dealerIndex: BigInt # uint64
-  dealerSnapshot: dealerSnapshot! @derivedFrom(field: "dealerMappingSnapshot") # dealerSnapshot
+  # dealerSnapshot: dealerSnapshot! @derivedFrom(field: "dealerMappingSnapshot") # dealerSnapshot
 }
 
 # customed using entity
@@ -412,8 +412,8 @@ type chainIdMappingSnapshot @entity {
   owner: String! # address
   chainId: BigInt! # chainId
   chainIdIndex: BigInt # uint64
-  chainIdSnapshot: chainIdSnapshot!
-    @derivedFrom(field: "chainIdMappingSnapshot")
+  # chainIdSnapshot: chainIdSnapshot!
+  #   @derivedFrom(field: "chainIdMappingSnapshot")
 }
 
 # customed using entity

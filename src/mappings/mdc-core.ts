@@ -20,15 +20,15 @@ import {
   getTokenEntity,
   getColumnArrayUpdatedEntity,
   getcurrBoundSpvInfoEntity,
-  getdealerSnapshotEntity,
+  // getdealerSnapshotEntity,
   mdcStoreEBCNewMapping,
   mdcStoreDealerNewMapping,
   mdcStoreChainIdNewMapping,
   mdcStoreResponseMaker,
   mdcStoreRuleSnapshot,
   getEBCEntityNew,
-  getEBCSnapshotEntity,
-  getChainIdSnapshotEntity,
+  // getEBCSnapshotEntity,
+  // getChainIdSnapshotEntity,
   decodeEnabletime,
   func_updateColumnArrayName,
   STRING_INVALID,
@@ -206,16 +206,16 @@ export function handleColumnArrayUpdatedEvent(
   for (let i = 0; i < uniqueDealers.length; i++) {
     dealerArray.push(uniqueDealers[i].toHexString());
   }
-  let dealerSnapshot = getdealerSnapshotEntity(mdc, event);
-  dealerSnapshot.columnArrayHash = columnArrayHash.toHexString();
+  // let dealerSnapshot = getdealerSnapshotEntity(mdc, event);
+  // dealerSnapshot.columnArrayHash = columnArrayHash.toHexString();
 
   // process chainIds
   let uniqueChainIds = removeDuplicatesBigInt(chainIds);
   if (chainIds.length != uniqueChainIds.length) {
     parameterDuplication = true;
   }
-  let chainIdSnapshot = getChainIdSnapshotEntity(mdc, event);
-  chainIdSnapshot.columnArrayHash = columnArrayHash.toHexString();
+  // let chainIdSnapshot = getChainIdSnapshotEntity(mdc, event);
+  // chainIdSnapshot.columnArrayHash = columnArrayHash.toHexString();
 
   // process ebcs
   let uniqueEbcs = removeDuplicates(ebcs);
@@ -226,8 +226,8 @@ export function handleColumnArrayUpdatedEvent(
   for (let i = 0; i < uniqueEbcs.length; i++) {
     ebcsArray.push(uniqueEbcs[i].toHexString());
   }
-  let ebcSnapshot = getEBCSnapshotEntity(mdc, event);
-  ebcSnapshot.columnArrayHash = columnArrayHash.toHexString();
+  // let ebcSnapshot = getEBCSnapshotEntity(mdc, event);
+  // ebcSnapshot.columnArrayHash = columnArrayHash.toHexString();
 
   // process ColumnArray
   let columnArraySnapshot = getColumnArrayUpdatedEntity(event, mdc);
@@ -246,33 +246,30 @@ export function handleColumnArrayUpdatedEvent(
 
   mdcStoreDealerNewMapping(
     mdc,
-    dealerSnapshot,
     dealerArray,
     event,
     enableTimestamp,
     columnArraySnapshot,
   );
-  dealerSnapshot.save();
+  // dealerSnapshot.save();
 
   mdcStoreChainIdNewMapping(
     mdc,
-    chainIdSnapshot,
     uniqueChainIds,
     event,
     enableTimestamp,
     columnArraySnapshot,
   );
-  chainIdSnapshot.save();
+  // chainIdSnapshot.save();
 
   mdcStoreEBCNewMapping(
     mdc,
-    ebcSnapshot,
     ebcsArray,
     event,
     enableTimestamp,
     columnArraySnapshot,
   );
-  ebcSnapshot.save();
+  // ebcSnapshot.save();
 
   columnArraySnapshot.save();
   mdc.save();
