@@ -152,11 +152,12 @@ type MDC @entity {
   currBoundSpvInfo: [currBoundSpvInfo!]! # currBoundSpvInfo
   columnArraySnapshot: [columnArraySnapshot!]! # columnArraySnapshot
   challengeManager: [challengeManager!]!
+  withdrawRequested: [WithdrawRequested!]!
+  # derived info
   factory: [FactoryManager!]! @derivedFrom(field: "mdcs")
   ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
   dealer: [Dealer!]! @derivedFrom(field: "mdcs") # Dealer
   responseMaker: [responseMaker!]! @derivedFrom(field: "mdcs") # responseMaker
-  withdrawRequested: [WithdrawRequested!]!
   # Time related
   createblockNumber: BigInt!
   createblockTimestamp: BigInt!

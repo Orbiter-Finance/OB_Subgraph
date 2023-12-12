@@ -139,26 +139,26 @@ type responseMakersSnapshot @entity {
 
 # customed using entity
 type MDC @entity {
+  # base info
   id: ID! # mdc address
-  owner: String! # address
-  factoryAddr: String! # address
+  owner: String! # maker address
+  factoryAddr: String! # mdc factory address
+  manager: String # ob manager address
+  # Rel
   ruleUpdateRel: [ruleUpdateRel!]!
   responseMakersSnapshot: [responseMakersSnapshot!]! #snapshot
-  # dealerSnapshot: [dealerSnapshot!]! #snapshot
-  # ebcSnapshot: [ebcSnapshot!]! #snapshot
-  # chainIdSnapshot: [chainIdSnapshot!]! #snapshot
   ruleSnapshot: [ruleRel!]! #snapshot
   ruleLatest: [latestRule!]! #latestData
   currBoundSpvInfo: [currBoundSpvInfo!]! # currBoundSpvInfo
   columnArraySnapshot: [columnArraySnapshot!]! # columnArraySnapshot
-  # mdcLatestColumn: mdcLatestColumn! # dealer/ebc/chainId mapping
   challengeManager: [challengeManager!]!
+  withdrawRequested: [WithdrawRequested!]!
+  # derived info
   factory: [FactoryManager!]! @derivedFrom(field: "mdcs")
   ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
   dealer: [Dealer!]! @derivedFrom(field: "mdcs") # Dealer
   responseMaker: [responseMaker!]! @derivedFrom(field: "mdcs") # responseMaker
-  withdrawRequested: [WithdrawRequested!]!
-  manager: String
+  # Time related
   createblockNumber: BigInt!
   createblockTimestamp: BigInt!
   createtransactionHash: String!

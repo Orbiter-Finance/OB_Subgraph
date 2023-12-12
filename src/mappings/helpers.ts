@@ -831,12 +831,12 @@ function getResponseMakerEntity(
   if (_responseMaker == null) {
     _responseMaker = new responseMaker(id);
     _responseMaker.mdcs = [];
-    _responseMaker.mdcs = entity.addRelation(_responseMaker.mdcs, mdc.id);
     log.info('create new responseMaker, id: {}', [id]);
     let factory = getFactoryEntity(mdc.factoryAddr);
     factory.responseMakers = entity.addRelation(factory.responseMakers, id);
     factory.save();
   }
+  _responseMaker.mdcs = entity.addRelation(_responseMaker.mdcs, mdc.id);
   _responseMaker.latestUpdateBlockNumber = event.block.number;
   _responseMaker.latestUpdateTimestamp = event.block.timestamp;
   _responseMaker.latestUpdateHash = event.transaction.hash.toHexString();

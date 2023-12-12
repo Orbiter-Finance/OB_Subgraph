@@ -1184,6 +1184,23 @@ export class MDC extends Entity {
     this.set("factoryAddr", Value.fromString(value));
   }
 
+  get manager(): string | null {
+    let value = this.get("manager");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set manager(value: string | null) {
+    if (!value) {
+      this.unset("manager");
+    } else {
+      this.set("manager", Value.fromString(<string>value));
+    }
+  }
+
   get ruleUpdateRel(): Array<string> {
     let value = this.get("ruleUpdateRel");
     if (!value || value.kind == ValueKind.NULL) {
@@ -1275,6 +1292,19 @@ export class MDC extends Entity {
     this.set("challengeManager", Value.fromStringArray(value));
   }
 
+  get withdrawRequested(): Array<string> {
+    let value = this.get("withdrawRequested");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set withdrawRequested(value: Array<string>) {
+    this.set("withdrawRequested", Value.fromStringArray(value));
+  }
+
   get factory(): FactoryManagerLoader {
     return new FactoryManagerLoader(
       "MDC",
@@ -1297,36 +1327,6 @@ export class MDC extends Entity {
       this.get("id")!.toString(),
       "responseMaker"
     );
-  }
-
-  get withdrawRequested(): Array<string> {
-    let value = this.get("withdrawRequested");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set withdrawRequested(value: Array<string>) {
-    this.set("withdrawRequested", Value.fromStringArray(value));
-  }
-
-  get manager(): string | null {
-    let value = this.get("manager");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toString();
-    }
-  }
-
-  set manager(value: string | null) {
-    if (!value) {
-      this.unset("manager");
-    } else {
-      this.set("manager", Value.fromString(<string>value));
-    }
   }
 
   get createblockNumber(): BigInt {
