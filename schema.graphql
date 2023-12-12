@@ -151,7 +151,7 @@ type MDC @entity {
   ruleLatest: [latestRule!]! #latestData
   currBoundSpvInfo: [currBoundSpvInfo!]! # currBoundSpvInfo
   columnArraySnapshot: [columnArraySnapshot!]! # columnArraySnapshot
-  mapping: MDCMapping # dealer/ebc/chainId mapping
+  # mdcLatestColumn: mdcLatestColumn! # dealer/ebc/chainId mapping
   challengeManager: [challengeManager!]!
   factory: [FactoryManager!]! @derivedFrom(field: "mdcs")
   ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
@@ -246,12 +246,13 @@ type tokenPairManager implements PairManager @entity {
   latestUpdateBlockNumber: BigInt
 }
 
-type MDCMapping @entity {
+# entity to save the latest column of MDC, no need to storage in MDC entity
+type mdcLatestColumn @entity {
   id: ID! # mdc address
   dealerMapping: [DealerMapping!]! # dealer address mapping, defined by maker
   ebcMapping: [ebcMapping!]! # ebc address mapping, defined by maker
   chainIdMapping: [chainIdMapping!]! # chainId mapping, defined by maker
-  mdc: [MDC!]! @derivedFrom(field: "mapping") # MDC
+  mdc: [MDC!]! @derivedFrom(field: "mdcLatestColumn") # MDC
   latestUpdateHash: String
   latestUpdateTimestamp: BigInt
   latestUpdateBlockNumber: BigInt
@@ -310,7 +311,7 @@ type ebcMapping @entity {
   latestUpdateBlockNumber: BigInt
   latestUpdateTimestamp: BigInt
   latestUpdateHash: String
-  mdcmapping: MDCMapping! @derivedFrom(field: "ebcMapping") # MDCMapping
+  mdcLatestColumn: mdcLatestColumn! @derivedFrom(field: "ebcMapping") # mdcLatestColumn
 }
 
 # customed using entity
@@ -382,7 +383,7 @@ type DealerMapping @entity {
   latestUpdateBlockNumber: BigInt
   latestUpdateTimestamp: BigInt
   latestUpdateHash: String
-  MDCMapping: MDCMapping! @derivedFrom(field: "dealerMapping") # MDCMapping
+  mdcLatestColumn: mdcLatestColumn! @derivedFrom(field: "dealerMapping") # mdcLatestColumn
 }
 
 # customed using entity
@@ -430,7 +431,7 @@ type ruleRel
   token: String! # address
   ruleUpdateVersion: [ruleUpdateVersion!]!
   # related to rule
-  # mappingSnapshot: [MDCMapping!] # ruleMapping
+  # mappingSnapshot: [mdcLatestColumn!] # ruleMapping
   mdc: MDC! @derivedFrom(field: "ruleSnapshot") # MDC
   ebc: ebcRel! @derivedFrom(field: "rulesList") # EBCs
   # dealer: Dealer! @derivedFrom(field: "rules") # Dealer

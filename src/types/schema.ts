@@ -1301,21 +1301,17 @@ export class MDC extends Entity {
     this.set("columnArraySnapshot", Value.fromStringArray(value));
   }
 
-  get mapping(): string | null {
-    let value = this.get("mapping");
+  get mdcLatestColumn(): string {
+    let value = this.get("mdcLatestColumn");
     if (!value || value.kind == ValueKind.NULL) {
-      return null;
+      throw new Error("Cannot return null for a required field.");
     } else {
       return value.toString();
     }
   }
 
-  set mapping(value: string | null) {
-    if (!value) {
-      this.unset("mapping");
-    } else {
-      this.set("mapping", Value.fromString(<string>value));
-    }
+  set mdcLatestColumn(value: string) {
+    this.set("mdcLatestColumn", Value.fromString(value));
   }
 
   get challengeManager(): Array<string> {
@@ -2312,7 +2308,7 @@ export class tokenPairManager extends Entity {
   }
 }
 
-export class MDCMapping extends Entity {
+export class mdcLatestColumn extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -2320,22 +2316,24 @@ export class MDCMapping extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save MDCMapping entity without an ID");
+    assert(id != null, "Cannot save mdcLatestColumn entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type MDCMapping must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type mdcLatestColumn must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("MDCMapping", id.toString(), this);
+      store.set("mdcLatestColumn", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): MDCMapping | null {
-    return changetype<MDCMapping | null>(store.get_in_block("MDCMapping", id));
+  static loadInBlock(id: string): mdcLatestColumn | null {
+    return changetype<mdcLatestColumn | null>(
+      store.get_in_block("mdcLatestColumn", id)
+    );
   }
 
-  static load(id: string): MDCMapping | null {
-    return changetype<MDCMapping | null>(store.get("MDCMapping", id));
+  static load(id: string): mdcLatestColumn | null {
+    return changetype<mdcLatestColumn | null>(store.get("mdcLatestColumn", id));
   }
 
   get id(): string {
@@ -2391,7 +2389,7 @@ export class MDCMapping extends Entity {
   }
 
   get mdc(): MDCLoader {
-    return new MDCLoader("MDCMapping", this.get("id")!.toString(), "mdc");
+    return new MDCLoader("mdcLatestColumn", this.get("id")!.toString(), "mdc");
   }
 
   get latestUpdateHash(): string | null {
@@ -3025,11 +3023,11 @@ export class ebcMapping extends Entity {
     }
   }
 
-  get mdcmapping(): MDCMappingLoader {
-    return new MDCMappingLoader(
+  get mdcLatestColumn(): mdcLatestColumnLoader {
+    return new mdcLatestColumnLoader(
       "ebcMapping",
       this.get("id")!.toString(),
-      "mdcmapping"
+      "mdcLatestColumn"
     );
   }
 }
@@ -3851,11 +3849,11 @@ export class DealerMapping extends Entity {
     }
   }
 
-  get MDCMapping(): MDCMappingLoader {
-    return new MDCMappingLoader(
+  get mdcLatestColumn(): mdcLatestColumnLoader {
+    return new mdcLatestColumnLoader(
       "DealerMapping",
       this.get("id")!.toString(),
-      "MDCMapping"
+      "mdcLatestColumn"
     );
   }
 }
@@ -7898,7 +7896,7 @@ export class SubgraphManagerLoader extends Entity {
   }
 }
 
-export class MDCMappingLoader extends Entity {
+export class mdcLatestColumnLoader extends Entity {
   _entity: string;
   _field: string;
   _id: string;
@@ -7910,9 +7908,9 @@ export class MDCMappingLoader extends Entity {
     this._field = field;
   }
 
-  load(): MDCMapping[] {
+  load(): mdcLatestColumn[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<MDCMapping[]>(value);
+    return changetype<mdcLatestColumn[]>(value);
   }
 }
 

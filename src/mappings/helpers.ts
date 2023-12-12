@@ -21,7 +21,7 @@ import {
   MDC,
   dealerSnapshot,
   currBoundSpvInfo,
-  MDCMapping,
+  mdcLatestColumn,
   responseMakersSnapshot,
   chainIdMapping,
   ebcMapping,
@@ -246,21 +246,21 @@ export function getChainInfoEntity(
   return _chainInfo as chainRel;
 }
 
-export function getMDCMappingEntity(
+export function getmdcLatestColumnEntity(
   mdc: MDC,
   event: ethereum.Event,
-): MDCMapping {
-  let _MDCMapping = MDCMapping.load(mdc.id);
-  if (_MDCMapping == null) {
-    _MDCMapping = new MDCMapping(mdc.id);
-    _MDCMapping.dealerMapping = [];
-    _MDCMapping.ebcMapping = [];
-    _MDCMapping.chainIdMapping = [];
+): mdcLatestColumn {
+  let _mdcLatestColumn = mdcLatestColumn.load(mdc.id);
+  if (_mdcLatestColumn == null) {
+    _mdcLatestColumn = new mdcLatestColumn(mdc.id);
+    _mdcLatestColumn.dealerMapping = [];
+    _mdcLatestColumn.ebcMapping = [];
+    _mdcLatestColumn.chainIdMapping = [];
   }
-  _MDCMapping.latestUpdateBlockNumber = event.block.number;
-  _MDCMapping.latestUpdateTimestamp = event.block.timestamp;
-  _MDCMapping.latestUpdateHash = event.transaction.hash.toHexString();
-  return _MDCMapping as MDCMapping;
+  _mdcLatestColumn.latestUpdateBlockNumber = event.block.number;
+  _mdcLatestColumn.latestUpdateTimestamp = event.block.timestamp;
+  _mdcLatestColumn.latestUpdateHash = event.transaction.hash.toHexString();
+  return _mdcLatestColumn as mdcLatestColumn;
 }
 
 export function getTokenFromChainInfoUpdated(chainid: BigInt): Array<string> {
@@ -411,14 +411,16 @@ export function getChainIdSnapshotEntity(
 
 function getMDCLatestDealers(mdc: MDC): string[] {
   let dealer = new Array<string>();
-  let mdcMapping = MDCMapping.load(mdc.id);
-  if (mdcMapping != null) {
+  let _mdcLatestColumn = mdcLatestColumn.load(mdc.id);
+  if (_mdcLatestColumn != null) {
     log.info('MDC: {} mapping dealerCnt: {}', [
       mdc.id,
-      mdcMapping.dealerMapping.length.toString(),
+      _mdcLatestColumn.dealerMapping.length.toString(),
     ]);
-    for (let i = 0; i < mdcMapping.dealerMapping.length; i++) {
-      let _dealerMapping = DealerMapping.load(mdcMapping.dealerMapping[i]);
+    for (let i = 0; i < _mdcLatestColumn.dealerMapping.length; i++) {
+      let _dealerMapping = DealerMapping.load(
+        _mdcLatestColumn.dealerMapping[i],
+      );
       if (_dealerMapping != null) {
         if (_dealerMapping.dealerAddr.length > 0) {
           dealer = dealer.concat([_dealerMapping.dealerAddr]);
@@ -431,14 +433,14 @@ function getMDCLatestDealers(mdc: MDC): string[] {
 
 export function getMDCLatestEBCs(mdc: MDC): string[] {
   let ebc = new Array<string>();
-  let mdcMapping = MDCMapping.load(mdc.id);
-  if (mdcMapping != null) {
+  let _mdcLatestColumn = mdcLatestColumn.load(mdc.id);
+  if (_mdcLatestColumn != null) {
     log.info('MDC: {} mapping ebcCnt: {}', [
       mdc.id,
-      mdcMapping.ebcMapping.length.toString(),
+      _mdcLatestColumn.ebcMapping.length.toString(),
     ]);
-    for (let i = 0; i < mdcMapping.ebcMapping.length; i++) {
-      let _ebcMapping = ebcMapping.load(mdcMapping.ebcMapping[i]);
+    for (let i = 0; i < _mdcLatestColumn.ebcMapping.length; i++) {
+      let _ebcMapping = ebcMapping.load(_mdcLatestColumn.ebcMapping[i]);
       if (_ebcMapping != null) {
         if (_ebcMapping.ebcAddr.length > 0) {
           ebc = ebc.concat([_ebcMapping.ebcAddr]);
@@ -451,14 +453,14 @@ export function getMDCLatestEBCs(mdc: MDC): string[] {
 
 export function getMDCLatestChainIds(mdc: MDC): BigInt[] {
   let chainIds = new Array<BigInt>();
-  let mdcMapping = MDCMapping.load(mdc.id);
-  if (mdcMapping != null) {
+  let _mdcLatestColumn = mdcLatestColumn.load(mdc.id);
+  if (_mdcLatestColumn != null) {
     log.info('MDC: {} mapping chainIdCnt: {}', [
       mdc.id,
-      mdcMapping.chainIdMapping.length.toString(),
+      _mdcLatestColumn.chainIdMapping.length.toString(),
     ]);
-    for (let i = 0; i < mdcMapping.chainIdMapping.length; i++) {
-      const latestMappingId = mdcMapping.chainIdMapping[i];
+    for (let i = 0; i < _mdcLatestColumn.chainIdMapping.length; i++) {
+      const latestMappingId = _mdcLatestColumn.chainIdMapping[i];
       log.info('load MDC: {} mappingId: {}', [mdc.id, latestMappingId]);
       let _chainIdMapping = chainIdMapping.load(latestMappingId);
       if (_chainIdMapping != null) {
@@ -521,11 +523,11 @@ export function mdcStoreDealerNewMapping(
   enableTimestamp: BigInt,
   columnArraySnapshot: columnArraySnapshot,
 ): void {
-  let mdcMapping = getMDCMappingEntity(mdc, event);
+  let mdcLatestColumn = getmdcLatestColumnEntity(mdc, event);
   let latesMappingTmp = [] as string[];
   let snapshotMappingTmp = [] as string[];
   removeMDCFromDealer(mdc, event);
-  mdcMapping.dealerMapping = [];
+  mdcLatestColumn.dealerMapping = [];
   _MDCBindDealer.dealerList = newDealers;
   _MDCBindDealer.enableTimestamp = enableTimestamp;
   _MDCBindDealer.dealerMappingSnapshot = [];
@@ -578,9 +580,9 @@ export function mdcStoreDealerNewMapping(
       snapshotId,
     );
   }
-  mdcMapping.dealerMapping = latesMappingTmp;
+  mdcLatestColumn.dealerMapping = latesMappingTmp;
   _MDCBindDealer.dealerMappingSnapshot = snapshotMappingTmp;
-  mdcMapping.save();
+  mdcLatestColumn.save();
 }
 
 function removeMDCFromEBC(
@@ -657,11 +659,11 @@ export function mdcStoreEBCNewMapping(
   enableTimestamp: BigInt,
   columnArraySnapshot: columnArraySnapshot,
 ): void {
-  let mdcMapping = getMDCMappingEntity(mdc, event);
+  let mdcLatestColumn = getmdcLatestColumnEntity(mdc, event);
   let latesMappingTmp = [] as string[];
   let snapshotMappingTmp = [] as string[];
   removeMDCFromEBC(mdc, event);
-  mdcMapping.ebcMapping = [];
+  mdcLatestColumn.ebcMapping = [];
   ebcSnapshot.ebcList = newEBCs;
   ebcSnapshot.ebcMappingSnapshot = [];
   ebcSnapshot.enableTimestamp = enableTimestamp;
@@ -702,9 +704,9 @@ export function mdcStoreEBCNewMapping(
       snapshotId,
     );
   }
-  mdcMapping.ebcMapping = latesMappingTmp;
+  mdcLatestColumn.ebcMapping = latesMappingTmp;
   ebcSnapshot.ebcMappingSnapshot = snapshotMappingTmp;
-  mdcMapping.save();
+  mdcLatestColumn.save();
 }
 
 function getchainIdMappingEntity(
@@ -749,10 +751,10 @@ export function mdcStoreChainIdNewMapping(
   enableTimestamp: BigInt,
   columnArraySnapshot: columnArraySnapshot,
 ): void {
-  let mdcMapping = getMDCMappingEntity(mdc, event);
+  let mdcLatestColumn = getmdcLatestColumnEntity(mdc, event);
   let latestMappingIds: string[] = [];
   let snapshotMappingIds: string[] = [];
-  mdcMapping.chainIdMapping = [];
+  mdcLatestColumn.chainIdMapping = [];
   chainIdSnapshot.chainIdList = newChainIds;
   chainIdSnapshot.chainIdMappingSnapshot = [];
   chainIdSnapshot.enableTimestamp = enableTimestamp;
@@ -794,10 +796,10 @@ export function mdcStoreChainIdNewMapping(
     );
   }
 
-  mdcMapping.chainIdMapping = latestMappingIds;
+  mdcLatestColumn.chainIdMapping = latestMappingIds;
   chainIdSnapshot.chainIdMappingSnapshot = snapshotMappingIds;
 
-  mdcMapping.save();
+  mdcLatestColumn.save();
 }
 
 export function getDealerEntity(dealer: string, event: ethereum.Event): Dealer {

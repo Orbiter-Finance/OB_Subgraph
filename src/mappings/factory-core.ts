@@ -16,7 +16,7 @@ import {
   ONE_NUM,
   getFactoryEntity,
   getMDCEntity,
-  getMDCMappingEntity,
+  getmdcLatestColumnEntity,
 } from './helpers';
 import { entity } from './utils';
 import { ContractDeployment, subgraphManagerID } from './contractConfig';
@@ -51,11 +51,11 @@ export function factoryCreateMDC(
   let mdcNew = getMDCEntity(mdc, event);
   factory.mdcs = entity.addRelation(factory.mdcs, mdcNew.id);
   factory.owners = entity.addRelation(factory.owners, maker.toHexString());
-  let mdcMapping = getMDCMappingEntity(mdcNew, event);
+  let mdcLatestColumn = getmdcLatestColumnEntity(mdcNew, event);
   mdcNew.owner = maker.toHexString();
-  mdcNew.mapping = mdcMapping.id;
+  // mdcNew.mdcLatestColumn = mdcLatestColumn.id;
   mdcNew.manager = getManagerAddress(Address.fromString(factoryId));
-  mdcMapping.save();
+  mdcLatestColumn.save();
   mdcNew.save();
   factory.save();
   MDCTemplate.create(mdc);

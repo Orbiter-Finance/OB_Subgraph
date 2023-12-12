@@ -237,11 +237,11 @@ describe('Describe ColumnArrayUpdated assertions', () => {
     );
   });
 
-  test('MDCMapping created and stored', () => {
-    assert.entityCount('MDCMapping', 1);
+  test('mdcLatestColumn created and stored', () => {
+    assert.entityCount('mdcLatestColumn', 1);
 
     assert.fieldEquals(
-      'MDCMapping',
+      'mdcLatestColumn',
       mdcAddress.toLowerCase(),
       'dealerMapping',
       '[0x7a0b33bdcbd07f10ffaa8251fc843ed293495feb-0xa1ae843d71ef6843137f70d6e93c5d143c1843e4, 0x7a0b33bdcbd07f10ffaa8251fc843ed293495feb-0x230b33bdcbd07f10ffaa8251fc843ed293495feb]',
@@ -260,7 +260,7 @@ describe('Describe ColumnArrayUpdated assertions', () => {
     );
 
     assert.fieldEquals(
-      'MDCMapping',
+      'mdcLatestColumn',
       '0x7a0b33bdcbd07f10ffaa8251fc843ed293495feb',
       'dealerMapping',
       '[0x7a0b33bdcbd07f10ffaa8251fc843ed293495feb-0xa1ae843d71ef6843137f70d6e93c5d143c1843e4, 0x7a0b33bdcbd07f10ffaa8251fc843ed293495feb-0x230b33bdcbd07f10ffaa8251fc843ed293495feb]',
