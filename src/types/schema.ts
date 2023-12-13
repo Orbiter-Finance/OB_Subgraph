@@ -1227,19 +1227,6 @@ export class MDC extends Entity {
     this.set("responseMakersSnapshot", Value.fromStringArray(value));
   }
 
-  get ruleSnapshot(): Array<string> {
-    let value = this.get("ruleSnapshot");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set ruleSnapshot(value: Array<string>) {
-    this.set("ruleSnapshot", Value.fromStringArray(value));
-  }
-
   get currBoundSpvInfo(): Array<string> {
     let value = this.get("currBoundSpvInfo");
     if (!value || value.kind == ValueKind.NULL) {
@@ -3802,10 +3789,6 @@ export class ruleRel extends Entity {
 
   set sameRuleKeySnapshot(value: Array<string>) {
     this.set("sameRuleKeySnapshot", Value.fromStringArray(value));
-  }
-
-  get mdc(): MDCLoader {
-    return new MDCLoader("ruleRel", this.get("id")!.toString(), "mdc");
   }
 
   get ebc(): ebcRelLoader {

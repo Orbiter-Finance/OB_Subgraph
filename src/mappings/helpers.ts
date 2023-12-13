@@ -215,7 +215,7 @@ export function getMDCEntity(mdcAddress: Address, event: ethereum.Event): MDC {
     // mdc.dealerSnapshot = [];
     // mdc.ebcSnapshot = [];
     // mdc.chainIdSnapshot = [];
-    mdc.ruleSnapshot = [];
+    // mdc.ruleSnapshot = [];
     // mdc.ruleLatest = [];
     mdc.challengeManager = [];
     mdc.withdrawRequestList = [];
@@ -1140,8 +1140,8 @@ function getruleUpdateVersionEntity(
   ruleKey: string,
   mdc: MDC,
   ebc: ebcRel,
-  latestRule: latestRule,
-  ruleRel: ruleRel,
+  // latestRule: latestRule,
+  // ruleRel: ruleRel,
   event: ethereum.Event,
 ): sameRuleKeySnapshot {
   let rule = allRulesInfo.load(id);
@@ -1160,10 +1160,10 @@ function getruleUpdateVersionEntity(
     rule.sameRuleKeySnapshot,
     _ruleUpdateVersion.id,
   );
-  ruleRel.sameRuleKeySnapshot = entity.addRelation(
-    ruleRel.sameRuleKeySnapshot,
-    _ruleUpdateVersion.id,
-  );
+  // ruleRel.sameRuleKeySnapshot = entity.addRelation(
+  //   ruleRel.sameRuleKeySnapshot,
+  //   _ruleUpdateVersion.id,
+  // );
   rule.latestUpdateHash = event.transaction.hash.toHexString();
   rule.latestUpdateTimestamp = event.block.timestamp;
   rule.latestUpdateBlockNumber = event.block.number;
@@ -1237,8 +1237,8 @@ function updateLatestRules(
   ebc: ebcRel,
   validateResult: string,
   validateBool: boolean,
-  snapshot: ruleRel,
-): string {
+  // snapshot: ruleRel,
+): void {
   const version = rscRules.version;
   const enableTimestamp = rscRules.enableTimestamp;
   let token0 = rsc.chain0Token;
@@ -1270,117 +1270,117 @@ function updateLatestRules(
   const _ChainPairManager = getChainPairManager(chainPairId, event);
   const _TokenPairManager0 = getTokenPairManager(chain0TokenPad, event);
   const _TokenPairManager1 = getTokenPairManager(chain1TokenPad, event);
-  const _rule = getLastRulesEntity(
-    id,
-    snapshot.root,
-    _ChainPairManager,
-    _TokenPairManager0,
-    _TokenPairManager1,
-  );
+  // const _rule = getLastRulesEntity(
+  //   id,
+  //   snapshot.root,
+  //   _ChainPairManager,
+  //   _TokenPairManager0,
+  //   _TokenPairManager1,
+  // );
   const _ruleUpdateVersion = getruleUpdateVersionEntity(
     id,
     ruleKey,
     mdc,
     ebc,
-    _rule,
-    snapshot,
+    // _rule,
+    // snapshot,
     event,
   );
-  const latestRuleId = _rule.id;
-  const _snapshotLatestRule = getLastRulesSnapshotEntity(
-    entity.createHashID([snapshot.id, id]),
-  );
+  // const latestRuleId = _rule.id;
+  // const _snapshotLatestRule = getLastRulesSnapshotEntity(
+  //   entity.createHashID([snapshot.id, id]),
+  // );
 
-  _rule.latestSnapShotID = _snapshotLatestRule.id;
-  const _rscRuleType = _rule;
-  _rscRuleType.owner = mdc.owner;
-  _rscRuleType.mdcAddr = mdc.id;
-  _rscRuleType.ebcAddr = ebc.id;
-  _rscRuleType.ruleKey = ruleKey;
-  _rscRuleType.chain0 = rsc.chain0;
-  _rscRuleType.chain1 = rsc.chain1;
-  _rscRuleType.chain0Status = rsc.chain0Status.toI32();
-  _rscRuleType.chain1Status = rsc.chain1Status.toI32();
-  _rscRuleType.chain0Token = chain0TokenPad;
-  _rscRuleType.chain1Token = chain1TokenPad;
-  _rscRuleType.chain0minPrice = rsc.chain0minPrice;
-  _rscRuleType.chain0maxPrice = rsc.chain0maxPrice;
-  _rscRuleType.chain1minPrice = rsc.chain1minPrice;
-  _rscRuleType.chain1maxPrice = rsc.chain1maxPrice;
-  _rscRuleType.chain0WithholdingFee = rsc.chain0WithholdingFee;
-  _rscRuleType.chain1WithholdingFee = rsc.chain1WithholdingFee;
-  _rscRuleType.chain0TradeFee = rsc.chain0TradeFee.toI32();
-  _rscRuleType.chain1TradeFee = rsc.chain1TradeFee.toI32();
-  _rscRuleType.chain0ResponseTime = rsc.chain0ResponseTime.toI32();
-  _rscRuleType.chain1ResponseTime = rsc.chain1ResponseTime.toI32();
-  _rscRuleType.chain0CompensationRatio = rsc.chain0CompensationRatio.toI32();
-  _rscRuleType.chain1CompensationRatio = rsc.chain1CompensationRatio.toI32();
-  _rscRuleType.enableTimestamp = enableTimestamp;
-  _rscRuleType.ruleValidation = validateBool;
-  _rscRuleType.ruleValidationErrorstatus = validateResult;
-  _rscRuleType.latestUpdateTimestamp = event.block.timestamp;
-  _rscRuleType.latestUpdateBlockNumber = event.block.number;
-  _rscRuleType.latestUpdateHash = event.transaction.hash.toHexString();
-  _rscRuleType.latestUpdateVersion = version as i32;
-  if (rsc.selector === updateRulesRootMode.ETH) {
-    _rscRuleType.type = 'ETH';
-    snapshot.type = 'ETH';
-  } else if (rsc.selector === updateRulesRootMode.ERC20) {
-    _rscRuleType.type = 'ERC20';
-    snapshot.type = 'ERC20';
-  }
+  // _rule.latestSnapShotID = _snapshotLatestRule.id;
+  // const _rscRuleType = _rule;
+  // _rscRuleType.owner = mdc.owner;
+  // _rscRuleType.mdcAddr = mdc.id;
+  // _rscRuleType.ebcAddr = ebc.id;
+  // _rscRuleType.ruleKey = ruleKey;
+  // _rscRuleType.chain0 = rsc.chain0;
+  // _rscRuleType.chain1 = rsc.chain1;
+  // _rscRuleType.chain0Status = rsc.chain0Status.toI32();
+  // _rscRuleType.chain1Status = rsc.chain1Status.toI32();
+  // _rscRuleType.chain0Token = chain0TokenPad;
+  // _rscRuleType.chain1Token = chain1TokenPad;
+  // _rscRuleType.chain0minPrice = rsc.chain0minPrice;
+  // _rscRuleType.chain0maxPrice = rsc.chain0maxPrice;
+  // _rscRuleType.chain1minPrice = rsc.chain1minPrice;
+  // _rscRuleType.chain1maxPrice = rsc.chain1maxPrice;
+  // _rscRuleType.chain0WithholdingFee = rsc.chain0WithholdingFee;
+  // _rscRuleType.chain1WithholdingFee = rsc.chain1WithholdingFee;
+  // _rscRuleType.chain0TradeFee = rsc.chain0TradeFee.toI32();
+  // _rscRuleType.chain1TradeFee = rsc.chain1TradeFee.toI32();
+  // _rscRuleType.chain0ResponseTime = rsc.chain0ResponseTime.toI32();
+  // _rscRuleType.chain1ResponseTime = rsc.chain1ResponseTime.toI32();
+  // _rscRuleType.chain0CompensationRatio = rsc.chain0CompensationRatio.toI32();
+  // _rscRuleType.chain1CompensationRatio = rsc.chain1CompensationRatio.toI32();
+  // _rscRuleType.enableTimestamp = enableTimestamp;
+  // _rscRuleType.ruleValidation = validateBool;
+  // _rscRuleType.ruleValidationErrorstatus = validateResult;
+  // _rscRuleType.latestUpdateTimestamp = event.block.timestamp;
+  // _rscRuleType.latestUpdateBlockNumber = event.block.number;
+  // _rscRuleType.latestUpdateHash = event.transaction.hash.toHexString();
+  // _rscRuleType.latestUpdateVersion = version as i32;
+  // if (rsc.selector === updateRulesRootMode.ETH) {
+  //   _rscRuleType.type = 'ETH';
+  //   snapshot.type = 'ETH';
+  // } else if (rsc.selector === updateRulesRootMode.ERC20) {
+  //   _rscRuleType.type = 'ERC20';
+  //   snapshot.type = 'ERC20';
+  // }
 
-  const _snapshotLatestRuleType = _snapshotLatestRule;
-  _snapshotLatestRuleType.owner = mdc.owner;
-  _snapshotLatestRuleType.mdcAddr = mdc.id;
-  _snapshotLatestRuleType.ebcAddr = ebc.id;
-  _snapshotLatestRuleType.ruleKey = ruleKey;
-  _snapshotLatestRuleType.chain0 = rsc.chain0;
-  _snapshotLatestRuleType.chain1 = rsc.chain1;
-  _snapshotLatestRuleType.chain0Status = rsc.chain0Status.toI32();
-  _snapshotLatestRuleType.chain1Status = rsc.chain1Status.toI32();
-  _snapshotLatestRuleType.chain0Token = chain0TokenPad;
-  _snapshotLatestRuleType.chain1Token = chain1TokenPad;
-  _snapshotLatestRuleType.chain0minPrice = rsc.chain0minPrice;
-  _snapshotLatestRuleType.chain0maxPrice = rsc.chain0maxPrice;
-  _snapshotLatestRuleType.chain1minPrice = rsc.chain1minPrice;
-  _snapshotLatestRuleType.chain1maxPrice = rsc.chain1maxPrice;
-  _snapshotLatestRuleType.chain0WithholdingFee = rsc.chain0WithholdingFee;
-  _snapshotLatestRuleType.chain1WithholdingFee = rsc.chain1WithholdingFee;
-  _snapshotLatestRuleType.chain0TradeFee = rsc.chain0TradeFee.toI32();
-  _snapshotLatestRuleType.chain1TradeFee = rsc.chain1TradeFee.toI32();
-  _snapshotLatestRuleType.chain0ResponseTime = rsc.chain0ResponseTime.toI32();
-  _snapshotLatestRuleType.chain1ResponseTime = rsc.chain1ResponseTime.toI32();
-  _snapshotLatestRuleType.chain0CompensationRatio =
-    rsc.chain0CompensationRatio.toI32();
-  _snapshotLatestRuleType.chain1CompensationRatio =
-    rsc.chain1CompensationRatio.toI32();
-  _snapshotLatestRuleType.enableTimestamp = enableTimestamp;
-  _snapshotLatestRuleType.enableBlockNumber = calculateEnableBlockNumber(
-    event.block.timestamp,
-    enableTimestamp,
-    event.block.number,
-  );
-  _snapshotLatestRuleType.ruleValidation = validateBool;
-  _snapshotLatestRuleType.ruleValidationErrorstatus = validateResult;
-  _snapshotLatestRuleType.latestUpdateTimestamp = event.block.timestamp;
-  _snapshotLatestRuleType.latestUpdateBlockNumber = event.block.number;
-  _snapshotLatestRuleType.latestUpdateHash =
-    event.transaction.hash.toHexString();
-  _snapshotLatestRuleType.latestUpdateVersion = version as i32;
-  if (rsc.selector === updateRulesRootMode.ETH) {
-    _snapshotLatestRuleType.type = 'ETH';
-  } else if (rsc.selector === updateRulesRootMode.ERC20) {
-    _snapshotLatestRuleType.type = 'ERC20';
-  }
-  // saveLatestRule2MDCEBC(mdc, ebc, _rule.id);
-  // saveLatestRule2RuleSnapshot(snapshot, _snapshotLatestRule.id);
+  // const _snapshotLatestRuleType = _snapshotLatestRule;
+  // _snapshotLatestRuleType.owner = mdc.owner;
+  // _snapshotLatestRuleType.mdcAddr = mdc.id;
+  // _snapshotLatestRuleType.ebcAddr = ebc.id;
+  // _snapshotLatestRuleType.ruleKey = ruleKey;
+  // _snapshotLatestRuleType.chain0 = rsc.chain0;
+  // _snapshotLatestRuleType.chain1 = rsc.chain1;
+  // _snapshotLatestRuleType.chain0Status = rsc.chain0Status.toI32();
+  // _snapshotLatestRuleType.chain1Status = rsc.chain1Status.toI32();
+  // _snapshotLatestRuleType.chain0Token = chain0TokenPad;
+  // _snapshotLatestRuleType.chain1Token = chain1TokenPad;
+  // _snapshotLatestRuleType.chain0minPrice = rsc.chain0minPrice;
+  // _snapshotLatestRuleType.chain0maxPrice = rsc.chain0maxPrice;
+  // _snapshotLatestRuleType.chain1minPrice = rsc.chain1minPrice;
+  // _snapshotLatestRuleType.chain1maxPrice = rsc.chain1maxPrice;
+  // _snapshotLatestRuleType.chain0WithholdingFee = rsc.chain0WithholdingFee;
+  // _snapshotLatestRuleType.chain1WithholdingFee = rsc.chain1WithholdingFee;
+  // _snapshotLatestRuleType.chain0TradeFee = rsc.chain0TradeFee.toI32();
+  // _snapshotLatestRuleType.chain1TradeFee = rsc.chain1TradeFee.toI32();
+  // _snapshotLatestRuleType.chain0ResponseTime = rsc.chain0ResponseTime.toI32();
+  // _snapshotLatestRuleType.chain1ResponseTime = rsc.chain1ResponseTime.toI32();
+  // _snapshotLatestRuleType.chain0CompensationRatio =
+  //   rsc.chain0CompensationRatio.toI32();
+  // _snapshotLatestRuleType.chain1CompensationRatio =
+  //   rsc.chain1CompensationRatio.toI32();
+  // _snapshotLatestRuleType.enableTimestamp = enableTimestamp;
+  // _snapshotLatestRuleType.enableBlockNumber = calculateEnableBlockNumber(
+  //   event.block.timestamp,
+  //   enableTimestamp,
+  //   event.block.number,
+  // );
+  // _snapshotLatestRuleType.ruleValidation = validateBool;
+  // _snapshotLatestRuleType.ruleValidationErrorstatus = validateResult;
+  // _snapshotLatestRuleType.latestUpdateTimestamp = event.block.timestamp;
+  // _snapshotLatestRuleType.latestUpdateBlockNumber = event.block.number;
+  // _snapshotLatestRuleType.latestUpdateHash =
+  //   event.transaction.hash.toHexString();
+  // _snapshotLatestRuleType.latestUpdateVersion = version as i32;
+  // if (rsc.selector === updateRulesRootMode.ETH) {
+  //   _snapshotLatestRuleType.type = 'ETH';
+  // } else if (rsc.selector === updateRulesRootMode.ERC20) {
+  //   _snapshotLatestRuleType.type = 'ERC20';
+  // }
+  // // saveLatestRule2MDCEBC(mdc, ebc, _rule.id);
+  // // saveLatestRule2RuleSnapshot(snapshot, _snapshotLatestRule.id);
 
-  _rule.save();
-  _snapshotLatestRule.save();
-  if (debugLogCreateRules) {
-    log.info('update latest rule id: {}', [id]);
-  }
+  // _rule.save();
+  // _snapshotLatestRule.save();
+  // if (debugLogCreateRules) {
+  //   log.info('update latest rule id: {}', [id]);
+  // }
 
   _ruleUpdateVersion.owner = mdc.owner;
   _ruleUpdateVersion.ruleKey = ruleKey;
@@ -1421,34 +1421,34 @@ function updateLatestRules(
   }
   _ruleUpdateVersion.save();
 
-  return latestRuleId;
+  // return latestRuleId;
 }
 
-function saveRuleSnapshotRelation(
-  event: ethereum.Event,
-  ruleSnapshot: ruleRel,
-  mdc: MDC,
-  ebc: ebcRel,
-): void {
-  if (mdc.ruleSnapshot == null) {
-    mdc.ruleSnapshot = [ruleSnapshot.id];
-  } else if (!mdc.ruleSnapshot.includes(ruleSnapshot.id)) {
-    mdc.ruleSnapshot = mdc.ruleSnapshot.concat([ruleSnapshot.id]);
-  }
-  if (ebc.rulesList == null) {
-    ebc.rulesList = [ruleSnapshot.id];
-  } else if (!ebc.rulesList.includes(ruleSnapshot.id)) {
-    ebc.rulesList = ebc.rulesList.concat([ruleSnapshot.id]);
-  }
-  // TODO: save ruleSnapshot to mdc later??
-  mdc.save();
-  ebc.save();
-  log.info('save ruleSnapshot {} relation mdc: {}, ebc: {}', [
-    ruleSnapshot.id,
-    mdc.id,
-    ebc.id,
-  ]);
-}
+// function saveRuleSnapshotRelation(
+//   event: ethereum.Event,
+//   ruleSnapshot: ruleRel,
+//   mdc: MDC,
+//   ebc: ebcRel,
+// ): void {
+//   if (mdc.ruleSnapshot == null) {
+//     mdc.ruleSnapshot = [ruleSnapshot.id];
+//   } else if (!mdc.ruleSnapshot.includes(ruleSnapshot.id)) {
+//     mdc.ruleSnapshot = mdc.ruleSnapshot.concat([ruleSnapshot.id]);
+//   }
+//   if (ebc.rulesList == null) {
+//     ebc.rulesList = [ruleSnapshot.id];
+//   } else if (!ebc.rulesList.includes(ruleSnapshot.id)) {
+//     ebc.rulesList = ebc.rulesList.concat([ruleSnapshot.id]);
+//   }
+//   // TODO: save ruleSnapshot to mdc later??
+//   mdc.save();
+//   ebc.save();
+//   log.info('save ruleSnapshot {} relation mdc: {}, ebc: {}', [
+//     ruleSnapshot.id,
+//     mdc.id,
+//     ebc.id,
+//   ]);
+// }
 
 function getRuleSnapshotEntity(
   event: ethereum.Event,
@@ -1491,13 +1491,13 @@ export function mdcStoreRuleSnapshot(
 ): Array<string> {
   let lastestRuleIdArray = new Array<string>();
   let validateBool = true;
-  let ruleSnapshot = getRuleSnapshotEntity(event, mdc, ebc);
-  saveRuleSnapshotRelation(event, ruleSnapshot, mdc, ebc);
-  ruleSnapshot.root = updateRulesRootEntity.root;
-  ruleSnapshot.version = updateRulesRootEntity.version;
-  ruleSnapshot.sourceChainIds = updateRulesRootEntity.sourceChainIds;
-  ruleSnapshot.pledgeAmounts = updateRulesRootEntity.pledgeAmounts;
-  ruleSnapshot.token = updateRulesRootEntity.tokenAddr;
+  // let ruleSnapshot = getRuleSnapshotEntity(event, mdc, ebc);
+  // saveRuleSnapshotRelation(event, ruleSnapshot, mdc, ebc);
+  // ruleSnapshot.root = updateRulesRootEntity.root;
+  // ruleSnapshot.version = updateRulesRootEntity.version;
+  // ruleSnapshot.sourceChainIds = updateRulesRootEntity.sourceChainIds;
+  // ruleSnapshot.pledgeAmounts = updateRulesRootEntity.pledgeAmounts;
+  // ruleSnapshot.token = updateRulesRootEntity.tokenAddr;
   if (updateRulesRootEntity.rscType.length > 0) {
     for (let i = 0; i < updateRulesRootEntity.rscType.length; i++) {
       // const chain0 = updateRulesRootEntity.rscType[i].chain0
@@ -1553,19 +1553,19 @@ export function mdcStoreRuleSnapshot(
       }
       // _rule.ruleValidationErrorstatus = validateResult
       // _rule.save()
-      lastestRuleIdArray = entity.addRelation(
-        lastestRuleIdArray,
-        updateLatestRules(
-          updateRulesRootEntity.rscType[i],
-          event,
-          updateRulesRootEntity,
-          mdc,
-          ebc,
-          validateResult,
-          validateBool,
-          ruleSnapshot,
-        ),
+      // lastestRuleIdArray = entity.addRelation(
+      // lastestRuleIdArray,
+      updateLatestRules(
+        updateRulesRootEntity.rscType[i],
+        event,
+        updateRulesRootEntity,
+        mdc,
+        ebc,
+        validateResult,
+        validateBool,
+        // ruleSnapshot,
       );
+      // );
       // if (debugLogCreateRules) {
       //     log.info('Rule index{}, update[0]:{}, [1]:{}, [2]:{}, [3]:{}, [4]:{}, [5]:{}, [6]:{}, [7]:{}, [8]:{}, [9]:{}, [10]:{}, [11]:{}, [12]:{}, [13]:{}, [14]:{}, [15]:{}, [16]:{}, [17]:{}, [18]:{}', [
       //         i.toString(),
@@ -1593,7 +1593,7 @@ export function mdcStoreRuleSnapshot(
     }
   }
 
-  ruleSnapshot.save();
+  // ruleSnapshot.save();
   return lastestRuleIdArray;
 }
 

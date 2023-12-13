@@ -147,7 +147,7 @@ type MDC @entity {
   # Rel
   allRulesInfo: [allRulesInfo!]!
   responseMakersSnapshot: [responseMakersSnapshot!]! #snapshot
-  ruleSnapshot: [ruleRel!]! #snapshot
+  # ruleSnapshot: [ruleRel!]! #snapshot
   # ruleLatest: [latestRule!]! #latestData
   currBoundSpvInfo: [currBoundSpvInfo!]! # currBoundSpvInfo
   columnArraySnapshot: [columnArraySnapshot!]! # columnArraySnapshot
@@ -433,7 +433,7 @@ type ruleRel
   sameRuleKeySnapshot: [sameRuleKeySnapshot!]!
   # related to rule
   # mappingSnapshot: [mdcLatestColumn!] # ruleMapping
-  mdc: MDC! @derivedFrom(field: "ruleSnapshot") # MDC
+  # mdc: MDC! @derivedFrom(field: "ruleSnapshot") # MDC
   ebc: ebcRel! @derivedFrom(field: "rulesList") # EBCs
   # dealer: Dealer! @derivedFrom(field: "rules") # Dealer
 
