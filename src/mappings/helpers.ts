@@ -36,8 +36,8 @@ import {
   chainIdMappingSnapshot,
   latestRuleSnapshot,
   Withdraw,
-  ruleUpdateRel,
-  ruleUpdateVersion,
+  allRulesInfo,
+  sameRuleKeySnapshot,
   chainPairManager,
   tokenPairManager,
 } from '../types/schema';
@@ -192,7 +192,7 @@ export function getEBCEntityNew(
     ebc.mdcList = [];
     ebc.rulesList = [];
     ebc.ruleLatest = [];
-    ebc.ruleUpdateRel = [];
+    ebc.allRulesInfo = [];
     ebc.statuses = true;
   }
   ebc.latestUpdateHash = event.transaction.hash.toHexString();
@@ -209,14 +209,14 @@ export function getMDCEntity(mdcAddress: Address, event: ethereum.Event): MDC {
     mdc = new MDC(mdcAddress.toHexString());
     mdc.owner = STRING_EMPTY;
     mdc.columnArraySnapshot = [];
-    mdc.ruleUpdateRel = [];
+    mdc.allRulesInfo = [];
     mdc.responseMakersSnapshot = [];
     mdc.currBoundSpvInfo = [];
     // mdc.dealerSnapshot = [];
     // mdc.ebcSnapshot = [];
     // mdc.chainIdSnapshot = [];
     mdc.ruleSnapshot = [];
-    mdc.ruleLatest = [];
+    // mdc.ruleLatest = [];
     mdc.challengeManager = [];
     mdc.withdrawRequestList = [];
     mdc.factoryAddr = event.address.toHexString();
@@ -939,23 +939,23 @@ function saveLatestRule2RuleSnapshot(
   }
 }
 
-function saveLatestRule2MDCEBC(
-  mdc: MDC,
-  ebc: ebcRel,
-  ruleLatestId: string,
-): void {
-  if (mdc.ruleLatest == null) {
-    mdc.ruleLatest = [ruleLatestId];
-  } else if (!mdc.ruleLatest.includes(ruleLatestId)) {
-    mdc.ruleLatest = mdc.ruleLatest.concat([ruleLatestId]);
-  }
+// function saveLatestRule2MDCEBC(
+//   mdc: MDC,
+//   ebc: ebcRel,
+//   ruleLatestId: string,
+// ): void {
+//   if (mdc.ruleLatest == null) {
+//     mdc.ruleLatest = [ruleLatestId];
+//   } else if (!mdc.ruleLatest.includes(ruleLatestId)) {
+//     mdc.ruleLatest = mdc.ruleLatest.concat([ruleLatestId]);
+//   }
 
-  if (ebc.ruleLatest == null) {
-    ebc.ruleLatest = [ruleLatestId];
-  } else if (!ebc.ruleLatest.includes(ruleLatestId)) {
-    ebc.ruleLatest = ebc.ruleLatest.concat([ruleLatestId]);
-  }
-}
+//   if (ebc.ruleLatest == null) {
+//     ebc.ruleLatest = [ruleLatestId];
+//   } else if (!ebc.ruleLatest.includes(ruleLatestId)) {
+//     ebc.ruleLatest = ebc.ruleLatest.concat([ruleLatestId]);
+//   }
+// }
 
 function saveSPV2MDC(mdc: MDC, spv: currBoundSpvInfo): void {
   if (mdc.currBoundSpvInfo == null) {
@@ -1086,7 +1086,7 @@ function getLastRulesEntity(
     lastRule.chain1 = BigInt.fromI32(0);
     lastRule.ruleValidation = true;
     lastRule.ruleValidationErrorstatus = RULEVALIDA_NOERROR;
-    lastRule.ruleUpdateRel = [];
+    // lastRule.allRulesInfo = [];
     lastRule.root = root;
     _chainPairManager.latestRule = entity.addRelation(
       _chainPairManager.latestRule,
@@ -1137,33 +1137,31 @@ function getTokenPairManager(
 
 function getruleUpdateVersionEntity(
   id: string,
+  ruleKey: string,
   mdc: MDC,
   ebc: ebcRel,
   latestRule: latestRule,
   ruleRel: ruleRel,
   event: ethereum.Event,
-): ruleUpdateVersion {
-  let rule = ruleUpdateRel.load(id);
+): sameRuleKeySnapshot {
+  let rule = allRulesInfo.load(id);
   if (rule == null) {
-    rule = new ruleUpdateRel(id);
-    rule.latestVersion = BigInt.fromI32(0);
-    rule.ruleUpdateVersion = [];
-    mdc.ruleUpdateRel = entity.addRelation(mdc.ruleUpdateRel, id);
-    ebc.ruleUpdateRel = entity.addRelation(ebc.ruleUpdateRel, id);
-    latestRule.ruleUpdateRel = entity.addRelation(latestRule.ruleUpdateRel, id);
+    rule = new allRulesInfo(id);
+    rule.updateNumber = BigInt.fromI32(0);
+    rule.ruleKey = ruleKey;
+    rule.sameRuleKeySnapshot = [];
+    mdc.allRulesInfo = entity.addRelation(mdc.allRulesInfo, id);
+    ebc.allRulesInfo = entity.addRelation(ebc.allRulesInfo, id);
+    // latestRule.allRulesInfo = entity.addRelation(latestRule.allRulesInfo, id);
   }
-  rule.latestVersion = rule.latestVersion.plus(BigInt.fromI32(1));
-  const _ruleUpdateVersion = getruleUpdateVersion(
-    id,
-    rule.latestVersion,
-    event,
-  );
-  rule.ruleUpdateVersion = entity.addRelation(
-    rule.ruleUpdateVersion,
+  rule.updateNumber = rule.updateNumber.plus(BigInt.fromI32(1));
+  const _ruleUpdateVersion = getruleUpdateVersion(id, rule.updateNumber, event);
+  rule.sameRuleKeySnapshot = entity.addRelation(
+    rule.sameRuleKeySnapshot,
     _ruleUpdateVersion.id,
   );
-  ruleRel.ruleUpdateVersion = entity.addRelation(
-    ruleRel.ruleUpdateVersion,
+  ruleRel.sameRuleKeySnapshot = entity.addRelation(
+    ruleRel.sameRuleKeySnapshot,
     _ruleUpdateVersion.id,
   );
   rule.latestUpdateHash = event.transaction.hash.toHexString();
@@ -1178,24 +1176,25 @@ function getruleUpdateVersion(
   _id: string,
   updateVersion: BigInt,
   event: ethereum.Event,
-): ruleUpdateVersion {
+): sameRuleKeySnapshot {
   const id = entity.createHashID([_id, updateVersion.toString()]);
-  let rule = ruleUpdateVersion.load(id);
+  let rule = sameRuleKeySnapshot.load(id);
   if (rule == null) {
-    rule = new ruleUpdateVersion(id);
-    rule.makerHash = _id;
-    rule.updateVersion = BigInt.fromI32(0);
-    log.info('create ruleUpdateVersion: {}-{}, hash: {}', [
+    rule = new sameRuleKeySnapshot(id);
+    rule.ruleRoot = '';
+    rule.ruleVersion = BigInt.fromI32(0);
+    rule.currUpdateNumber = BigInt.fromI32(0);
+    log.info('create sameRuleKeySnapshot: {}-{}, hash: {}', [
       id,
       updateVersion.toString(),
       _id,
     ]);
   }
-  rule.updateVersion = updateVersion;
+  rule.currUpdateNumber = updateVersion;
   rule.latestUpdateHash = event.transaction.hash.toHexString();
   rule.latestUpdateTimestamp = event.block.timestamp;
   rule.latestUpdateBlockNumber = event.block.number;
-  return rule as ruleUpdateVersion;
+  return rule as sameRuleKeySnapshot;
 }
 
 function getLastRulesSnapshotEntity(id: string): latestRuleSnapshot {
@@ -1217,18 +1216,18 @@ function getLastRulesSnapshotEntity(id: string): latestRuleSnapshot {
   return lastRule;
 }
 
-function getAllLatestRules(mdc: MDC, ebc: ebcRel): string[] {
-  let ruleIDs: string[] = [];
-  if (mdc.ruleLatest != null) {
-    for (let i = 0; i < mdc.ruleLatest.length; i++) {
-      let rule = latestRule.load(mdc.ruleLatest[i]);
-      if (rule != null) {
-        ruleIDs.push(rule.id);
-      }
-    }
-  }
-  return ruleIDs;
-}
+// function getAllLatestRules(mdc: MDC, ebc: ebcRel): string[] {
+//   let ruleIDs: string[] = [];
+//   if (mdc.ruleLatest != null) {
+//     for (let i = 0; i < mdc.ruleLatest.length; i++) {
+//       let rule = latestRule.load(mdc.ruleLatest[i]);
+//       if (rule != null) {
+//         ruleIDs.push(rule.id);
+//       }
+//     }
+//   }
+//   return ruleIDs;
+// }
 
 function updateLatestRules(
   rsc: rscRuleType,
@@ -1254,6 +1253,13 @@ function updateLatestRules(
     token1.toString(),
   ]);
 
+  const ruleKey = entity.createHashID([
+    rsc.chain0.toHexString(),
+    rsc.chain1.toHexString(),
+    rsc.chain0Token.toHexString(),
+    rsc.chain1Token.toHexString(),
+  ]);
+
   const chain0TokenPad = padZeroToUint(rsc.chain0Token.toHexString());
   const chain1TokenPad = padZeroToUint(rsc.chain1Token.toHexString());
 
@@ -1273,6 +1279,7 @@ function updateLatestRules(
   );
   const _ruleUpdateVersion = getruleUpdateVersionEntity(
     id,
+    ruleKey,
     mdc,
     ebc,
     _rule,
@@ -1283,12 +1290,6 @@ function updateLatestRules(
   const _snapshotLatestRule = getLastRulesSnapshotEntity(
     entity.createHashID([snapshot.id, id]),
   );
-  const ruleKey = entity.createHashID([
-    rsc.chain0.toHexString(),
-    rsc.chain1.toHexString(),
-    rsc.chain0Token.toHexString(),
-    rsc.chain1Token.toHexString(),
-  ]);
 
   _rule.latestSnapShotID = _snapshotLatestRule.id;
   const _rscRuleType = _rule;
@@ -1372,8 +1373,8 @@ function updateLatestRules(
   } else if (rsc.selector === updateRulesRootMode.ERC20) {
     _snapshotLatestRuleType.type = 'ERC20';
   }
-  saveLatestRule2MDCEBC(mdc, ebc, _rule.id);
-  saveLatestRule2RuleSnapshot(snapshot, _snapshotLatestRule.id);
+  // saveLatestRule2MDCEBC(mdc, ebc, _rule.id);
+  // saveLatestRule2RuleSnapshot(snapshot, _snapshotLatestRule.id);
 
   _rule.save();
   _snapshotLatestRule.save();
@@ -1382,6 +1383,9 @@ function updateLatestRules(
   }
 
   _ruleUpdateVersion.owner = mdc.owner;
+  _ruleUpdateVersion.ruleKey = ruleKey;
+  _ruleUpdateVersion.ruleRoot = rscRules.root;
+  _ruleUpdateVersion.ruleVersion = BigInt.fromI32(rscRules.version);
   _ruleUpdateVersion.mdcAddr = mdc.id;
   _ruleUpdateVersion.ebcAddr = ebc.id;
   _ruleUpdateVersion.chain0 = rsc.chain0;
@@ -1410,7 +1414,6 @@ function updateLatestRules(
   _ruleUpdateVersion.latestUpdateTimestamp = event.block.timestamp;
   _ruleUpdateVersion.latestUpdateBlockNumber = event.block.number;
   _ruleUpdateVersion.latestUpdateHash = event.transaction.hash.toHexString();
-  _ruleUpdateVersion.latestUpdateVersion = version as i32;
   if (rsc.selector === updateRulesRootMode.ETH) {
     _ruleUpdateVersion.type = 'ETH';
   } else if (rsc.selector === updateRulesRootMode.ERC20) {
@@ -1464,7 +1467,7 @@ function getRuleSnapshotEntity(
     ruleSnapshot.root = STRING_EMPTY;
     ruleSnapshot.version = 0;
     // ruleSnapshot.rules = []
-    ruleSnapshot.ruleUpdateVersion = [];
+    ruleSnapshot.sameRuleKeySnapshot = [];
     ruleSnapshot.sourceChainIds = [];
     ruleSnapshot.pledgeAmounts = [];
     ruleSnapshot.ruleLatest = [];
@@ -1483,6 +1486,8 @@ export function mdcStoreRuleSnapshot(
   updateRulesRootEntity: rscRules,
   mdc: MDC,
   ebc: ebcRel,
+  root: string,
+  version: BigInt,
 ): Array<string> {
   let lastestRuleIdArray = new Array<string>();
   let validateBool = true;
@@ -1592,29 +1597,29 @@ export function mdcStoreRuleSnapshot(
   return lastestRuleIdArray;
 }
 
-export function fullfillLatestRuleSnapshot(
-  event: ethereum.Event,
-  mdc: MDC,
-  ebc: ebcRel,
-  RuleThisRoundArray: string[],
-): void {
-  const currentRuleIdArray: Array<string> = getAllLatestRules(mdc, ebc);
-  const misArray: string[] = findDifferentData(
-    RuleThisRoundArray,
-    currentRuleIdArray,
-  );
-  let ruleSnapshot = getRuleSnapshotEntity(event, mdc, ebc);
-  for (let i = 0; i < misArray.length; i++) {
-    log.debug('misArray: {}', [misArray[i]]);
-    let lastRule = latestRule.load(misArray[i]);
-    if (lastRule != null) {
-      saveLatestRule2RuleSnapshot(ruleSnapshot, lastRule.latestSnapShotID);
-    }
-  }
-  if (misArray.length > 0) {
-    ruleSnapshot.save();
-  }
-}
+// export function fullfillLatestRuleSnapshot(
+//   event: ethereum.Event,
+//   mdc: MDC,
+//   ebc: ebcRel,
+//   RuleThisRoundArray: string[],
+// ): void {
+//   const currentRuleIdArray: Array<string> = getAllLatestRules(mdc, ebc);
+//   const misArray: string[] = findDifferentData(
+//     RuleThisRoundArray,
+//     currentRuleIdArray,
+//   );
+//   let ruleSnapshot = getRuleSnapshotEntity(event, mdc, ebc);
+//   for (let i = 0; i < misArray.length; i++) {
+//     log.debug('misArray: {}', [misArray[i]]);
+//     let lastRule = latestRule.load(misArray[i]);
+//     if (lastRule != null) {
+//       saveLatestRule2RuleSnapshot(ruleSnapshot, lastRule.latestSnapShotID);
+//     }
+//   }
+//   if (misArray.length > 0) {
+//     ruleSnapshot.save();
+//   }
+// }
 
 export function compareUpdateRulesRootSelector(
   selector: Bytes,

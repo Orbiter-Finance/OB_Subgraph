@@ -35,7 +35,6 @@ import {
   ETH_ZERO_ADDRESS,
   func_registerChainsName,
   func_updateChainSpvsName,
-  fullfillLatestRuleSnapshot,
   function_challenge,
   func_challengeName,
   decodeCreateChallenge,
@@ -161,12 +160,14 @@ export function handleupdateRulesRootEvent(
       updateRulesRootEntity,
       mdc,
       ebcEntity,
+      root.toHexString(),
+      version,
     );
     ebcSave(ebcEntity, mdc);
     ebcEntity.save();
     mdc.save();
     if (ebcEntity != null) {
-      fullfillLatestRuleSnapshot(event, mdc, ebcEntity, lastestRuleIdArray);
+      // fullfillLatestRuleSnapshot(event, mdc, ebcEntity, lastestRuleIdArray);
     }
     if (factory) {
       factory.save();

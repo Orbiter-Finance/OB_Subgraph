@@ -1201,8 +1201,8 @@ export class MDC extends Entity {
     }
   }
 
-  get ruleUpdateRel(): Array<string> {
-    let value = this.get("ruleUpdateRel");
+  get allRulesInfo(): Array<string> {
+    let value = this.get("allRulesInfo");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1210,8 +1210,8 @@ export class MDC extends Entity {
     }
   }
 
-  set ruleUpdateRel(value: Array<string>) {
-    this.set("ruleUpdateRel", Value.fromStringArray(value));
+  set allRulesInfo(value: Array<string>) {
+    this.set("allRulesInfo", Value.fromStringArray(value));
   }
 
   get responseMakersSnapshot(): Array<string> {
@@ -1238,19 +1238,6 @@ export class MDC extends Entity {
 
   set ruleSnapshot(value: Array<string>) {
     this.set("ruleSnapshot", Value.fromStringArray(value));
-  }
-
-  get ruleLatest(): Array<string> {
-    let value = this.get("ruleLatest");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set ruleLatest(value: Array<string>) {
-    this.set("ruleLatest", Value.fromStringArray(value));
   }
 
   get currBoundSpvInfo(): Array<string> {
@@ -1382,7 +1369,7 @@ export class MDC extends Entity {
   }
 }
 
-export class ruleUpdateRel extends Entity {
+export class allRulesInfo extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -1390,24 +1377,24 @@ export class ruleUpdateRel extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ruleUpdateRel entity without an ID");
+    assert(id != null, "Cannot save allRulesInfo entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ruleUpdateRel must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type allRulesInfo must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ruleUpdateRel", id.toString(), this);
+      store.set("allRulesInfo", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): ruleUpdateRel | null {
-    return changetype<ruleUpdateRel | null>(
-      store.get_in_block("ruleUpdateRel", id)
+  static loadInBlock(id: string): allRulesInfo | null {
+    return changetype<allRulesInfo | null>(
+      store.get_in_block("allRulesInfo", id)
     );
   }
 
-  static load(id: string): ruleUpdateRel | null {
-    return changetype<ruleUpdateRel | null>(store.get("ruleUpdateRel", id));
+  static load(id: string): allRulesInfo | null {
+    return changetype<allRulesInfo | null>(store.get("allRulesInfo", id));
   }
 
   get id(): string {
@@ -1423,8 +1410,8 @@ export class ruleUpdateRel extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get ruleUpdateVersion(): Array<string> {
-    let value = this.get("ruleUpdateVersion");
+  get sameRuleKeySnapshot(): Array<string> {
+    let value = this.get("sameRuleKeySnapshot");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1432,12 +1419,12 @@ export class ruleUpdateRel extends Entity {
     }
   }
 
-  set ruleUpdateVersion(value: Array<string>) {
-    this.set("ruleUpdateVersion", Value.fromStringArray(value));
+  set sameRuleKeySnapshot(value: Array<string>) {
+    this.set("sameRuleKeySnapshot", Value.fromStringArray(value));
   }
 
-  get latestVersion(): BigInt {
-    let value = this.get("latestVersion");
+  get updateNumber(): BigInt {
+    let value = this.get("updateNumber");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1445,24 +1432,29 @@ export class ruleUpdateRel extends Entity {
     }
   }
 
-  set latestVersion(value: BigInt) {
-    this.set("latestVersion", Value.fromBigInt(value));
+  set updateNumber(value: BigInt) {
+    this.set("updateNumber", Value.fromBigInt(value));
+  }
+
+  get ruleKey(): string {
+    let value = this.get("ruleKey");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ruleKey(value: string) {
+    this.set("ruleKey", Value.fromString(value));
   }
 
   get mdc(): MDCLoader {
-    return new MDCLoader("ruleUpdateRel", this.get("id")!.toString(), "mdc");
+    return new MDCLoader("allRulesInfo", this.get("id")!.toString(), "mdc");
   }
 
   get ebc(): ebcRelLoader {
-    return new ebcRelLoader("ruleUpdateRel", this.get("id")!.toString(), "ebc");
-  }
-
-  get latestRule(): latestRuleLoader {
-    return new latestRuleLoader(
-      "ruleUpdateRel",
-      this.get("id")!.toString(),
-      "latestRule"
-    );
+    return new ebcRelLoader("allRulesInfo", this.get("id")!.toString(), "ebc");
   }
 
   get latestUpdateHash(): string | null {
@@ -1517,7 +1509,7 @@ export class ruleUpdateRel extends Entity {
   }
 }
 
-export class ruleUpdateVersion extends Entity {
+export class sameRuleKeySnapshot extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -1525,25 +1517,25 @@ export class ruleUpdateVersion extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save ruleUpdateVersion entity without an ID");
+    assert(id != null, "Cannot save sameRuleKeySnapshot entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type ruleUpdateVersion must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type sameRuleKeySnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("ruleUpdateVersion", id.toString(), this);
+      store.set("sameRuleKeySnapshot", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): ruleUpdateVersion | null {
-    return changetype<ruleUpdateVersion | null>(
-      store.get_in_block("ruleUpdateVersion", id)
+  static loadInBlock(id: string): sameRuleKeySnapshot | null {
+    return changetype<sameRuleKeySnapshot | null>(
+      store.get_in_block("sameRuleKeySnapshot", id)
     );
   }
 
-  static load(id: string): ruleUpdateVersion | null {
-    return changetype<ruleUpdateVersion | null>(
-      store.get("ruleUpdateVersion", id)
+  static load(id: string): sameRuleKeySnapshot | null {
+    return changetype<sameRuleKeySnapshot | null>(
+      store.get("sameRuleKeySnapshot", id)
     );
   }
 
@@ -1560,8 +1552,8 @@ export class ruleUpdateVersion extends Entity {
     this.set("id", Value.fromString(value));
   }
 
-  get makerHash(): string {
-    let value = this.get("makerHash");
+  get ruleKey(): string {
+    let value = this.get("ruleKey");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1569,8 +1561,34 @@ export class ruleUpdateVersion extends Entity {
     }
   }
 
-  set makerHash(value: string) {
-    this.set("makerHash", Value.fromString(value));
+  set ruleKey(value: string) {
+    this.set("ruleKey", Value.fromString(value));
+  }
+
+  get ruleRoot(): string {
+    let value = this.get("ruleRoot");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set ruleRoot(value: string) {
+    this.set("ruleRoot", Value.fromString(value));
+  }
+
+  get ruleVersion(): BigInt {
+    let value = this.get("ruleVersion");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set ruleVersion(value: BigInt) {
+    this.set("ruleVersion", Value.fromBigInt(value));
   }
 
   get owner(): string {
@@ -1586,8 +1604,8 @@ export class ruleUpdateVersion extends Entity {
     this.set("owner", Value.fromString(value));
   }
 
-  get updateVersion(): BigInt {
-    let value = this.get("updateVersion");
+  get currUpdateNumber(): BigInt {
+    let value = this.get("currUpdateNumber");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -1595,8 +1613,8 @@ export class ruleUpdateVersion extends Entity {
     }
   }
 
-  set updateVersion(value: BigInt) {
-    this.set("updateVersion", Value.fromBigInt(value));
+  set currUpdateNumber(value: BigInt) {
+    this.set("currUpdateNumber", Value.fromBigInt(value));
   }
 
   get mdcAddr(): string {
@@ -1933,19 +1951,6 @@ export class ruleUpdateVersion extends Entity {
     }
   }
 
-  get latestUpdateVersion(): i32 {
-    let value = this.get("latestUpdateVersion");
-    if (!value || value.kind == ValueKind.NULL) {
-      return 0;
-    } else {
-      return value.toI32();
-    }
-  }
-
-  set latestUpdateVersion(value: i32) {
-    this.set("latestUpdateVersion", Value.fromI32(value));
-  }
-
   get latestUpdateTimestamp(): BigInt | null {
     let value = this.get("latestUpdateTimestamp");
     if (!value || value.kind == ValueKind.NULL) {
@@ -2023,17 +2028,17 @@ export class ruleUpdateVersion extends Entity {
     this.set("ruleValidationErrorstatus", Value.fromString(value));
   }
 
-  get ruleUpdateRel(): ruleUpdateRelLoader {
-    return new ruleUpdateRelLoader(
-      "ruleUpdateVersion",
+  get allRulesInfo(): allRulesInfoLoader {
+    return new allRulesInfoLoader(
+      "sameRuleKeySnapshot",
       this.get("id")!.toString(),
-      "ruleUpdateRel"
+      "allRulesInfo"
     );
   }
 
   get ruleRel(): ruleRelLoader {
     return new ruleRelLoader(
-      "ruleUpdateVersion",
+      "sameRuleKeySnapshot",
       this.get("id")!.toString(),
       "ruleRel"
     );
@@ -3786,8 +3791,8 @@ export class ruleRel extends Entity {
     this.set("token", Value.fromString(value));
   }
 
-  get ruleUpdateVersion(): Array<string> {
-    let value = this.get("ruleUpdateVersion");
+  get sameRuleKeySnapshot(): Array<string> {
+    let value = this.get("sameRuleKeySnapshot");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -3795,8 +3800,8 @@ export class ruleRel extends Entity {
     }
   }
 
-  set ruleUpdateVersion(value: Array<string>) {
-    this.set("ruleUpdateVersion", Value.fromStringArray(value));
+  set sameRuleKeySnapshot(value: Array<string>) {
+    this.set("sameRuleKeySnapshot", Value.fromStringArray(value));
   }
 
   get mdc(): MDCLoader {
@@ -4349,19 +4354,6 @@ export class latestRule extends Entity {
     this.set("root", Value.fromString(value));
   }
 
-  get ruleUpdateRel(): Array<string> {
-    let value = this.get("ruleUpdateRel");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set ruleUpdateRel(value: Array<string>) {
-    this.set("ruleUpdateRel", Value.fromStringArray(value));
-  }
-
   get latestSnapShotID(): string {
     let value = this.get("latestSnapShotID");
     if (!value || value.kind == ValueKind.NULL) {
@@ -4377,10 +4369,6 @@ export class latestRule extends Entity {
 
   get ebc(): ebcRelLoader {
     return new ebcRelLoader("latestRule", this.get("id")!.toString(), "ebc");
-  }
-
-  get mdc(): MDCLoader {
-    return new MDCLoader("latestRule", this.get("id")!.toString(), "mdc");
   }
 
   get chainPairManager(): chainPairManagerLoader {
@@ -5481,8 +5469,8 @@ export class ebcRel extends Entity {
     this.set("ruleLatest", Value.fromStringArray(value));
   }
 
-  get ruleUpdateRel(): Array<string> {
-    let value = this.get("ruleUpdateRel");
+  get allRulesInfo(): Array<string> {
+    let value = this.get("allRulesInfo");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -5490,8 +5478,8 @@ export class ebcRel extends Entity {
     }
   }
 
-  set ruleUpdateRel(value: Array<string>) {
-    this.set("ruleUpdateRel", Value.fromStringArray(value));
+  set allRulesInfo(value: Array<string>) {
+    this.set("allRulesInfo", Value.fromStringArray(value));
   }
 
   get statuses(): boolean {
@@ -7273,7 +7261,7 @@ export class responseMakerLoader extends Entity {
   }
 }
 
-export class latestRuleLoader extends Entity {
+export class allRulesInfoLoader extends Entity {
   _entity: string;
   _field: string;
   _id: string;
@@ -7285,27 +7273,9 @@ export class latestRuleLoader extends Entity {
     this._field = field;
   }
 
-  load(): latestRule[] {
+  load(): allRulesInfo[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<latestRule[]>(value);
-  }
-}
-
-export class ruleUpdateRelLoader extends Entity {
-  _entity: string;
-  _field: string;
-  _id: string;
-
-  constructor(entity: string, id: string, field: string) {
-    super();
-    this._entity = entity;
-    this._id = id;
-    this._field = field;
-  }
-
-  load(): ruleUpdateRel[] {
-    let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<ruleUpdateRel[]>(value);
+    return changetype<allRulesInfo[]>(value);
   }
 }
 

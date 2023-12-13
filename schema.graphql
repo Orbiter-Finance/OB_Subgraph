@@ -145,10 +145,10 @@ type MDC @entity {
   factoryAddr: String! # mdc factory address
   manager: String # ob manager address
   # Rel
-  ruleUpdateRel: [ruleUpdateRel!]!
+  allRulesInfo: [allRulesInfo!]!
   responseMakersSnapshot: [responseMakersSnapshot!]! #snapshot
   ruleSnapshot: [ruleRel!]! #snapshot
-  ruleLatest: [latestRule!]! #latestData
+  # ruleLatest: [latestRule!]! #latestData
   currBoundSpvInfo: [currBoundSpvInfo!]! # currBoundSpvInfo
   columnArraySnapshot: [columnArraySnapshot!]! # columnArraySnapshot
   challengeManager: [challengeManager!]!
@@ -165,26 +165,28 @@ type MDC @entity {
   latestUpdatetransactionHash: String!
 }
 
-type ruleUpdateRel @entity {
-  id: ID! # hash(mdc, ebc, chain0, chain1)
-  ruleUpdateVersion: [ruleUpdateVersion!]!
-  latestVersion: BigInt!
+type allRulesInfo @entity {
+  id: ID! # hash(mdc, ebc, chain0, chain1, token0 token1)
+  sameRuleKeySnapshot: [sameRuleKeySnapshot!]!
+  updateNumber: BigInt! # repensent the numbers of this rule been updated
+  ruleKey: String! # hash(chain0,chain1,token0,token1)
   # Rel
-  mdc: MDC! @derivedFrom(field: "ruleUpdateRel")
-  ebc: ebcRel! @derivedFrom(field: "ruleUpdateRel")
-  latestRule: latestRule! @derivedFrom(field: "ruleUpdateRel")
+  mdc: MDC! @derivedFrom(field: "allRulesInfo")
+  ebc: ebcRel! @derivedFrom(field: "allRulesInfo")
+  # latestRule: latestRule! @derivedFrom(field: "allRulesInfo")
   latestUpdateHash: String
   latestUpdateTimestamp: BigInt
   latestUpdateBlockNumber: BigInt
 }
 
-type ruleUpdateVersion
-  @entity(immutable: true) { # every rule update
-  # As MDC LatestRule: hash(hash(mdc, ebc, chain0, chain1), updateVersion)
+type sameRuleKeySnapshot @entity(immutable: true) {
   id: ID!
-  makerHash: String! # hash(mdc, ebc, chain0, chain1)
+  # makerHash: String! # hash(mdc, ebc, chain0, chain1)
+  ruleKey: String! # hash(chain0,chain1,token0,token1)
+  ruleRoot: String! # bytes32
+  ruleVersion: BigInt! # uint32
   owner: String! # address
-  updateVersion: BigInt! # version++
+  currUpdateNumber: BigInt! # version++
   mdcAddr: String! # address
   ebcAddr: String! # address
   type: String # ETH/ERC20
@@ -207,7 +209,6 @@ type ruleUpdateVersion
   chain0CompensationRatio: Int # uint32
   chain1CompensationRatio: Int # uint32
   enableTimestamp: BigInt # uint64
-  latestUpdateVersion: Int # uint32
   latestUpdateTimestamp: BigInt
   latestUpdateBlockNumber: BigInt
   latestUpdateHash: String
@@ -215,8 +216,8 @@ type ruleUpdateVersion
   ruleValidationErrorstatus: String!
 
   # Related
-  ruleUpdateRel: [ruleUpdateRel!]! @derivedFrom(field: "ruleUpdateVersion")
-  ruleRel: [ruleRel!]! @derivedFrom(field: "ruleUpdateVersion")
+  allRulesInfo: [allRulesInfo!]! @derivedFrom(field: "sameRuleKeySnapshot")
+  ruleRel: [ruleRel!]! @derivedFrom(field: "sameRuleKeySnapshot")
 }
 
 interface PairManager {
@@ -429,7 +430,7 @@ type ruleRel
   sourceChainIds: [BigInt!]! # uint64[]
   pledgeAmounts: [BigInt!]! # uint[]
   token: String! # address
-  ruleUpdateVersion: [ruleUpdateVersion!]!
+  sameRuleKeySnapshot: [sameRuleKeySnapshot!]!
   # related to rule
   # mappingSnapshot: [mdcLatestColumn!] # ruleMapping
   mdc: MDC! @derivedFrom(field: "ruleSnapshot") # MDC
@@ -478,10 +479,10 @@ type latestRule
   ruleValidationErrorstatus: String!
   root: String!
   # Rel
-  ruleUpdateRel: [ruleUpdateRel!]!
+  # allRulesInfo: [allRulesInfo!]!
   latestSnapShotID: String!
   ebc: ebcRel! @derivedFrom(field: "ruleLatest") # EBCs
-  mdc: MDC! @derivedFrom(field: "ruleLatest") # MDC
+  # mdc: MDC! @derivedFrom(field: "ruleLatest") # MDC
   chainPairManager: chainPairManager! @derivedFrom(field: "latestRule")
   tokenPairManager: tokenPairManager! @derivedFrom(field: "latestRule")
 }
@@ -572,7 +573,7 @@ type ebcRel @entity {
   mdcList: [MDC!]! # list all mdc!! who bind this ebc
   rulesList: [ruleRel!]! # list all rules Snapshot!! who bind this ebc
   ruleLatest: [latestRule!]! # list all latest rules!! who bind this ebc
-  ruleUpdateRel: [ruleUpdateRel!]!
+  allRulesInfo: [allRulesInfo!]!
   statuses: Boolean!
   latestUpdateHash: String!
 }

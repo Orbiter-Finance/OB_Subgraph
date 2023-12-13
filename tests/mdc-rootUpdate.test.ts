@@ -131,14 +131,14 @@ describe('Describe check MDC rule snaptShot', () => {
   // )
   // })
 
-  // test('ruleUpdateVersion created and stored', () => {
+  // test('sameRuleKeySnapshot created and stored', () => {
   //   const mockDataId: string =
   //     '0x75e0c3ef76e5597b509e2df487068bb3b876c070b1144ac23ece9f0dfff8d435';
   //   const mockHashId: string =
   //     '0x239b7ef2adaabfc2e4e13c143349a3d2f3d3ddc5b389dcd246cb3d728103b609';
   //   const latestRuleId: string =
   //     '0x239b7ef2adaabfc2e4e13c143349a3d2f3d3ddc5b389dcd246cb3d728103b609';
-  //   // assert.fieldEquals('ruleUpdateVersion', mockDataId, 'id', mockDataId);
+  //   // assert.fieldEquals('sameRuleKeySnapshot', mockDataId, 'id', mockDataId);
 
   //   assert.fieldEquals('latestRule', latestRuleId, 'id', latestRuleId);
 
@@ -157,7 +157,7 @@ describe('Describe check MDC rule snaptShot', () => {
     // assert.fieldEquals(
     //   "crossChainPairManager",
     //   mockPairID,
-    //   "ruleUpdateRel",
+    //   "allRulesInfo",
     //   mockPair
     // )
   });
