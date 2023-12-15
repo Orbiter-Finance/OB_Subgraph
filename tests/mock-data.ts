@@ -1,5 +1,5 @@
 import { Bytes } from '@graphprotocol/graph-ts';
-import { challengeENUM, challengeStatues } from '../src/mappings/mdc-core';
+import { challengeENUM, challengeStatuses } from '../src/mappings/mdc-core';
 
 export let mockMdcAddr = '0x7A0B33bDcBD07f10FfAa8251fC843ed293495fEb';
 export const funcERC20RootMockInput =
@@ -45,18 +45,18 @@ export const functionVerifyDestInput2 =
 
 export function mockChallengeFunctionSelector(selector: string): Bytes {
   let returnBytes: Bytes = Bytes.fromHexString('') as Bytes;
-  if (selector == challengeStatues[challengeENUM.CREATE]) {
+  if (selector == challengeStatuses[challengeENUM.CREATE]) {
     returnBytes = Bytes.fromHexString(functionrChallengeinput) as Bytes;
   }
-  if (selector == challengeStatues[challengeENUM.LIQUIDATION]) {
+  if (selector == challengeStatuses[challengeENUM.LIQUIDATION]) {
     returnBytes = Bytes.fromHexString(functionCheckChallengeInput) as Bytes;
   }
 
-  if (selector == challengeStatues[challengeENUM.VERIFY_SOURCE]) {
+  if (selector == challengeStatuses[challengeENUM.VERIFY_SOURCE]) {
     returnBytes = Bytes.fromHexString(functionVerifySourceInput2) as Bytes;
   }
 
-  if (selector == challengeStatues[challengeENUM.VERIFY_DEST]) {
+  if (selector == challengeStatuses[challengeENUM.VERIFY_DEST]) {
     returnBytes = Bytes.fromHexString(functionVerifyDestInput2) as Bytes;
   }
 

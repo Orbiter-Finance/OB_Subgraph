@@ -67,6 +67,19 @@ export class challengeManager extends Entity {
     this.set("challengeId", Value.fromString(value));
   }
 
+  get mdcAddr(): string {
+    let value = this.get("mdcAddr");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set mdcAddr(value: string) {
+    this.set("mdcAddr", Value.fromString(value));
+  }
+
   get owner(): string {
     let value = this.get("owner");
     if (!value || value.kind == ValueKind.NULL) {
@@ -80,8 +93,8 @@ export class challengeManager extends Entity {
     this.set("owner", Value.fromString(value));
   }
 
-  get challengeStatues(): string {
-    let value = this.get("challengeStatues");
+  get challengeStatuses(): string {
+    let value = this.get("challengeStatuses");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -89,8 +102,8 @@ export class challengeManager extends Entity {
     }
   }
 
-  set challengeStatues(value: string) {
-    this.set("challengeStatues", Value.fromString(value));
+  set challengeStatuses(value: string) {
+    this.set("challengeStatuses", Value.fromString(value));
   }
 
   get createChallenge(): Array<string> {
@@ -503,6 +516,19 @@ export class createChallenge extends Entity {
     this.set("challengeNodeNumber", Value.fromString(value));
   }
 
+  get isVerifyPass(): boolean {
+    let value = this.get("isVerifyPass");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set isVerifyPass(value: boolean) {
+    this.set("isVerifyPass", Value.fromBoolean(value));
+  }
+
   get totalChallengeVerifyCost(): BigInt {
     let value = this.get("totalChallengeVerifyCost");
     if (!value || value.kind == ValueKind.NULL) {
@@ -896,8 +922,8 @@ export class columnArraySnapshot extends Entity {
     this.set("chainIdMappingSnapshot", Value.fromStringArray(value));
   }
 
-  get columnArrayStatues(): string {
-    let value = this.get("columnArrayStatues");
+  get columnArrayStatuses(): string {
+    let value = this.get("columnArrayStatuses");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -905,8 +931,8 @@ export class columnArraySnapshot extends Entity {
     }
   }
 
-  set columnArrayStatues(value: string) {
-    this.set("columnArrayStatues", Value.fromString(value));
+  set columnArrayStatuses(value: string) {
+    this.set("columnArrayStatuses", Value.fromString(value));
   }
 
   get enableTimestamp(): BigInt {

@@ -1,7 +1,7 @@
 {
   "network": "goerli",
-  "orMDCFactoryAddress": "0x414ab2622945dCf473726437aD9d7dFB734db3a6",
-  "orMDCFactoryStartBlock": 10137782,
+  "orMDCFactoryAddress": "0xd801cdF5393aa131721534b37FC65D084e5362b5",
+  "orMDCFactoryStartBlock": 10214458,
   "orManagerAddress": "0xd7Fc431BB74Bd1C4c5493719F290F53d65142c1e",
   "orManagerStartBlock": 10091496,
   "orFeeManagerAddress": "0xcC45c67d121A4BC3BC88Cc5A3099a8F7854f11f6",

@@ -21,7 +21,7 @@ interface ChallengeInfoUpdated {
   latestUpdateBlockNumber: BigInt!
 }
 
-enum ChallengeStatues {
+enum ChallengeStatuses {
   CREATE
   VERIFY_SOURCE
   VERIFY_DEST
@@ -36,8 +36,9 @@ enum StringInit {
 type challengeManager @entity {
   id: ID! #hash(challengeId, mdcAddress)
   challengeId: String! # bytes32
+  mdcAddr: String! # address of mdc
   owner: String! # address of maker
-  challengeStatues: ChallengeStatues!
+  challengeStatuses: ChallengeStatuses!
   createChallenge: [createChallenge!]!
   # verifyChallengeSource result
   sourceTxFrom: String! # address
@@ -77,6 +78,7 @@ type createChallenge @entity {
   challengeNodeNumberParent: String! # challengeNodeNumber last number
   challengeNodeNumber: String! # sorting: encodePacked(sourceTxTime,sourceChainId,blocknumer,TxIndex)
   # info
+  isVerifyPass: Boolean!
   totalChallengeVerifyCost: BigInt! # uint: WEI
   createChallengeHash: String! # txHash of createChallenge
   createChallengeBlockNumber: BigInt! # blockNumber of createChallenge
@@ -102,7 +104,7 @@ type withdrawRequestList @entity(immutable: true) {
   mdc: MDC! @derivedFrom(field: "withdrawRequestList") # MDC
 }
 
-enum columnArrayStatues {
+enum columnArrayStatuses {
   PARAMETER_DUPLICATION
   ALL_CLEAR
 }
@@ -116,7 +118,7 @@ type columnArraySnapshot @entity(immutable: true) {
   ebcMappingSnapshot: [ebcMappingSnapshot!]! # ebc address mapping, defined by maker
   chainIds: [BigInt!]! # uint64[]
   chainIdMappingSnapshot: [chainIdMappingSnapshot!]! # chainId mapping, defined by maker
-  columnArrayStatues: columnArrayStatues!
+  columnArrayStatuses: columnArrayStatuses!
   # Time
   enableTimestamp: BigInt! # uint64
   latestUpdateHash: String!

@@ -16,7 +16,7 @@ import {
   functionrChallengeinput,
   mockChallengeFunctionSelector,
 } from './mock-data';
-import { challengeENUM, challengeStatues } from '../src/mappings/mdc-core';
+import { challengeENUM, challengeStatuses } from '../src/mappings/mdc-core';
 import { customData } from '../src/mappings/helpers';
 
 // Tests structure (matchstick-as >=0.5.0)
@@ -34,7 +34,7 @@ describe('test MDC create Challenge related function', () => {
     '0xafcfbb382b28dae47b76224f24ee29be2c823648';
   beforeAll(() => {
     const mockChallengeInput = mockChallengeFunctionSelector(
-      challengeStatues[challengeENUM.CREATE],
+      challengeStatuses[challengeENUM.CREATE],
     );
     let challengeId = Bytes.fromHexString(ChallengeId);
     let freezeToken: Address = Address.fromString(
@@ -117,7 +117,7 @@ describe('test MDC create Challenge related function', () => {
     const Challenger: string = '0xc3c7a782dda00a8e61cb9ba0ea8680bb3f3b9d10';
     beforeAll(() => {
       const mockChallengeInput = mockChallengeFunctionSelector(
-        challengeStatues[challengeENUM.VERIFY_SOURCE],
+        challengeStatuses[challengeENUM.VERIFY_SOURCE],
       );
       let challengeId = Bytes.fromHexString(ChallengeId);
       let freezeToken: Address = Address.fromString(
@@ -182,7 +182,7 @@ describe('test MDC create Challenge related function', () => {
     const Challenger: string = '0xc3c7a782dda00a8e61cb9ba0ea8680bb3f3b9d10';
     beforeAll(() => {
       const mockChallengeInput = mockChallengeFunctionSelector(
-        challengeStatues[challengeENUM.VERIFY_DEST],
+        challengeStatuses[challengeENUM.VERIFY_DEST],
       );
       let challengeId = Bytes.fromHexString(ChallengeId);
       let freezeToken: Address = Address.fromString(
@@ -252,7 +252,7 @@ describe('test MDC create Challenge related function', () => {
       '0xafcfbb382b28dae47b76224f24ee29be2c823648';
     beforeAll(() => {
       const mockChallengeInput = mockChallengeFunctionSelector(
-        challengeStatues[challengeENUM.LIQUIDATION],
+        challengeStatuses[challengeENUM.LIQUIDATION],
       );
       let challengeId = Bytes.fromHexString(ChallengeId);
       let freezeToken: Address = Address.fromString(
