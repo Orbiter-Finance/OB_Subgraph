@@ -98,7 +98,7 @@ export enum challengeENUM {
   LIQUIDATION = 3,
 }
 
-export const challengeStatues: string[] = [
+export const challengeStatuses: string[] = [
   'CREATE',
   'VERIFY_SOURCE',
   'VERIFY_DEST',
@@ -110,7 +110,7 @@ export enum stringInitENUM {
   INVALID = 1,
 }
 
-export const columnArrayStatues: string[] = [
+export const columnArrayStatuses: string[] = [
   'PARAMETER_DUPLICATION',
   'ALL_CLEAR',
 ];
@@ -120,7 +120,7 @@ export enum columnArrayENUM {
   ALL_CLEAR = 1,
 }
 
-export const stringInitStatues: string[] = ['EMPTY', 'INVALID'];
+export const stringInitStatuses: string[] = ['EMPTY', 'INVALID'];
 
 export function handleupdateRulesRootEvent(
   event: ethereum.Event,
@@ -237,11 +237,11 @@ export function handleColumnArrayUpdatedEvent(
   columnArraySnapshot.ebcs = ebcsArray;
   columnArraySnapshot.chainIds = uniqueChainIds;
   if (parameterDuplication) {
-    columnArraySnapshot.columnArrayStatues =
-      columnArrayStatues[columnArrayENUM.PARAMETER_DUPLICATION];
+    columnArraySnapshot.columnArrayStatuses =
+      columnArrayStatuses[columnArrayENUM.PARAMETER_DUPLICATION];
   } else {
-    columnArraySnapshot.columnArrayStatues =
-      columnArrayStatues[columnArrayENUM.ALL_CLEAR];
+    columnArraySnapshot.columnArrayStatuses =
+      columnArrayStatuses[columnArrayENUM.ALL_CLEAR];
   }
 
   mdcStoreDealerNewMapping(
@@ -475,10 +475,11 @@ export function handleChallengeInfoUpdatedEvent(
       sourceTxIndex,
     );
     createChallenge.liquidationTimestamp = BigInt.fromI32(0);
-    createChallenge.liquidator = stringInitStatues[stringInitENUM.EMPTY];
-    createChallenge.liquidationHash = stringInitStatues[stringInitENUM.EMPTY];
+    createChallenge.liquidator = stringInitStatuses[stringInitENUM.EMPTY];
+    createChallenge.liquidationHash = stringInitStatuses[stringInitENUM.EMPTY];
     createChallenge.liquidationBlockNumber = BigInt.fromI32(0);
-    challengeManager.challengeStatues = challengeStatues[challengeENUM.CREATE];
+    challengeManager.challengeStatuses =
+      challengeStatuses[challengeENUM.CREATE];
     createChallenge.save();
   } else if (selector == function_checkChallenge) {
     let createChallenge: createChallenge;
@@ -503,7 +504,7 @@ export function handleChallengeInfoUpdatedEvent(
         ],
       );
       if (
-        createChallenge.liquidator == stringInitStatues[stringInitENUM.EMPTY]
+        createChallenge.liquidator == stringInitStatuses[stringInitENUM.EMPTY]
       ) {
         createChallenge.liquidationTimestamp = abortTime;
         createChallenge.liquidator = event.transaction.from.toHexString();
@@ -515,8 +516,8 @@ export function handleChallengeInfoUpdatedEvent(
         break;
       }
     }
-    challengeManager.challengeStatues =
-      challengeStatues[challengeENUM.LIQUIDATION];
+    challengeManager.challengeStatuses =
+      challengeStatuses[challengeENUM.LIQUIDATION];
   } else if (function_verifyChallengeSourceSelcetorArray.includes(selector)) {
     log.info('trigger verifyChallengeSource(), selector: {}', [selector]);
     // const challenger = decodeVerifyChallengeSource(inputdata, selector);
@@ -527,7 +528,13 @@ export function handleChallengeInfoUpdatedEvent(
     //   mdc.id,
     //   verifiedTime0,
     // );
-    // let createChallenge = getCreateChallenge(challengeManager, challenger);
+    let createChallenge = getCreateChallenge(
+      challengeManager,
+      winner,
+      mdc,
+      challengeTime,
+    );
+    createChallenge.isVerifyPass = true;
     // verifyChallengeSource.sourceChainId = createChallenge.sourceChainId;
     challengeManager.sourceTxFrom = sourceTxFrom;
     // verifyChallengeSource.sourceTxTime = sourceTxTime;
@@ -553,9 +560,10 @@ export function handleChallengeInfoUpdatedEvent(
     challengeManager.verifyChallengeSourceHash =
       event.transaction.hash.toHexString();
     challengeManager.verifyChallengeSourceNumber = event.block.number;
-    challengeManager.challengeStatues =
-      challengeStatues[challengeENUM.VERIFY_SOURCE];
+    challengeManager.challengeStatuses =
+      challengeStatuses[challengeENUM.VERIFY_SOURCE];
     // verifyChallengeSource.save();
+    createChallenge.save();
   } else if (function_verifyChallengeDestSelcetorArray.includes(selector)) {
     log.info('trigger verifyChallengeDest(), selector: {}', [selector]);
 
@@ -597,8 +605,8 @@ export function handleChallengeInfoUpdatedEvent(
     challengeManager.verifyChallengeDestHash =
       event.transaction.hash.toHexString();
     challengeManager.verifyChallengeDestNumber = event.block.number;
-    challengeManager.challengeStatues =
-      challengeStatues[challengeENUM.VERIFY_DEST];
+    challengeManager.challengeStatuses =
+      challengeStatuses[challengeENUM.VERIFY_DEST];
     // verifyChallengeDest.save();
   } else {
     log.error('challenge function selector mismatch: {}', [selector]);

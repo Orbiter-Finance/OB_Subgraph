@@ -171,7 +171,7 @@ export function getFactoryEntity(id: string): FactoryManager {
     let subgraphManager = getSubgraphManager();
     subgraphManager.currentFactoryTemplate++;
     subgraphManager.factory = entity.addRelation(subgraphManager.factory, id);
-    log.info('create FactoryTemplate, Id: {}, statues:[{}/{}]', [
+    log.info('create FactoryTemplate, Id: {}, Statuses:[{}/{}]', [
       id,
       subgraphManager.currentFactoryTemplate.toString(),
       subgraphManager.totalFactory.toString(),

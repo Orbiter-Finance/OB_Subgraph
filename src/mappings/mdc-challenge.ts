@@ -4,10 +4,10 @@ import { entity, padZeroToBytes } from './utils';
 import { STRING_EMPTY } from './helpers';
 import { BigInt, Bytes, ethereum } from '@graphprotocol/graph-ts';
 import {
-  challengeStatues,
+  challengeStatuses,
   challengeENUM,
   stringInitENUM,
-  stringInitStatues,
+  stringInitStatuses,
 } from './mdc-core';
 
 export function getChallengeManagerEntity(
@@ -26,20 +26,21 @@ export function getChallengeManagerEntity(
     manager.mdcAddr = mdc.id;
     manager.owner = mdc.owner;
     log.info('create challengeManager: {}', [challengeManagerId]);
-    manager.challengeStatues = challengeStatues[challengeENUM.CREATE];
+    manager.challengeStatuses = challengeStatuses[challengeENUM.CREATE];
     manager.challengeId = challengeId;
-    manager.sourceTxFrom = stringInitStatues[stringInitENUM.EMPTY];
+    manager.sourceTxFrom = stringInitStatuses[stringInitENUM.EMPTY];
     manager.challengeUserRatio = BigInt.fromI32(0);
     manager.verifyChallengeSourceTimestamp = BigInt.fromI32(0);
-    manager.verifiedDataHash0 = stringInitStatues[stringInitENUM.EMPTY];
-    manager.verifyPassChallenger = stringInitStatues[stringInitENUM.EMPTY];
+    manager.verifiedDataHash0 = stringInitStatuses[stringInitENUM.EMPTY];
+    manager.verifyPassChallenger = stringInitStatuses[stringInitENUM.EMPTY];
     manager.challengerVerifyTransactionFee = BigInt.fromI32(0);
-    manager.challengeSourceVerifier = stringInitStatues[stringInitENUM.EMPTY];
-    manager.verifyChallengeSourceHash = stringInitStatues[stringInitENUM.EMPTY];
+    manager.challengeSourceVerifier = stringInitStatuses[stringInitENUM.EMPTY];
+    manager.verifyChallengeSourceHash =
+      stringInitStatuses[stringInitENUM.EMPTY];
     manager.verifyChallengeSourceNumber = BigInt.fromI32(0);
-    manager.challengeDestVerifier = stringInitStatues[stringInitENUM.EMPTY];
+    manager.challengeDestVerifier = stringInitStatuses[stringInitENUM.EMPTY];
     manager.verifyChallengeDestTimestamp = BigInt.fromI32(0);
-    manager.verifyChallengeDestHash = stringInitStatues[stringInitENUM.EMPTY];
+    manager.verifyChallengeDestHash = stringInitStatuses[stringInitENUM.EMPTY];
     manager.verifyChallengeDestNumber = BigInt.fromI32(0);
   }
   return manager as challengeManager;
@@ -62,6 +63,7 @@ export function getCreateChallenge(
     _createChallenge = new createChallenge(id);
     _createChallenge.challengeId = challengeManager.id;
     _createChallenge.challenger = challenger;
+    _createChallenge.isVerifyPass = false;
     log.info('new_CreateChallenge, managerId: {}, challenger: {}, id: {}', [
       challengeManager.id,
       challenger,
