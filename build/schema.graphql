@@ -36,6 +36,7 @@ enum StringInit {
 type challengeManager @entity {
   id: ID! #hash(challengeId, mdcAddress)
   challengeId: String! # bytes32
+  mdcAddr: String! # address of mdc
   owner: String! # address of maker
   challengeStatues: ChallengeStatues!
   createChallenge: [createChallenge!]!

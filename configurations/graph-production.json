@@ -3,5 +3,5 @@
   "debugLog": false,
   "debugLogCreateRules": false,
   "debugLogMapping": false,
-  "ManulDataSource": true
+  "ManulDataSource": false
 }

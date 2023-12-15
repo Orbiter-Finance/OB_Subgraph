@@ -21,6 +21,7 @@ export class ContractDeployment {
         '0xc1FbA31aACBD4A4f7B6b6B9620BE93fcF47e8f36',
         '0x362927553E49A4c260084EcaFeacFEcb9A92cA83',
         '0x414ab2622945dCf473726437aD9d7dFB734db3a6',
+        '0xd801cdF5393aa131721534b37FC65D084e5362b5',
       ];
       for (let i = 0; i < factoryList.length; i++) {
         lists.push(Address.fromString(factoryList[i]));
