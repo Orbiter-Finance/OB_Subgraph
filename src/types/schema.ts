@@ -184,19 +184,6 @@ export class challengeManager extends Entity {
     this.set("verifyPassChallenger", Value.fromString(value));
   }
 
-  get challengerVerifyTransactionFee(): BigInt {
-    let value = this.get("challengerVerifyTransactionFee");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set challengerVerifyTransactionFee(value: BigInt) {
-    this.set("challengerVerifyTransactionFee", Value.fromBigInt(value));
-  }
-
   get challengeSourceVerifier(): string {
     let value = this.get("challengeSourceVerifier");
     if (!value || value.kind == ValueKind.NULL) {

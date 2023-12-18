@@ -47,7 +47,7 @@ type challengeManager @entity {
   verifiedDataHash0: String!
   verifyPassChallenger: String! # address who create this challenge
   # verifyChallengeSource info
-  challengerVerifyTransactionFee: BigInt!
+  # challengerVerifyTransactionFee: BigInt!
   challengeSourceVerifier: String! # address who verified this challenge
   verifyChallengeSourceHash: String!
   verifyChallengeSourceNumber: BigInt!

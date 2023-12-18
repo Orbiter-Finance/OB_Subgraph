@@ -33,7 +33,7 @@ export function getChallengeManagerEntity(
     manager.verifyChallengeSourceTimestamp = BigInt.fromI32(0);
     manager.verifiedDataHash0 = stringInitStatuses[stringInitENUM.EMPTY];
     manager.verifyPassChallenger = stringInitStatuses[stringInitENUM.EMPTY];
-    manager.challengerVerifyTransactionFee = BigInt.fromI32(0);
+    // manager.challengerVerifyTransactionFee = BigInt.fromI32(0);
     manager.challengeSourceVerifier = stringInitStatuses[stringInitENUM.EMPTY];
     manager.verifyChallengeSourceHash =
       stringInitStatuses[stringInitENUM.EMPTY];

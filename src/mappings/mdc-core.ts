@@ -546,8 +546,7 @@ export function handleChallengeInfoUpdatedEvent(
     // verifyChallengeSource.challengeTime = challengeTime;
     // verifyChallengeSource.sourceTxBlockNum = sourceTXBlockNumber;
     // verifyChallengeSource.sourceTxIndex = sourceTxIndex;
-    challengeManager.challengerVerifyTransactionFee =
-      challengerVerifyTransactionFee;
+    // challengeManager.challengerVerifyTransactionFee = challengerVerifyTransactionFee;
     challengeManager.verifyChallengeSourceTimestamp = verifiedTime0;
     // verifyChallengeSource.verifiedTime1 = verifiedTime1;
     // verifyChallengeSource.abortTime = abortTime;

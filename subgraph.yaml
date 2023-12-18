@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: MDCFactory
-    network: goerli
+    network: sepolia
     source:
-      address: "0xd801cdF5393aa131721534b37FC65D084e5362b5"
+      address: "0x925bb1A0F051221eBDfD170b10De885c6A589e64"
       abi: MDCFactory
-      startBlock: 10214458
+      startBlock: 4909350
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -24,11 +24,11 @@ dataSources:
       file: ./src/mappings/mdc-factory.ts
   - kind: ethereum
     name: ORManager
-    network: goerli
+    network: sepolia
     source:
-      address: "0xd7Fc431BB74Bd1C4c5493719F290F53d65142c1e"
+      address: "0x76FC39362EF66DAd742791BDe738b9B050C3cBf5"
       abi: ORManager
-      startBlock: 10091496
+      startBlock: 4909350
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -77,11 +77,11 @@ dataSources:
       file: ./src/mappings/or-manager.ts
   - kind: ethereum
     name: FeeManager
-    network: goerli
+    network: sepolia
     source:
       address: "0xcC45c67d121A4BC3BC88Cc5A3099a8F7854f11f6"
       abi: FeeManager
-      startBlock: 18212091
+      startBlock: 4909350
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -112,11 +112,11 @@ dataSources:
       file: ./src/mappings/fee-manager.ts
   - kind: ethereum
     name: spvData
-    network: goerli
+    network: sepolia
     source:
-      address: "0x218FB5ec42451975f1401b482caF0E10D4b4BC94"
+      address: "0x25A87436D67684402E626B7915bCa520F12e4bae"
       abi: spvData
-      startBlock: 10125313
+      startBlock: 4909350
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -138,7 +138,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: MDC
-    network: goerli
+    network: sepolia
     source:
       abi: MDC
     mapping:
@@ -171,7 +171,7 @@ templates:
       file: ./src/mappings/mdc.ts
   - kind: ethereum
     name: MDCFactory
-    network: goerli
+    network: sepolia
     source:
       abi: MDCFactory
     mapping:
