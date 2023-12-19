@@ -139,9 +139,7 @@ describe('test MDC create Challenge related function', () => {
       ];
       let statementInfo = changetype<ethereum.Tuple>(statementTuple);
 
-      let winner: Address = Address.fromString(
-        '0x5f9204bc7402d77d8c9baa97d8f225e85347961e',
-      );
+      let winner: Address = Address.fromString(Challenger);
       let resultTuple: Array<ethereum.Value> = [
         ethereum.Value.fromAddress(winner),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
@@ -159,6 +157,7 @@ describe('test MDC create Challenge related function', () => {
         resultInfo,
       );
       customData.setInput(mockChallengeInput);
+      customData.setChallenger(Challenger);
       handleChallengeInfoUpdated(newChallengeInfoUpdatedEvent);
     });
 
@@ -204,9 +203,7 @@ describe('test MDC create Challenge related function', () => {
       ];
       let statementInfo = changetype<ethereum.Tuple>(statementTuple);
 
-      let winner: Address = Address.fromString(
-        '0x5f9204bc7402d77d8c9baa97d8f225e85347961e',
-      );
+      let winner: Address = Address.fromString(Challenger);
       let resultTuple: Array<ethereum.Value> = [
         ethereum.Value.fromAddress(winner),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),

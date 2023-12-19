@@ -2,6 +2,5 @@
   "isProduction": false,
   "debugLog": false,
   "debugLogCreateRules": false,
-  "debugLogMapping": false,
-  "ManulDataSource": false
+  "debugLogMapping": false
 }

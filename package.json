@@ -3,7 +3,7 @@
   "license": "MIT",
   "scripts": {
     "ct": "graph codegen --output-dir src/types/ && graph build && graph test",
-    "setup": "mustache configurations/configurations.json configurations/configTemplate/subgraph.yaml> subgraph.yaml && mustache configurations/graph-production.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph codegen --output-dir src/types/ && graph build",
+    "setup": "mustache configurations/configurations.json configurations/configTemplate/subgraph.yaml> subgraph.yaml && mustache configurations/graph-production.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph codegen --output-dir src/types/ && mustache configurations/configurations.json configurations/configTemplate/muti-dataSourceConfig src/mappings/muti-dataSourceConfig.ts && graph build",
     "codegen": "mustache configurations/graph-production.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph codegen --output-dir src/types/",
     "build": "mustache configurations/graph-production.json configurations/configTemplate/graph-test-config src/mappings/config.ts && graph build",
     "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ OBCabin",
