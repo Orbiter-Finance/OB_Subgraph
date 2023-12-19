@@ -73,6 +73,7 @@ import {
 import {
   calldata,
   entity,
+  padZeroToBytes,
   padZeroToEven,
   padZeroToUint,
   removeDuplicates,
@@ -466,8 +467,10 @@ export function handleChallengeInfoUpdatedEvent(
     createChallenge.totalChallengeVerifyCost = challengerVerifyTransactionFee;
     createChallenge.createChallengeHash = event.transaction.hash.toHexString();
     createChallenge.createChallengeBlockNumber = event.block.number;
-    createChallenge.challengeNodeNumberParent =
-      DecodeResult.challengeNodeNumberParent;
+    createChallenge.challengeNodeNumberParent = padZeroToBytes(
+      64,
+      DecodeResult.challengeNodeNumberParent,
+    );
     createChallenge.challengeNodeNumber = calChallengeNodeList(
       sourceTxTime,
       DecodeResult.sourceChainId,
