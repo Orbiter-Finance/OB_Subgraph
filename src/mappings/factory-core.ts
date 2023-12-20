@@ -64,8 +64,9 @@ export function factoryCreateMDC(
 export function factoryCreate(): void {
   let subgraphManager = getSubgraphManager();
   if (subgraphManager.currentFactoryTemplate < subgraphManager.totalFactory) {
+    let subgraphManager = getSubgraphManager();
+    const factoryList: Address[] = ContractDeployment.getFactoryList();
     for (let i = 0; i < subgraphManager.totalFactory; i++) {
-      const factoryList: Address[] = ContractDeployment.getFactoryList();
       const factoryId = factoryList[i].toHexString();
       let factory = FactoryManager.load(factoryId);
       if (factory == null) {
@@ -73,7 +74,14 @@ export function factoryCreate(): void {
         factory.save();
         FactoryTemplate.create(factoryList[i]);
       }
+      subgraphManager.currentFactoryTemplate++;
+      log.info('create FactoryTemplateExtra, Id: {}, createdNumber:[{}/{}]', [
+        factoryId,
+        subgraphManager.currentFactoryTemplate.toString(),
+        subgraphManager.totalFactory.toString(),
+      ]);
     }
+    subgraphManager.save();
   }
 }
 

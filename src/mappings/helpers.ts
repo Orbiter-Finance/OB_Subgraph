@@ -169,13 +169,8 @@ export function getFactoryEntity(id: string): FactoryManager {
     factory.owners = [];
     factory.responseMakers = [];
     let subgraphManager = getSubgraphManager();
-    subgraphManager.currentFactoryTemplate++;
     subgraphManager.factory = entity.addRelation(subgraphManager.factory, id);
-    log.info('create FactoryTemplate, Id: {}, Statuses:[{}/{}]', [
-      id,
-      subgraphManager.currentFactoryTemplate.toString(),
-      subgraphManager.totalFactory.toString(),
-    ]);
+    log.info('create FactoryTemplate, Id: {}', [id]);
     subgraphManager.save();
   }
   return factory as FactoryManager;
