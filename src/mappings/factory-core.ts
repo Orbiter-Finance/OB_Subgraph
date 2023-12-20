@@ -31,7 +31,7 @@ export function getSubgraphManager(): SubgraphManager {
     subgraphManager.factory = [];
     subgraphManager.totalFactory = totalFactory;
     subgraphManager.currentFactoryTemplate = 0;
-    log.info('create SubgraphManager, id: {}, factory count:{}', [
+    log.info('create SubgraphManager, id: {}, extrafactoryCount:{}', [
       subgraphManagerID,
       totalFactory.toString(),
     ]);

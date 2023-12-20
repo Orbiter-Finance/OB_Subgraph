@@ -19,7 +19,7 @@ export class ContractDeployment {
     const factoryArray: string[] = factoryList.split(',');
     if (factoryArray.length > 0) {
       for (let i = 0; i < factoryArray.length; i++) {
-        log.error('factoryList: {}{}', [factoryArray[i], i.toString()]);
+        log.info('create FactoryList[{}]: {}', [i.toString(), factoryArray[i]]);
         lists.push(Address.fromString(factoryArray[i]));
       }
     }

@@ -325,9 +325,10 @@ export function handleChainInfoUpdatedEvent(
     _chainInfo.minVerifyChallengeDestTxSecond = minVerifyChallengeDestTxSecond;
     _chainInfo.maxVerifyChallengeDestTxSecond = maxVerifyChallengeDestTxSecond;
     for (let i = 0; i < spvs.length; i++) {
-      _chainInfo.spvs = _chainInfo.spvs.concat([
+      _chainInfo.spvs = entity.addRelation(
+        _chainInfo.spvs,
         AddressFmtPadZero(spvs[i].toHexString()),
-      ]);
+      );
     }
     _chainInfo.enableTimestamp = enableTime;
   } else if (selector == ChainInfoUpdatedMode.updateChainSpvs) {
@@ -358,7 +359,7 @@ export function handleChainTokenUpdatedEvent(
   let Token = getTokenEntity(chainId, tokenInfo.token.toHexString(), event);
   Token.mainnetToken = mainnetToken.toHexString();
   if (mainnetToken.toHexString() == ETH_ZERO_ADDRESS) {
-    log.info('native token is ether', []);
+    // log.info('native token is ether', []);
     Token.name = 'Ether';
     Token.symbol = 'ETH';
     Token.decimals = decimals;
@@ -442,7 +443,7 @@ export function handleChallengeInfoUpdatedEvent(
   let mdc = getMDCEntity(event.address, event);
   let challengeManager = getChallengeManagerEntity(mdc, challengeId);
   if (selector == function_challenge) {
-    log.info('trigger challenge(), selector: {}', [selector]);
+    log.info('trigger_challenge(), selector: {}', [selector]);
     const DecodeResult = decodeCreateChallenge(inputdata);
     const challenger: string = isProduction
       ? event.transaction.from.toHexString()
@@ -498,7 +499,7 @@ export function handleChallengeInfoUpdatedEvent(
         challengeTime,
       );
       log.info(
-        'trigger checkChallenge(), selector: {}, id:{}, hash{}, index:{}',
+        'trigger_checkChallenge(), selector: {}, id:{}, hash{}, index:{}',
         [
           selector,
           createChallenge.id,
@@ -522,7 +523,7 @@ export function handleChallengeInfoUpdatedEvent(
     challengeManager.challengeStatuses =
       challengeStatuses[challengeENUM.LIQUIDATION];
   } else if (function_verifyChallengeSourceSelcetorArray.includes(selector)) {
-    log.info('trigger verifyChallengeSource(), selector: {}', [selector]);
+    log.info('trigger_verifyChallengeSource(), selector: {}', [selector]);
     // const challenger = decodeVerifyChallengeSource(inputdata, selector);
     // let verifyChallengeSource = getVerifyChallengeSourceEntity(
     //   challengeManager,
@@ -567,7 +568,7 @@ export function handleChallengeInfoUpdatedEvent(
     // verifyChallengeSource.save();
     createChallenge.save();
   } else if (function_verifyChallengeDestSelcetorArray.includes(selector)) {
-    log.info('trigger verifyChallengeDest(), selector: {}', [selector]);
+    log.info('trigger_verifyChallengeDest(), selector: {}', [selector]);
 
     // const challenger = decodeVerifyChallengeDest(inputdata, selector);
     // let verifyChallengeDest = getVerifyChallengeDestEntity(
