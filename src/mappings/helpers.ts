@@ -98,6 +98,7 @@ export const func_updateChainSpvsName = '(uint64,uint64,address[],uint[])';
 export const func_updateColumnArrayName =
   '(uint64,address[],address[],uint64[])';
 export const func_updateResponseMakersName = '(uint64,bytes[])';
+export const func_updateChallengeUserRatio = '(uint64,uint64)';
 
 // chalenge related
 export const func_checkChallengeName = '(uint64,bytes32,address[])';
@@ -1631,8 +1632,18 @@ export function compareChainInfoUpdatedSelector(
     : ChainInfoUpdatedMode.INV;
 }
 
-export function decodeEnabletime(inputData: Bytes, type: string): BigInt {
-  let tuple = calldata.decode(inputData, type);
+export function decodeEnabletime(
+  inputData: Bytes,
+  type: string,
+  decodeWOPrefix: bool = false,
+): BigInt {
+  let tuple: ethereum.Tuple;
+  if (decodeWOPrefix) {
+    tuple = calldata.decodeWOPrefix(inputData, type);
+  } else {
+    tuple = calldata.decode(inputData, type);
+  }
+
   if (debugLogMapping) {
     for (let i = 0; i < tuple.length; i++) {
       log.debug('tuple[{}].kind:{}', [i.toString(), tuple[i].kind.toString()]);

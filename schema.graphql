@@ -560,12 +560,15 @@ type tokenRel @entity {
   latestUpdateHash: String!
 }
 
-type ChallengeUserRatioUpdated @entity(immutable: true) {
-  id: Bytes!
+type challengeUserRatioSnapshot @entity(immutable: true) {
+  id: ID! # hash(orManagerAddress,txHash,logIndex)
+  orManagerAddress: String! # address
   challengeUserRatio: BigInt! # uint64
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+  enableTimestamp: BigInt! # uint64
+  enableBlockNumber: BigInt!
+  latestUpdateBlockNumber: BigInt!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateHash: String!
 }
 
 # using entity, binding in contract Event
