@@ -1,1 +1,1 @@
-export const factoryList = '0x925bb1A0F051221eBDfD170b10De885c6A589e64,0xA4f740B38430AaE4f96a5416D936043CC8B8E5Ea';
+export const factoryList = '';

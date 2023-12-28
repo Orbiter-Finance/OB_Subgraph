@@ -6,9 +6,9 @@ dataSources:
     name: MDCFactory
     network: sepolia
     source:
-      address: "0x925bb1A0F051221eBDfD170b10De885c6A589e64"
+      address: "0xd9BE21394F5bCA706cB74E930378433338105a42"
       abi: MDCFactory
-      startBlock: 4909350
+      startBlock: 4973005
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

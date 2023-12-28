@@ -16,13 +16,20 @@ export const subgraphManagerID: string = crypto
 export class ContractDeployment {
   static getFactoryList(): Array<Address> {
     let lists = new Array<Address>(0);
-    const factoryArray: string[] = factoryList.split(',');
-    if (factoryArray.length > 0) {
-      for (let i = 0; i < factoryArray.length; i++) {
-        log.info('create FactoryList[{}]: {}', [i.toString(), factoryArray[i]]);
-        lists.push(Address.fromString(factoryArray[i]));
+    if (factoryList != '') {
+      const factoryArray: string[] = factoryList.split(',');
+      log.warning('factoryArray.length{}', [factoryArray.length.toString()]);
+      if (factoryArray.length > 0) {
+        for (let i = 0; i < factoryArray.length; i++) {
+          log.info('create FactoryList[{}]: {}', [
+            i.toString(),
+            factoryArray[i],
+          ]);
+          lists.push(Address.fromString(factoryArray[i]));
+        }
       }
     }
+
     return lists;
   }
 

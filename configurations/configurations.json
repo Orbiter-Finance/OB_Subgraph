@@ -1,17 +1,14 @@
 {
   "network": "sepolia",
-  "orMDCFactoryAddress": "0x925bb1A0F051221eBDfD170b10De885c6A589e64",
-  "orMDCFactoryStartBlock": 4909350,
+  "orMDCFactoryAddress": "0xd9BE21394F5bCA706cB74E930378433338105a42",
+  "orMDCFactoryStartBlock": 4973005,
   "orManagerAddress": "0x76FC39362EF66DAd742791BDe738b9B050C3cBf5",
   "orManagerStartBlock": 4909350,
   "orFeeManagerAddress": "0xcC45c67d121A4BC3BC88Cc5A3099a8F7854f11f6",
   "orFeeManagerStartBlock": 4909350,
   "orSpvDataAddress": "0x25A87436D67684402E626B7915bCa520F12e4bae",
   "orSpvDataStartBlock": 4909350,
-  "extraMDCFactoryAddressList": [
-    "0x925bb1A0F051221eBDfD170b10De885c6A589e64",
-    "0xA4f740B38430AaE4f96a5416D936043CC8B8E5Ea"
-  ],
+  "extraMDCFactoryAddressList": [],
   "graftingEnable": false,
   "DeploymentID-LastVersion": "",
   "UpgradeStartBlock": 0
