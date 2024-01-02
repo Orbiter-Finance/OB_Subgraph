@@ -1334,14 +1334,6 @@ export class MDC extends Entity {
     return new DealerLoader("MDC", this.get("id")!.toString(), "dealer");
   }
 
-  get responseMaker(): responseMakerLoader {
-    return new responseMakerLoader(
-      "MDC",
-      this.get("id")!.toString(),
-      "responseMaker"
-    );
-  }
-
   get createblockNumber(): BigInt {
     let value = this.get("createblockNumber");
     if (!value || value.kind == ValueKind.NULL) {
@@ -7304,24 +7296,6 @@ export class DealerLoader extends Entity {
   load(): Dealer[] {
     let value = store.loadRelated(this._entity, this._id, this._field);
     return changetype<Dealer[]>(value);
-  }
-}
-
-export class responseMakerLoader extends Entity {
-  _entity: string;
-  _field: string;
-  _id: string;
-
-  constructor(entity: string, id: string, field: string) {
-    super();
-    this._entity = entity;
-    this._id = id;
-    this._field = field;
-  }
-
-  load(): responseMaker[] {
-    let value = store.loadRelated(this._entity, this._id, this._field);
-    return changetype<responseMaker[]>(value);
   }
 }
 

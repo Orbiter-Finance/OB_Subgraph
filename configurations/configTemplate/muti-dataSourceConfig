@@ -1,1 +1,1 @@
-export const factoryList = '{{ extraMDCFactoryAddressList }}';
+export const factoryList: string = '{{ extraMDCFactoryAddressList }}';

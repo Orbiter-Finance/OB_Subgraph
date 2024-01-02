@@ -861,7 +861,10 @@ export function mdcStoreResponseMaker(
     responseMakers = new responseMakersSnapshot(id);
     responseMakers.owner = mdc.owner;
     responseMakers.responseMakerList = [];
-    mdc.responseMakersSnapshot = [responseMakers.id];
+    mdc.responseMakersSnapshot = entity.addRelation(
+      mdc.responseMakersSnapshot,
+      id,
+    );
     responseMakers.enableTimestamp = enableTimestamp;
     log.info('mdc: {} create new responseMakersSnapshot, id: {}', [mdc.id, id]);
   }
@@ -871,14 +874,14 @@ export function mdcStoreResponseMaker(
   responseMakers.latestUpdateHash = event.transaction.hash.toHexString();
   responseMakers.save();
 
-  for (let i = 0; i < responseMakersArray.length; i++) {
-    let _responseMaker = getResponseMakerEntity(
-      responseMakersArray[i],
-      mdc,
-      event,
-    );
-    _responseMaker.save();
-  }
+  // for (let i = 0; i < responseMakersArray.length; i++) {
+  //   let _responseMaker = getResponseMakerEntity(
+  //     responseMakersArray[i],
+  //     mdc,
+  //     event,
+  //   );
+  //   _responseMaker.save();
+  // }
 }
 
 function saveColumnArray2MDC(mdc: MDC, columnArray: columnArraySnapshot): void {

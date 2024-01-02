@@ -8,7 +8,7 @@
   "orFeeManagerStartBlock": 4909350,
   "orSpvDataAddress": "0x25A87436D67684402E626B7915bCa520F12e4bae",
   "orSpvDataStartBlock": 4909350,
-  "extraMDCFactoryAddressList": [],
+  "extraMDCFactoryAddressList": "0xd9BE21394F5bCA706cB74E930378433338105a42",
   "graftingEnable": false,
   "DeploymentID-LastVersion": "",
   "UpgradeStartBlock": 0
