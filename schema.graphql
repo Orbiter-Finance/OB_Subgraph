@@ -559,6 +559,22 @@ type tokenRel @entity {
   latestUpdateHash: String!
 }
 
+type chainRelSnapshot @entity {
+  id: ID! # hash(txhash, logindex, chainId)
+  chainId: String! # chainId
+  spvs: [String!]! # address[]
+  nativeToken: String! # address
+  batchLimit: BigInt # uint192
+  minVerifyChallengeSourceTxSecond: BigInt # uint64
+  maxVerifyChallengeSourceTxSecond: BigInt # uint64
+  minVerifyChallengeDestTxSecond: BigInt # uint64
+  maxVerifyChallengeDestTxSecond: BigInt # uint64
+  enableTimestamp: BigInt # uint64
+  latestUpdateBlockNumber: BigInt!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateHash: String!
+}
+
 type challengeUserRatioSnapshot @entity(immutable: true) {
   id: ID! # hash(orManagerAddress,txHash,logIndex)
   orManagerAddress: String! # address

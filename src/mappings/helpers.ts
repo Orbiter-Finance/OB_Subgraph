@@ -40,6 +40,7 @@ import {
   ruleUpdateVersion,
   chainPairManager,
   tokenPairManager,
+  chainRelSnapshot,
 } from '../types/schema';
 import { entity, findDifferentData, calldata, padZeroToUint } from './utils';
 import { functionrResponseMakerMockinput } from '../../tests/mock-data';
@@ -240,6 +241,27 @@ export function getChainInfoEntity(
   _chainInfo.latestUpdateBlockNumber = event.block.number;
   _chainInfo.latestUpdateTimestamp = event.block.timestamp;
   return _chainInfo as chainRel;
+}
+
+export function getChainInfoSnapshotEntity(
+  event: ethereum.Event,
+  _id: BigInt,
+): chainRelSnapshot {
+  let id = entity.createHashID([
+    event.transaction.hash.toHexString(),
+    event.logIndex.toString(),
+    _id.toString(),
+  ]);
+  let _chainInfo = chainRelSnapshot.load(id);
+  if (_chainInfo == null) {
+    log.info('create new chainRelSnapshot, id: {}', [id]);
+    _chainInfo = new chainRelSnapshot(id);
+    _chainInfo.spvs = [];
+  }
+  _chainInfo.latestUpdateHash = event.transaction.hash.toHexString();
+  _chainInfo.latestUpdateBlockNumber = event.block.number;
+  _chainInfo.latestUpdateTimestamp = event.block.timestamp;
+  return _chainInfo as chainRelSnapshot;
 }
 
 export function getmdcLatestColumnEntity(
