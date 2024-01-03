@@ -5309,6 +5309,242 @@ export class tokenRel extends Entity {
   }
 }
 
+export class chainRelSnapshot extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save chainRelSnapshot entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type chainRelSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("chainRelSnapshot", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): chainRelSnapshot | null {
+    return changetype<chainRelSnapshot | null>(
+      store.get_in_block("chainRelSnapshot", id)
+    );
+  }
+
+  static load(id: string): chainRelSnapshot | null {
+    return changetype<chainRelSnapshot | null>(
+      store.get("chainRelSnapshot", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get chainId(): string {
+    let value = this.get("chainId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set chainId(value: string) {
+    this.set("chainId", Value.fromString(value));
+  }
+
+  get spvs(): Array<string> {
+    let value = this.get("spvs");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set spvs(value: Array<string>) {
+    this.set("spvs", Value.fromStringArray(value));
+  }
+
+  get nativeToken(): string {
+    let value = this.get("nativeToken");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set nativeToken(value: string) {
+    this.set("nativeToken", Value.fromString(value));
+  }
+
+  get batchLimit(): BigInt | null {
+    let value = this.get("batchLimit");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set batchLimit(value: BigInt | null) {
+    if (!value) {
+      this.unset("batchLimit");
+    } else {
+      this.set("batchLimit", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get minVerifyChallengeSourceTxSecond(): BigInt | null {
+    let value = this.get("minVerifyChallengeSourceTxSecond");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set minVerifyChallengeSourceTxSecond(value: BigInt | null) {
+    if (!value) {
+      this.unset("minVerifyChallengeSourceTxSecond");
+    } else {
+      this.set(
+        "minVerifyChallengeSourceTxSecond",
+        Value.fromBigInt(<BigInt>value)
+      );
+    }
+  }
+
+  get maxVerifyChallengeSourceTxSecond(): BigInt | null {
+    let value = this.get("maxVerifyChallengeSourceTxSecond");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxVerifyChallengeSourceTxSecond(value: BigInt | null) {
+    if (!value) {
+      this.unset("maxVerifyChallengeSourceTxSecond");
+    } else {
+      this.set(
+        "maxVerifyChallengeSourceTxSecond",
+        Value.fromBigInt(<BigInt>value)
+      );
+    }
+  }
+
+  get minVerifyChallengeDestTxSecond(): BigInt | null {
+    let value = this.get("minVerifyChallengeDestTxSecond");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set minVerifyChallengeDestTxSecond(value: BigInt | null) {
+    if (!value) {
+      this.unset("minVerifyChallengeDestTxSecond");
+    } else {
+      this.set(
+        "minVerifyChallengeDestTxSecond",
+        Value.fromBigInt(<BigInt>value)
+      );
+    }
+  }
+
+  get maxVerifyChallengeDestTxSecond(): BigInt | null {
+    let value = this.get("maxVerifyChallengeDestTxSecond");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set maxVerifyChallengeDestTxSecond(value: BigInt | null) {
+    if (!value) {
+      this.unset("maxVerifyChallengeDestTxSecond");
+    } else {
+      this.set(
+        "maxVerifyChallengeDestTxSecond",
+        Value.fromBigInt(<BigInt>value)
+      );
+    }
+  }
+
+  get enableTimestamp(): BigInt | null {
+    let value = this.get("enableTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set enableTimestamp(value: BigInt | null) {
+    if (!value) {
+      this.unset("enableTimestamp");
+    } else {
+      this.set("enableTimestamp", Value.fromBigInt(<BigInt>value));
+    }
+  }
+
+  get latestUpdateBlockNumber(): BigInt {
+    let value = this.get("latestUpdateBlockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestUpdateBlockNumber(value: BigInt) {
+    this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
+  }
+
+  get latestUpdateTimestamp(): BigInt {
+    let value = this.get("latestUpdateTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestUpdateTimestamp(value: BigInt) {
+    this.set("latestUpdateTimestamp", Value.fromBigInt(value));
+  }
+
+  get latestUpdateHash(): string {
+    let value = this.get("latestUpdateHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set latestUpdateHash(value: string) {
+    this.set("latestUpdateHash", Value.fromString(value));
+  }
+}
+
 export class challengeUserRatioSnapshot extends Entity {
   constructor(id: string) {
     super();

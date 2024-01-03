@@ -48,6 +48,7 @@ import {
   customData,
   function_verifyChallengeSourceSelcetorArray,
   function_verifyChallengeDestSelcetorArray,
+  getChainInfoSnapshotEntity,
 } from './helpers';
 import {
   FactoryManager,
@@ -342,6 +343,25 @@ export function handleChainInfoUpdatedEvent(
     ]);
   }
   _chainInfo.save();
+
+  let chainInfoSnapshot = getChainInfoSnapshotEntity(event, chainInfoId);
+  chainInfoSnapshot.chainId = _chainInfo.id;
+  chainInfoSnapshot.spvs = _chainInfo.spvs;
+  chainInfoSnapshot.nativeToken = _chainInfo.nativeToken;
+  chainInfoSnapshot.batchLimit = _chainInfo.batchLimit;
+  chainInfoSnapshot.minVerifyChallengeSourceTxSecond =
+    _chainInfo.minVerifyChallengeSourceTxSecond;
+  chainInfoSnapshot.maxVerifyChallengeSourceTxSecond =
+    _chainInfo.maxVerifyChallengeSourceTxSecond;
+  chainInfoSnapshot.minVerifyChallengeDestTxSecond =
+    _chainInfo.minVerifyChallengeDestTxSecond;
+  chainInfoSnapshot.maxVerifyChallengeDestTxSecond =
+    _chainInfo.maxVerifyChallengeDestTxSecond;
+  chainInfoSnapshot.enableTimestamp = _chainInfo.enableTimestamp;
+  chainInfoSnapshot.latestUpdateBlockNumber = event.block.number;
+  chainInfoSnapshot.latestUpdateTimestamp = event.block.timestamp;
+  chainInfoSnapshot.latestUpdateHash = event.transaction.hash.toHexString();
+  chainInfoSnapshot.save();
 }
 
 export function handleChainTokenUpdatedEvent(

@@ -159,7 +159,6 @@ type MDC @entity {
   factory: [FactoryManager!]! @derivedFrom(field: "mdcs")
   ebc: [ebcRel!]! @derivedFrom(field: "mdcList") # EBC
   dealer: [Dealer!]! @derivedFrom(field: "mdcs") # Dealer
-  # responseMaker: [responseMaker!]! @derivedFrom(field: "mdcs") # responseMaker
   # Time related
   createblockNumber: BigInt!
   createblockTimestamp: BigInt!
@@ -555,6 +554,22 @@ type tokenRel @entity {
   mainnetToken: String # address
   decimals: Int # uint8
   chain: [chainRel!]! @derivedFrom(field: "tokens") # ChainInfo
+  latestUpdateBlockNumber: BigInt!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateHash: String!
+}
+
+type chainRelSnapshot @entity {
+  id: ID! # hash(txhash, logindex, chainId)
+  chainId: String! # chainId
+  spvs: [String!]! # address[]
+  nativeToken: String! # address
+  batchLimit: BigInt # uint192
+  minVerifyChallengeSourceTxSecond: BigInt # uint64
+  maxVerifyChallengeSourceTxSecond: BigInt # uint64
+  minVerifyChallengeDestTxSecond: BigInt # uint64
+  maxVerifyChallengeDestTxSecond: BigInt # uint64
+  enableTimestamp: BigInt # uint64
   latestUpdateBlockNumber: BigInt!
   latestUpdateTimestamp: BigInt!
   latestUpdateHash: String!
