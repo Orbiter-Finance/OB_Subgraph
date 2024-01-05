@@ -1,17 +1,14 @@
 {
   "network": "mainnet",
-  "orMDCFactoryAddress": "0x6747B308651B23C11D6019E38394b805F3BCa82B",
-  "orMDCFactoryStartBlock": 18212080,
-  "orManagerAddress": "",
-  "orManagerStartBlock": 0,
-  "orFeeManagerAddress": "",
-  "orFeeManagerStartBlock": 0,
-  "orSpvDataAddress": "",
-  "orSpvDataStartBlock": 0,
-  "extraMDCFactoryAddressList": [
-    "0x6747B308651B23C11D6019E38394b805F3BCa82B",
-    "0xfd854cb189Eb6754f02c5d6d0f9a70D78629F644"
-  ],
+  "orMDCFactoryAddress": "0x5C6907fcF57Bb6fA255d4c853c2A0242041501Cc",
+  "orMDCFactoryStartBlock": 18933512,
+  "orManagerAddress": "0xF73AA1B01B2FbBb0B8daD8D44a8660C4930f8Ea3",
+  "orManagerStartBlock": 18933510,
+  "orFeeManagerAddress": "0x478eE41C232757c67EA4bE341956074cB8DaCe53",
+  "orFeeManagerStartBlock": 18933745,
+  "orSpvDataAddress": "0xa1aDd021C99c34424a9ECd2762A1fd5a5A84fa34",
+  "orSpvDataStartBlock": 18933745,
+  "extraMDCFactoryAddressList": [],
   "graftingEnable": false,
   "DeploymentID-LastVersion": "",
   "UpgradeStartBlock": 0
