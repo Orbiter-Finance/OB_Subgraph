@@ -190,7 +190,7 @@ export function getEBCEntityNew(
     ebc.rulesList = [];
     ebc.ruleLatest = [];
     ebc.ruleUpdateRel = [];
-    ebc.statuses = true;
+    ebc.statuses = false;
   }
   ebc.latestUpdateHash = event.transaction.hash.toHexString();
   return ebc as ebcRel;

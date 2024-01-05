@@ -166,7 +166,6 @@ export function handleupdateRulesRootEvent(
     );
     ebcSave(ebcEntity, mdc);
     ebcEntity.save();
-    mdc.save();
     if (ebcEntity != null) {
       fullfillLatestRuleSnapshot(event, mdc, ebcEntity, lastestRuleIdArray);
     }
@@ -176,6 +175,7 @@ export function handleupdateRulesRootEvent(
   } else {
     log.warning('ebcAddress is null', ['error']);
   }
+  mdc.save();
 }
 
 export function handleColumnArrayUpdatedEvent(
@@ -282,13 +282,20 @@ export function handleEbcsUpdatedEvent(
   ebcs: Array<Address>,
   statuses: Array<boolean>,
 ): void {
-  let _statuses = statuses;
-  if (ebcs.length > statuses.length) {
-    for (let i = statuses.length; i < ebcs.length; i++) {
-      _statuses.push(true);
-    }
-  } else if (ebcs.length < statuses.length) {
-    _statuses = statuses.slice(0, ebcs.length);
+  // let _statuses = statuses;
+  // if (ebcs.length > statuses.length) {
+  //   for (let i = statuses.length; i < ebcs.length; i++) {
+  //     _statuses.push(true);
+
+  //   }
+  // } else if (ebcs.length < statuses.length) {
+  //   _statuses = statuses.slice(0, ebcs.length);
+  // }
+
+  for (let i = 0; i < ebcs.length; i++) {
+    let ebc = getEBCEntityNew(ebcs[i].toHexString(), event);
+    ebc.statuses = statuses[i];
+    ebc.save();
   }
 }
 
