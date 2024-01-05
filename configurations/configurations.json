@@ -4,8 +4,8 @@
   "orMDCFactoryStartBlock": 18212080,
   "orManagerAddress": "0xF73AA1B01B2FbBb0B8daD8D44a8660C4930f8Ea3",
   "orManagerStartBlock": 18933510,
-  "orFeeManagerAddress": "0x478eE41C232757c67EA4bE341956074cB8DaCe53",
-  "orFeeManagerStartBlock": 18933745,
+  "orFeeManagerAddress": "0xcC45c67d121A4BC3BC88Cc5A3099a8F7854f11f6",
+  "orFeeManagerStartBlock": 18212091,
   "orSpvDataAddress": "0xa1aDd021C99c34424a9ECd2762A1fd5a5A84fa34",
   "orSpvDataStartBlock": 18933745,
   "extraMDCFactoryAddressList": [
