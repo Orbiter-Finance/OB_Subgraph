@@ -181,7 +181,7 @@ type allRulesInfo @entity {
 }
 
 type sameRuleKeySnapshot @entity(immutable: true) {
-  id: ID!
+  id: ID! #hash(allRulesInfo.id, currUpdateNumber)
   # makerHash: String! # hash(mdc, ebc, chain0, chain1)
   ruleKey: String! # hash(chain0,chain1,token0,token1)
   ruleRoot: String! # bytes32
