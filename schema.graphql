@@ -277,6 +277,11 @@ type SubgraphManager @entity {
   factory: [FactoryManager!]!
   totalFactory: Int!
   currentFactoryTemplate: Int!
+
+  orManagerenableTimestamp: BigInt!
+  orManagerlatestUpdateHash: String!
+  orManagerlatestUpdateTimestamp: BigInt!
+  orManagerlatestUpdateBlockNumber: BigInt!
 }
 
 # customed using entity

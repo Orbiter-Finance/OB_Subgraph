@@ -2616,6 +2616,58 @@ export class SubgraphManager extends Entity {
   set currentFactoryTemplate(value: i32) {
     this.set("currentFactoryTemplate", Value.fromI32(value));
   }
+
+  get orManagerenableTimestamp(): BigInt {
+    let value = this.get("orManagerenableTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set orManagerenableTimestamp(value: BigInt) {
+    this.set("orManagerenableTimestamp", Value.fromBigInt(value));
+  }
+
+  get orManagerlatestUpdateHash(): string {
+    let value = this.get("orManagerlatestUpdateHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set orManagerlatestUpdateHash(value: string) {
+    this.set("orManagerlatestUpdateHash", Value.fromString(value));
+  }
+
+  get orManagerlatestUpdateTimestamp(): BigInt {
+    let value = this.get("orManagerlatestUpdateTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set orManagerlatestUpdateTimestamp(value: BigInt) {
+    this.set("orManagerlatestUpdateTimestamp", Value.fromBigInt(value));
+  }
+
+  get orManagerlatestUpdateBlockNumber(): BigInt {
+    let value = this.get("orManagerlatestUpdateBlockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set orManagerlatestUpdateBlockNumber(value: BigInt) {
+    this.set("orManagerlatestUpdateBlockNumber", Value.fromBigInt(value));
+  }
 }
 
 export class FactoryManager extends Entity {

@@ -49,6 +49,8 @@ import {
   function_verifyChallengeSourceSelcetorArray,
   function_verifyChallengeDestSelcetorArray,
   getChainInfoSnapshotEntity,
+  orManagerUpdateTimeInfo,
+  func_updateChainTokens,
 } from './helpers';
 import {
   FactoryManager,
@@ -66,6 +68,7 @@ import {
   functionupdateColumnArrayMockinput,
   functionrChallengeinput,
   functionCheckChallengeInput,
+  funcETHRootMockInput1,
 } from '../../tests/mock-data';
 import {
   ChainInfoUpdatedChainInfoStruct,
@@ -92,6 +95,7 @@ import {
   getChallengeManagerEntity,
   getCreateChallenge,
 } from './mdc-challenge';
+import { getSubgraphManager } from './factory-core';
 
 export enum challengeENUM {
   CREATE = 0,
@@ -304,7 +308,6 @@ export function handleChainInfoUpdatedEvent(
   chainInfoId: BigInt,
   chainInfo: ChainInfoUpdatedChainInfoStruct,
 ): void {
-  // log.debug("handleChainInfoUpdated id:{}", [chainInfoId.toString()])
   let _chainInfo = getChainInfoEntity(event, chainInfoId);
   _chainInfo.nativeToken = padZeroToUint(chainInfo.nativeToken.toHexString());
   let batchLimit = chainInfo.batchLimit;
@@ -315,6 +318,7 @@ export function handleChainInfoUpdatedEvent(
   let minVerifyChallengeDestTxSecond = chainInfo.minVerifyChallengeDestTxSecond;
   let maxVerifyChallengeDestTxSecond = chainInfo.maxVerifyChallengeDestTxSecond;
   let spvs = isProduction ? chainInfo.spvs : [Address.fromString(mockMdcAddr)];
+  let enableTime = BigInt.fromI32(0);
 
   const inputdata = isProduction
     ? event.transaction.input
@@ -324,7 +328,7 @@ export function handleChainInfoUpdatedEvent(
   );
   if (selector == ChainInfoUpdatedMode.registerChains) {
     log.info('registerChains', ['registerChains']);
-    const enableTime = decodeEnabletime(inputdata, func_registerChainsName);
+    enableTime = decodeEnabletime(inputdata, func_registerChainsName);
     _chainInfo.batchLimit = batchLimit;
     _chainInfo.minVerifyChallengeSourceTxSecond =
       minVerifyChallengeSourceTxSecond;
@@ -341,7 +345,7 @@ export function handleChainInfoUpdatedEvent(
     _chainInfo.enableTimestamp = enableTime;
   } else if (selector == ChainInfoUpdatedMode.updateChainSpvs) {
     log.info('updateChainSpvs', ['updateChainSpvs']);
-    const enableTime = decodeEnabletime(inputdata, func_updateChainSpvsName);
+    enableTime = decodeEnabletime(inputdata, func_updateChainSpvsName);
     parseChainInfoUpdatedInputData(inputdata, _chainInfo);
     _chainInfo.enableTimestamp = enableTime;
   } else {
@@ -369,6 +373,8 @@ export function handleChainInfoUpdatedEvent(
   chainInfoSnapshot.latestUpdateTimestamp = event.block.timestamp;
   chainInfoSnapshot.latestUpdateHash = event.transaction.hash.toHexString();
   chainInfoSnapshot.save();
+
+  orManagerUpdateTimeInfo(event, enableTime);
 }
 
 export function handleChainTokenUpdatedEvent(
@@ -383,6 +389,8 @@ export function handleChainTokenUpdatedEvent(
     mainnetToken.toHexString() != ETH_ZERO_ADDRESS
       ? mainnetToken.toHexString()
       : token;
+  const inputdata = isProduction ? event.transaction.input : customData.input;
+  const enableTime = decodeEnabletime(inputdata, func_updateChainTokens);
   let Token = getTokenEntity(chainId, tokenInfo.token.toHexString(), event);
   Token.mainnetToken = mainnetToken.toHexString();
   if (mainnetToken.toHexString() == ETH_ZERO_ADDRESS) {
@@ -404,6 +412,7 @@ export function handleChainTokenUpdatedEvent(
   }
 
   Token.save();
+  orManagerUpdateTimeInfo(event, enableTime);
 }
 
 export function handleResponseMakersUpdatedEvent(

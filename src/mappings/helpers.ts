@@ -95,6 +95,8 @@ export const func_updateRulesRootName = `(${selectorSetting})`;
 export const func_updateRulesRootERC20Name = `(${selectorSetting},address)`;
 export const func_registerChainsName =
   '(uint64,(uint64,uint192,uint64,uint64,uint64,uint64,uint,address[])[])';
+export const func_updateChainTokens =
+  '(uint64,uint64[],(uint256,address,uint8)[])';
 export const func_updateChainSpvsName = '(uint64,uint64,address[],uint[])';
 export const func_updateColumnArrayName =
   '(uint64,address[],address[],uint64[])';
@@ -1287,7 +1289,7 @@ function updateLatestRules(
   const _TokenPairManager1 = getTokenPairManager(chain1TokenPad, event);
   const _rule = getLastRulesEntity(
     id,
-    snapshot.root,
+    rscRules.root,
     _ChainPairManager,
     _TokenPairManager0,
     _TokenPairManager1,
@@ -1313,6 +1315,7 @@ function updateLatestRules(
 
   _rule.latestSnapShotID = _snapshotLatestRule.id;
   const _rscRuleType = _rule;
+  _rscRuleType.root = rscRules.root;
   _rscRuleType.owner = mdc.owner;
   _rscRuleType.mdcAddr = mdc.id;
   _rscRuleType.ebcAddr = ebc.id;
@@ -1874,4 +1877,19 @@ export function calculateEnableBlockNumber(
     }
   }
   return enableBlockNumber;
+}
+
+export function orManagerUpdateTimeInfo(
+  event: ethereum.Event,
+  enableTimestamp: BigInt,
+): void {
+  if (enableTimestamp) {
+    let subgraphManager = getSubgraphManager();
+    subgraphManager.orManagerenableTimestamp = enableTimestamp;
+    subgraphManager.orManagerlatestUpdateHash =
+      event.transaction.hash.toHexString();
+    subgraphManager.orManagerlatestUpdateTimestamp = event.block.timestamp;
+    subgraphManager.orManagerlatestUpdateBlockNumber = event.block.number;
+    subgraphManager.save();
+  }
 }

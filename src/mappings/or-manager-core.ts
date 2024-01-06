@@ -21,6 +21,7 @@ import {
   getFactoryEntity,
   getMDCEntity,
   getmdcLatestColumnEntity,
+  orManagerUpdateTimeInfo,
 } from './helpers';
 import { entity } from './utils';
 import { isProduction } from './config';
@@ -54,4 +55,6 @@ export function handlechallengeUserRatioEvent(
   snapshot.latestUpdateTimestamp = event.block.timestamp;
   snapshot.latestUpdateHash = event.transaction.hash.toHexString();
   snapshot.save();
+
+  orManagerUpdateTimeInfo(event, enableTime);
 }

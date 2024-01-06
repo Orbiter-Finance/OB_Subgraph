@@ -63,6 +63,7 @@ describe('test MDC create Challenge related function', () => {
       ethereum.Value.fromAddress(winner),
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
       ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+      ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
       ethereum.Value.fromBytes(
         Address.fromHexString('0x5f9204bc7402d77d8c9baa97d8f225e85347961e'),
       ),
@@ -144,6 +145,7 @@ describe('test MDC create Challenge related function', () => {
         ethereum.Value.fromAddress(winner),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
         ethereum.Value.fromBytes(
           Address.fromHexString('0x5f9204bc7402d77d8c9baa97d8f225e85347961e'),
         ),
@@ -206,6 +208,7 @@ describe('test MDC create Challenge related function', () => {
       let winner: Address = Address.fromString(Challenger);
       let resultTuple: Array<ethereum.Value> = [
         ethereum.Value.fromAddress(winner),
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
         ethereum.Value.fromBytes(
@@ -276,6 +279,7 @@ describe('test MDC create Challenge related function', () => {
       );
       let resultTuple: Array<ethereum.Value> = [
         ethereum.Value.fromAddress(winner),
+        ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
         ethereum.Value.fromUnsignedBigInt(BigInt.fromI32(1234567890)),
         ethereum.Value.fromBytes(
