@@ -99,8 +99,12 @@ export class ChallengeInfoUpdatedResultStruct extends ethereum.Tuple {
     return this[2].toBigInt();
   }
 
+  get lastChallengeBlockNum(): BigInt {
+    return this[3].toBigInt();
+  }
+
   get verifiedDataHash0(): Bytes {
-    return this[3].toBytes();
+    return this[4].toBytes();
   }
 }
 
@@ -282,7 +286,7 @@ export class MDC__getVersionAndEnableTimeResult {
   }
 }
 
-export class MDC__getWithdrawRequestInfoResultValue0Struct extends ethereum.Tuple {
+export class MDC__getWithdrawRequestListResultValue0Struct extends ethereum.Tuple {
   get requestAmount(): BigInt {
     return this[0].toBigInt();
   }
@@ -293,84 +297,6 @@ export class MDC__getWithdrawRequestInfoResultValue0Struct extends ethereum.Tupl
 
   get requestToken(): Address {
     return this[2].toAddress();
-  }
-}
-
-export class MDC__parsePublicInputResultValue0Struct extends ethereum.Tuple {
-  get sourceChainId(): BigInt {
-    return this[0].toBigInt();
-  }
-
-  get sourceTxHash(): Bytes {
-    return this[1].toBytes();
-  }
-
-  get txIndex(): BigInt {
-    return this[2].toBigInt();
-  }
-
-  get from(): BigInt {
-    return this[3].toBigInt();
-  }
-
-  get to(): BigInt {
-    return this[4].toBigInt();
-  }
-
-  get freezeToken(): Address {
-    return this[5].toAddress();
-  }
-
-  get freezeAmount(): BigInt {
-    return this[6].toBigInt();
-  }
-
-  get nonce(): BigInt {
-    return this[7].toBigInt();
-  }
-
-  get timestamp(): BigInt {
-    return this[8].toBigInt();
-  }
-
-  get dest(): BigInt {
-    return this[9].toBigInt();
-  }
-
-  get destToken(): BigInt {
-    return this[10].toBigInt();
-  }
-
-  get L1TXBlockHash(): Bytes {
-    return this[11].toBytes();
-  }
-
-  get L1TBlockNumber(): BigInt {
-    return this[12].toBigInt();
-  }
-
-  get mdcContractAddress(): Address {
-    return this[13].toAddress();
-  }
-
-  get managerContractAddress(): Address {
-    return this[14].toAddress();
-  }
-
-  get ruleRootSlot(): BigInt {
-    return this[15].toBigInt();
-  }
-
-  get ruleVersionSlot(): BigInt {
-    return this[16].toBigInt();
-  }
-
-  get enableTimeSlot(): BigInt {
-    return this[17].toBigInt();
-  }
-
-  get RulePreRootHash(): Bytes {
-    return this[18].toBytes();
   }
 }
 
@@ -387,6 +313,31 @@ export class MDC__rulesRootResultValue0Struct extends ethereum.Tuple {
 export class MDC extends ethereum.SmartContract {
   static bind(address: Address): MDC {
     return new MDC("MDC", address);
+  }
+
+  canChallengeContinue(challengeIdentNum: BigInt): boolean {
+    let result = super.call(
+      "canChallengeContinue",
+      "canChallengeContinue(uint256):(bool)",
+      [ethereum.Value.fromUnsignedBigInt(challengeIdentNum)]
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_canChallengeContinue(
+    challengeIdentNum: BigInt
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "canChallengeContinue",
+      "canChallengeContinue(uint256):(bool)",
+      [ethereum.Value.fromUnsignedBigInt(challengeIdentNum)]
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
 
   columnArrayHash(): Bytes {
@@ -433,31 +384,6 @@ export class MDC extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toBigInt());
   }
 
-  getCanChallengeContinue(challengeIdentNum: BigInt): boolean {
-    let result = super.call(
-      "getCanChallengeContinue",
-      "getCanChallengeContinue(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(challengeIdentNum)]
-    );
-
-    return result[0].toBoolean();
-  }
-
-  try_getCanChallengeContinue(
-    challengeIdentNum: BigInt
-  ): ethereum.CallResult<boolean> {
-    let result = super.tryCall(
-      "getCanChallengeContinue",
-      "getCanChallengeContinue(uint256):(bool)",
-      [ethereum.Value.fromUnsignedBigInt(challengeIdentNum)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(value[0].toBoolean());
-  }
-
   getVersionAndEnableTime(): MDC__getVersionAndEnableTimeResult {
     let result = super.call(
       "getVersionAndEnableTime",
@@ -493,26 +419,26 @@ export class MDC extends ethereum.SmartContract {
     );
   }
 
-  getWithdrawRequestInfo(
+  getWithdrawRequestList(
     targetToken: Address
-  ): MDC__getWithdrawRequestInfoResultValue0Struct {
+  ): MDC__getWithdrawRequestListResultValue0Struct {
     let result = super.call(
-      "getWithdrawRequestInfo",
-      "getWithdrawRequestInfo(address):((uint256,uint64,address))",
+      "getWithdrawRequestList",
+      "getWithdrawRequestList(address):((uint256,uint64,address))",
       [ethereum.Value.fromAddress(targetToken)]
     );
 
-    return changetype<MDC__getWithdrawRequestInfoResultValue0Struct>(
+    return changetype<MDC__getWithdrawRequestListResultValue0Struct>(
       result[0].toTuple()
     );
   }
 
-  try_getWithdrawRequestInfo(
+  try_getWithdrawRequestList(
     targetToken: Address
-  ): ethereum.CallResult<MDC__getWithdrawRequestInfoResultValue0Struct> {
+  ): ethereum.CallResult<MDC__getWithdrawRequestListResultValue0Struct> {
     let result = super.tryCall(
-      "getWithdrawRequestInfo",
-      "getWithdrawRequestInfo(address):((uint256,uint64,address))",
+      "getWithdrawRequestList",
+      "getWithdrawRequestList(address):((uint256,uint64,address))",
       [ethereum.Value.fromAddress(targetToken)]
     );
     if (result.reverted) {
@@ -520,7 +446,7 @@ export class MDC extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(
-      changetype<MDC__getWithdrawRequestInfoResultValue0Struct>(
+      changetype<MDC__getWithdrawRequestListResultValue0Struct>(
         value[0].toTuple()
       )
     );
@@ -554,35 +480,6 @@ export class MDC extends ethereum.SmartContract {
     }
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toAddress());
-  }
-
-  parsePublicInput(proofData: Bytes): MDC__parsePublicInputResultValue0Struct {
-    let result = super.call(
-      "parsePublicInput",
-      "parsePublicInput(bytes):((uint64,bytes32,uint256,uint256,uint256,address,uint256,uint256,uint64,uint256,uint256,bytes32,uint256,address,address,uint256,uint256,uint256,bytes32))",
-      [ethereum.Value.fromBytes(proofData)]
-    );
-
-    return changetype<MDC__parsePublicInputResultValue0Struct>(
-      result[0].toTuple()
-    );
-  }
-
-  try_parsePublicInput(
-    proofData: Bytes
-  ): ethereum.CallResult<MDC__parsePublicInputResultValue0Struct> {
-    let result = super.tryCall(
-      "parsePublicInput",
-      "parsePublicInput(bytes):((uint64,bytes32,uint256,uint256,uint256,address,uint256,uint256,uint64,uint256,uint256,bytes32,uint256,address,address,uint256,uint256,uint256,bytes32))",
-      [ethereum.Value.fromBytes(proofData)]
-    );
-    if (result.reverted) {
-      return new ethereum.CallResult();
-    }
-    let value = result.value;
-    return ethereum.CallResult.fromValue(
-      changetype<MDC__parsePublicInputResultValue0Struct>(value[0].toTuple())
-    );
   }
 
   responseMakersHash(): Bytes {
@@ -692,16 +589,20 @@ export class ChallengeCall__Inputs {
     return this._call.inputValues[4].value.toBytes();
   }
 
+  get ruleKey(): Bytes {
+    return this._call.inputValues[5].value.toBytes();
+  }
+
   get freezeToken(): Address {
-    return this._call.inputValues[5].value.toAddress();
+    return this._call.inputValues[6].value.toAddress();
   }
 
   get freezeAmount1(): BigInt {
-    return this._call.inputValues[6].value.toBigInt();
+    return this._call.inputValues[7].value.toBigInt();
   }
 
-  get lastChallengeIdentNum(): BigInt {
-    return this._call.inputValues[7].value.toBigInt();
+  get parentNodeNumOfTargetNode(): BigInt {
+    return this._call.inputValues[8].value.toBigInt();
   }
 }
 
@@ -738,12 +639,8 @@ export class CheckChallengeCall__Inputs {
     return this._call.inputValues[1].value.toBytes();
   }
 
-  get verifiedData0(): Array<BigInt> {
-    return this._call.inputValues[2].value.toBigIntArray();
-  }
-
-  get challenger(): Array<Address> {
-    return this._call.inputValues[3].value.toAddressArray();
+  get challengers(): Array<Address> {
+    return this._call.inputValues[2].value.toAddressArray();
   }
 }
 
@@ -1230,38 +1127,34 @@ export class VerifyChallengeDestCall__Inputs {
     this._call = call;
   }
 
-  get spvAddress(): Address {
+  get challenger(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get challenger(): Address {
+  get spvAddress(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
+  get sourceChainId(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
+  }
+
+  get sourceTxHash(): Bytes {
+    return this._call.inputValues[3].value.toBytes();
+  }
+
   get proof(): Bytes {
-    return this._call.inputValues[2].value.toBytes();
+    return this._call.inputValues[4].value.toBytes();
   }
 
-  get spvBlockHashs(): Array<Bytes> {
-    return this._call.inputValues[3].value.toBytesArray();
-  }
-
-  get verifyInfo(): VerifyChallengeDestCallVerifyInfoStruct {
-    return changetype<VerifyChallengeDestCallVerifyInfoStruct>(
-      this._call.inputValues[4].value.toTuple()
+  get verifiedSourceTxData(): VerifyChallengeDestCallVerifiedSourceTxDataStruct {
+    return changetype<VerifyChallengeDestCallVerifiedSourceTxDataStruct>(
+      this._call.inputValues[5].value.toTuple()
     );
-  }
-
-  get verifiedData0(): Array<BigInt> {
-    return this._call.inputValues[5].value.toBigIntArray();
   }
 
   get rawDatas(): Bytes {
     return this._call.inputValues[6].value.toBytes();
-  }
-
-  get sourceChainId(): BigInt {
-    return this._call.inputValues[7].value.toBigInt();
   }
 }
 
@@ -1273,27 +1166,41 @@ export class VerifyChallengeDestCall__Outputs {
   }
 }
 
-export class VerifyChallengeDestCallVerifyInfoStruct extends ethereum.Tuple {
-  get data(): Array<BigInt> {
-    return this[0].toBigIntArray();
+export class VerifyChallengeDestCallVerifiedSourceTxDataStruct extends ethereum.Tuple {
+  get minChallengeSecond(): BigInt {
+    return this[0].toBigInt();
   }
 
-  get slots(): Array<VerifyChallengeDestCallVerifyInfoSlotsStruct> {
-    return this[1].toTupleArray<VerifyChallengeDestCallVerifyInfoSlotsStruct>();
-  }
-}
-
-export class VerifyChallengeDestCallVerifyInfoSlotsStruct extends ethereum.Tuple {
-  get account(): Address {
-    return this[0].toAddress();
+  get maxChallengeSecond(): BigInt {
+    return this[1].toBigInt();
   }
 
-  get key(): Bytes {
-    return this[1].toBytes();
-  }
-
-  get value(): BigInt {
+  get nonce(): BigInt {
     return this[2].toBigInt();
+  }
+
+  get destChainId(): BigInt {
+    return this[3].toBigInt();
+  }
+
+  get from(): BigInt {
+    return this[4].toBigInt();
+  }
+
+  get destToken(): BigInt {
+    return this[5].toBigInt();
+  }
+
+  get destAmount(): BigInt {
+    return this[6].toBigInt();
+  }
+
+  get responseMakersHash(): BigInt {
+    return this[7].toBigInt();
+  }
+
+  get responseTime(): BigInt {
+    return this[8].toBigInt();
   }
 }
 
@@ -1314,26 +1221,28 @@ export class VerifyChallengeSourceCall__Inputs {
     this._call = call;
   }
 
-  get spvAddress(): Address {
+  get challenger(): Address {
     return this._call.inputValues[0].value.toAddress();
   }
 
-  get challenger(): Address {
+  get spvAddress(): Address {
     return this._call.inputValues[1].value.toAddress();
   }
 
-  get proof(): Bytes {
-    return this._call.inputValues[2].value.toBytes();
+  get sourceChainId(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
   }
 
-  get verifyInfo(): VerifyChallengeSourceCallVerifyInfoStruct {
-    return changetype<VerifyChallengeSourceCallVerifyInfoStruct>(
-      this._call.inputValues[3].value.toTuple()
-    );
+  get proof(): Bytes {
+    return this._call.inputValues[3].value.toBytes();
   }
 
   get rawDatas(): Bytes {
     return this._call.inputValues[4].value.toBytes();
+  }
+
+  get encodeRuleBytes(): Bytes {
+    return this._call.inputValues[5].value.toBytes();
   }
 }
 
@@ -1342,32 +1251,6 @@ export class VerifyChallengeSourceCall__Outputs {
 
   constructor(call: VerifyChallengeSourceCall) {
     this._call = call;
-  }
-}
-
-export class VerifyChallengeSourceCallVerifyInfoStruct extends ethereum.Tuple {
-  get data(): Array<BigInt> {
-    return this[0].toBigIntArray();
-  }
-
-  get slots(): Array<VerifyChallengeSourceCallVerifyInfoSlotsStruct> {
-    return this[1].toTupleArray<
-      VerifyChallengeSourceCallVerifyInfoSlotsStruct
-    >();
-  }
-}
-
-export class VerifyChallengeSourceCallVerifyInfoSlotsStruct extends ethereum.Tuple {
-  get account(): Address {
-    return this[0].toAddress();
-  }
-
-  get key(): Bytes {
-    return this[1].toBytes();
-  }
-
-  get value(): BigInt {
-    return this[2].toBigInt();
   }
 }
 

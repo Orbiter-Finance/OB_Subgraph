@@ -40,6 +40,7 @@ import {
   sameRuleKeySnapshot,
   chainPairManager,
   tokenPairManager,
+  chainRelSnapshot,
 } from '../types/schema';
 import { entity, findDifferentData, calldata, padZeroToUint } from './utils';
 import { functionrResponseMakerMockinput } from '../../tests/mock-data';
@@ -94,10 +95,13 @@ export const func_updateRulesRootName = `(${selectorSetting})`;
 export const func_updateRulesRootERC20Name = `(${selectorSetting},address)`;
 export const func_registerChainsName =
   '(uint64,(uint64,uint192,uint64,uint64,uint64,uint64,uint,address[])[])';
+export const func_updateChainTokens =
+  '(uint64,uint64[],(uint256,address,uint8)[])';
 export const func_updateChainSpvsName = '(uint64,uint64,address[],uint[])';
 export const func_updateColumnArrayName =
   '(uint64,address[],address[],uint64[])';
 export const func_updateResponseMakersName = '(uint64,bytes[])';
+export const func_updateChallengeUserRatio = '(uint64,uint64)';
 
 // chalenge related
 export const func_checkChallengeName = '(uint64,bytes32,address[])';
@@ -169,13 +173,8 @@ export function getFactoryEntity(id: string): FactoryManager {
     factory.owners = [];
     factory.responseMakers = [];
     let subgraphManager = getSubgraphManager();
-    subgraphManager.currentFactoryTemplate++;
     subgraphManager.factory = entity.addRelation(subgraphManager.factory, id);
-    log.info('create FactoryTemplate, Id: {}, Statuses:[{}/{}]', [
-      id,
-      subgraphManager.currentFactoryTemplate.toString(),
-      subgraphManager.totalFactory.toString(),
-    ]);
+    log.info('create FactoryTemplate, Id: {}', [id]);
     subgraphManager.save();
   }
   return factory as FactoryManager;
@@ -193,7 +192,7 @@ export function getEBCEntityNew(
     ebc.rulesList = [];
     ebc.ruleLatest = [];
     ebc.allRulesInfo = [];
-    ebc.statuses = true;
+    ebc.statuses = false;
   }
   ebc.latestUpdateHash = event.transaction.hash.toHexString();
   return ebc as ebcRel;
@@ -244,6 +243,27 @@ export function getChainInfoEntity(
   _chainInfo.latestUpdateBlockNumber = event.block.number;
   _chainInfo.latestUpdateTimestamp = event.block.timestamp;
   return _chainInfo as chainRel;
+}
+
+export function getChainInfoSnapshotEntity(
+  event: ethereum.Event,
+  _id: BigInt,
+): chainRelSnapshot {
+  let id = entity.createHashID([
+    event.transaction.hash.toHexString(),
+    event.logIndex.toString(),
+    _id.toString(),
+  ]);
+  let _chainInfo = chainRelSnapshot.load(id);
+  if (_chainInfo == null) {
+    log.info('create new chainRelSnapshot, id: {}', [id]);
+    _chainInfo = new chainRelSnapshot(id);
+    _chainInfo.spvs = [];
+  }
+  _chainInfo.latestUpdateHash = event.transaction.hash.toHexString();
+  _chainInfo.latestUpdateBlockNumber = event.block.number;
+  _chainInfo.latestUpdateTimestamp = event.block.timestamp;
+  return _chainInfo as chainRelSnapshot;
 }
 
 export function getmdcLatestColumnEntity(
@@ -865,7 +885,10 @@ export function mdcStoreResponseMaker(
     responseMakers = new responseMakersSnapshot(id);
     responseMakers.owner = mdc.owner;
     responseMakers.responseMakerList = [];
-    mdc.responseMakersSnapshot = [responseMakers.id];
+    mdc.responseMakersSnapshot = entity.addRelation(
+      mdc.responseMakersSnapshot,
+      id,
+    );
     responseMakers.enableTimestamp = enableTimestamp;
     log.info('mdc: {} create new responseMakersSnapshot, id: {}', [mdc.id, id]);
   }
@@ -875,14 +898,14 @@ export function mdcStoreResponseMaker(
   responseMakers.latestUpdateHash = event.transaction.hash.toHexString();
   responseMakers.save();
 
-  for (let i = 0; i < responseMakersArray.length; i++) {
-    let _responseMaker = getResponseMakerEntity(
-      responseMakersArray[i],
-      mdc,
-      event,
-    );
-    _responseMaker.save();
-  }
+  // for (let i = 0; i < responseMakersArray.length; i++) {
+  //   let _responseMaker = getResponseMakerEntity(
+  //     responseMakersArray[i],
+  //     mdc,
+  //     event,
+  //   );
+  //   _responseMaker.save();
+  // }
 }
 
 function saveColumnArray2MDC(mdc: MDC, columnArray: columnArraySnapshot): void {
@@ -1267,9 +1290,9 @@ function updateLatestRules(
     rsc.chain0.toString(),
     rsc.chain1.toString(),
   ]);
-  const _ChainPairManager = getChainPairManager(chainPairId, event);
-  const _TokenPairManager0 = getTokenPairManager(chain0TokenPad, event);
-  const _TokenPairManager1 = getTokenPairManager(chain1TokenPad, event);
+  // const _ChainPairManager = getChainPairManager(chainPairId, event);
+  // const _TokenPairManager0 = getTokenPairManager(chain0TokenPad, event);
+  // const _TokenPairManager1 = getTokenPairManager(chain1TokenPad, event);
   // const _rule = getLastRulesEntity(
   //   id,
   //   snapshot.root,
@@ -1641,8 +1664,18 @@ export function compareChainInfoUpdatedSelector(
     : ChainInfoUpdatedMode.INV;
 }
 
-export function decodeEnabletime(inputData: Bytes, type: string): BigInt {
-  let tuple = calldata.decode(inputData, type);
+export function decodeEnabletime(
+  inputData: Bytes,
+  type: string,
+  decodeWOPrefix: bool = false,
+): BigInt {
+  let tuple: ethereum.Tuple;
+  if (decodeWOPrefix) {
+    tuple = calldata.decodeWOPrefix(inputData, type);
+  } else {
+    tuple = calldata.decode(inputData, type);
+  }
+
   if (debugLogMapping) {
     for (let i = 0; i < tuple.length; i++) {
       log.debug('tuple[{}].kind:{}', [i.toString(), tuple[i].kind.toString()]);
@@ -1848,4 +1881,19 @@ export function calculateEnableBlockNumber(
     }
   }
   return enableBlockNumber;
+}
+
+export function orManagerUpdateTimeInfo(
+  event: ethereum.Event,
+  enableTimestamp: BigInt,
+): void {
+  if (enableTimestamp) {
+    let subgraphManager = getSubgraphManager();
+    subgraphManager.orManagerenableTimestamp = enableTimestamp;
+    subgraphManager.orManagerlatestUpdateHash =
+      event.transaction.hash.toHexString();
+    subgraphManager.orManagerlatestUpdateTimestamp = event.block.timestamp;
+    subgraphManager.orManagerlatestUpdateBlockNumber = event.block.number;
+    subgraphManager.save();
+  }
 }

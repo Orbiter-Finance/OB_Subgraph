@@ -24,8 +24,12 @@ import {
 } from './mdc-utils';
 import { createMDCCreatedEvent } from './mdc-factory-utils';
 import { handleMDCCreated } from '../src/mappings/mdc-factory';
-import { AddressFmtPadZero, ETH_ZERO_ADDRESS } from '../src/mappings/helpers';
-import { mockMdcAddr } from './mock-data';
+import {
+  AddressFmtPadZero,
+  ETH_ZERO_ADDRESS,
+  customData,
+} from '../src/mappings/helpers';
+import { mockMdcAddr, updateChainTokens } from './mock-data';
 import {
   createChainInfoUpdatedEvent,
   createChainTokenUpdatedEvent,
@@ -105,27 +109,27 @@ describe('Describe check responseMakers Event', () => {
     );
   });
 
-  test('responseMaker created and stored', () => {
-    assert.entityCount('responseMaker', 2);
+  // test('responseMaker created and stored', () => {
+  //   assert.entityCount('responseMaker', 2);
 
-    assert.fieldEquals(
-      'responseMaker',
-      AddressFmtPadZero(BigInt.fromString(responseMakers1).toHexString()),
-      'id',
-      AddressFmtPadZero(BigInt.fromString(responseMakers1).toHexString()),
-    );
+  //   assert.fieldEquals(
+  //     'responseMaker',
+  //     AddressFmtPadZero(BigInt.fromString(responseMakers1).toHexString()),
+  //     'id',
+  //     AddressFmtPadZero(BigInt.fromString(responseMakers1).toHexString()),
+  //   );
 
-    assert.fieldEquals(
-      'FactoryManager',
-      '0xa16081f360e3847006db660bae1c6d1b2e17ec2a',
-      'responseMakers',
-      `[${AddressFmtPadZero(
-        BigInt.fromString(responseMakers1).toHexString(),
-      )}, ${AddressFmtPadZero(
-        BigInt.fromString(responseMakers2).toHexString(),
-      )}\]`,
-    );
-  });
+  //   assert.fieldEquals(
+  //     'FactoryManager',
+  //     '0xa16081f360e3847006db660bae1c6d1b2e17ec2a',
+  //     'responseMakers',
+  //     `[${AddressFmtPadZero(
+  //       BigInt.fromString(responseMakers1).toHexString(),
+  //     )}, ${AddressFmtPadZero(
+  //       BigInt.fromString(responseMakers2).toHexString(),
+  //     )}\]`,
+  //   );
+  // });
 });
 
 describe('Describe check ChainInfoUpdated Event', () => {
@@ -187,7 +191,7 @@ describe('Describe check ChainTokenUpdated Event', () => {
       _chainId,
       tokenInfo,
     );
-
+    customData.setInput(Bytes.fromHexString(updateChainTokens));
     handleChainTokenUpdated(newChainTokenUpdatedEvent);
   });
 

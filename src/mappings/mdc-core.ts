@@ -47,6 +47,9 @@ import {
   customData,
   function_verifyChallengeSourceSelcetorArray,
   function_verifyChallengeDestSelcetorArray,
+  getChainInfoSnapshotEntity,
+  orManagerUpdateTimeInfo,
+  func_updateChainTokens,
 } from './helpers';
 import {
   FactoryManager,
@@ -64,6 +67,7 @@ import {
   functionupdateColumnArrayMockinput,
   functionrChallengeinput,
   functionCheckChallengeInput,
+  funcETHRootMockInput1,
 } from '../../tests/mock-data';
 import {
   ChainInfoUpdatedChainInfoStruct,
@@ -90,6 +94,7 @@ import {
   getChallengeManagerEntity,
   getCreateChallenge,
 } from './mdc-challenge';
+import { getSubgraphManager } from './factory-core';
 
 export enum challengeENUM {
   CREATE = 0,
@@ -166,7 +171,6 @@ export function handleupdateRulesRootEvent(
     );
     ebcSave(ebcEntity, mdc);
     ebcEntity.save();
-    mdc.save();
     if (ebcEntity != null) {
       // fullfillLatestRuleSnapshot(event, mdc, ebcEntity, lastestRuleIdArray);
     }
@@ -176,6 +180,7 @@ export function handleupdateRulesRootEvent(
   } else {
     log.warning('ebcAddress is null', ['error']);
   }
+  mdc.save();
 }
 
 export function handleColumnArrayUpdatedEvent(
@@ -282,13 +287,20 @@ export function handleEbcsUpdatedEvent(
   ebcs: Array<Address>,
   statuses: Array<boolean>,
 ): void {
-  let _statuses = statuses;
-  if (ebcs.length > statuses.length) {
-    for (let i = statuses.length; i < ebcs.length; i++) {
-      _statuses.push(true);
-    }
-  } else if (ebcs.length < statuses.length) {
-    _statuses = statuses.slice(0, ebcs.length);
+  // let _statuses = statuses;
+  // if (ebcs.length > statuses.length) {
+  //   for (let i = statuses.length; i < ebcs.length; i++) {
+  //     _statuses.push(true);
+
+  //   }
+  // } else if (ebcs.length < statuses.length) {
+  //   _statuses = statuses.slice(0, ebcs.length);
+  // }
+
+  for (let i = 0; i < ebcs.length; i++) {
+    let ebc = getEBCEntityNew(ebcs[i].toHexString(), event);
+    ebc.statuses = statuses[i];
+    ebc.save();
   }
 }
 
@@ -297,7 +309,6 @@ export function handleChainInfoUpdatedEvent(
   chainInfoId: BigInt,
   chainInfo: ChainInfoUpdatedChainInfoStruct,
 ): void {
-  // log.debug("handleChainInfoUpdated id:{}", [chainInfoId.toString()])
   let _chainInfo = getChainInfoEntity(event, chainInfoId);
   _chainInfo.nativeToken = padZeroToUint(chainInfo.nativeToken.toHexString());
   let batchLimit = chainInfo.batchLimit;
@@ -308,6 +319,7 @@ export function handleChainInfoUpdatedEvent(
   let minVerifyChallengeDestTxSecond = chainInfo.minVerifyChallengeDestTxSecond;
   let maxVerifyChallengeDestTxSecond = chainInfo.maxVerifyChallengeDestTxSecond;
   let spvs = isProduction ? chainInfo.spvs : [Address.fromString(mockMdcAddr)];
+  let enableTime = BigInt.fromI32(0);
 
   const inputdata = isProduction
     ? event.transaction.input
@@ -317,7 +329,7 @@ export function handleChainInfoUpdatedEvent(
   );
   if (selector == ChainInfoUpdatedMode.registerChains) {
     log.info('registerChains', ['registerChains']);
-    const enableTime = decodeEnabletime(inputdata, func_registerChainsName);
+    enableTime = decodeEnabletime(inputdata, func_registerChainsName);
     _chainInfo.batchLimit = batchLimit;
     _chainInfo.minVerifyChallengeSourceTxSecond =
       minVerifyChallengeSourceTxSecond;
@@ -326,14 +338,15 @@ export function handleChainInfoUpdatedEvent(
     _chainInfo.minVerifyChallengeDestTxSecond = minVerifyChallengeDestTxSecond;
     _chainInfo.maxVerifyChallengeDestTxSecond = maxVerifyChallengeDestTxSecond;
     for (let i = 0; i < spvs.length; i++) {
-      _chainInfo.spvs = _chainInfo.spvs.concat([
+      _chainInfo.spvs = entity.addRelation(
+        _chainInfo.spvs,
         AddressFmtPadZero(spvs[i].toHexString()),
-      ]);
+      );
     }
     _chainInfo.enableTimestamp = enableTime;
   } else if (selector == ChainInfoUpdatedMode.updateChainSpvs) {
     log.info('updateChainSpvs', ['updateChainSpvs']);
-    const enableTime = decodeEnabletime(inputdata, func_updateChainSpvsName);
+    enableTime = decodeEnabletime(inputdata, func_updateChainSpvsName);
     parseChainInfoUpdatedInputData(inputdata, _chainInfo);
     _chainInfo.enableTimestamp = enableTime;
   } else {
@@ -342,6 +355,27 @@ export function handleChainInfoUpdatedEvent(
     ]);
   }
   _chainInfo.save();
+
+  let chainInfoSnapshot = getChainInfoSnapshotEntity(event, chainInfoId);
+  chainInfoSnapshot.chainId = _chainInfo.id;
+  chainInfoSnapshot.spvs = _chainInfo.spvs;
+  chainInfoSnapshot.nativeToken = _chainInfo.nativeToken;
+  chainInfoSnapshot.batchLimit = _chainInfo.batchLimit;
+  chainInfoSnapshot.minVerifyChallengeSourceTxSecond =
+    _chainInfo.minVerifyChallengeSourceTxSecond;
+  chainInfoSnapshot.maxVerifyChallengeSourceTxSecond =
+    _chainInfo.maxVerifyChallengeSourceTxSecond;
+  chainInfoSnapshot.minVerifyChallengeDestTxSecond =
+    _chainInfo.minVerifyChallengeDestTxSecond;
+  chainInfoSnapshot.maxVerifyChallengeDestTxSecond =
+    _chainInfo.maxVerifyChallengeDestTxSecond;
+  chainInfoSnapshot.enableTimestamp = _chainInfo.enableTimestamp;
+  chainInfoSnapshot.latestUpdateBlockNumber = event.block.number;
+  chainInfoSnapshot.latestUpdateTimestamp = event.block.timestamp;
+  chainInfoSnapshot.latestUpdateHash = event.transaction.hash.toHexString();
+  chainInfoSnapshot.save();
+
+  orManagerUpdateTimeInfo(event, enableTime);
 }
 
 export function handleChainTokenUpdatedEvent(
@@ -356,10 +390,12 @@ export function handleChainTokenUpdatedEvent(
     mainnetToken.toHexString() != ETH_ZERO_ADDRESS
       ? mainnetToken.toHexString()
       : token;
+  const inputdata = isProduction ? event.transaction.input : customData.input;
+  const enableTime = decodeEnabletime(inputdata, func_updateChainTokens);
   let Token = getTokenEntity(chainId, tokenInfo.token.toHexString(), event);
   Token.mainnetToken = mainnetToken.toHexString();
   if (mainnetToken.toHexString() == ETH_ZERO_ADDRESS) {
-    log.info('native token is ether', []);
+    // log.info('native token is ether', []);
     Token.name = 'Ether';
     Token.symbol = 'ETH';
     Token.decimals = decimals;
@@ -377,6 +413,7 @@ export function handleChainTokenUpdatedEvent(
   }
 
   Token.save();
+  orManagerUpdateTimeInfo(event, enableTime);
 }
 
 export function handleResponseMakersUpdatedEvent(
@@ -443,7 +480,7 @@ export function handleChallengeInfoUpdatedEvent(
   let mdc = getMDCEntity(event.address, event);
   let challengeManager = getChallengeManagerEntity(mdc, challengeId);
   if (selector == function_challenge) {
-    log.info('trigger challenge(), selector: {}', [selector]);
+    log.info('trigger_challenge(), selector: {}', [selector]);
     const DecodeResult = decodeCreateChallenge(inputdata);
     const challenger: string = isProduction
       ? event.transaction.from.toHexString()
@@ -499,7 +536,7 @@ export function handleChallengeInfoUpdatedEvent(
         challengeTime,
       );
       log.info(
-        'trigger checkChallenge(), selector: {}, id:{}, hash{}, index:{}',
+        'trigger_checkChallenge(), selector: {}, id:{}, hash{}, index:{}',
         [
           selector,
           createChallenge.id,
@@ -523,7 +560,7 @@ export function handleChallengeInfoUpdatedEvent(
     challengeManager.challengeStatuses =
       challengeStatuses[challengeENUM.LIQUIDATION];
   } else if (function_verifyChallengeSourceSelcetorArray.includes(selector)) {
-    log.info('trigger verifyChallengeSource(), selector: {}', [selector]);
+    log.info('trigger_verifyChallengeSource(), selector: {}', [selector]);
     // const challenger = decodeVerifyChallengeSource(inputdata, selector);
     // let verifyChallengeSource = getVerifyChallengeSourceEntity(
     //   challengeManager,
@@ -568,7 +605,7 @@ export function handleChallengeInfoUpdatedEvent(
     // verifyChallengeSource.save();
     createChallenge.save();
   } else if (function_verifyChallengeDestSelcetorArray.includes(selector)) {
-    log.info('trigger verifyChallengeDest(), selector: {}', [selector]);
+    log.info('trigger_verifyChallengeDest(), selector: {}', [selector]);
 
     // const challenger = decodeVerifyChallengeDest(inputdata, selector);
     // let verifyChallengeDest = getVerifyChallengeDestEntity(

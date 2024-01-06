@@ -89,6 +89,11 @@
             "type": "uint64"
           },
           {
+            "internalType": "uint64",
+            "name": "lastChallengeBlockNum",
+            "type": "uint64"
+          },
+          {
             "internalType": "bytes32",
             "name": "verifiedDataHash0",
             "type": "bytes32"
@@ -249,6 +254,25 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "challengeIdentNum",
+        "type": "uint256"
+      }
+    ],
+    "name": "canChallengeContinue",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint64",
         "name": "sourceTxTime",
         "type": "uint64"
@@ -274,6 +298,11 @@
         "type": "bytes32"
       },
       {
+        "internalType": "bytes32",
+        "name": "ruleKey",
+        "type": "bytes32"
+      },
+      {
         "internalType": "address",
         "name": "freezeToken",
         "type": "address"
@@ -285,7 +314,7 @@
       },
       {
         "internalType": "uint256",
-        "name": "lastChallengeIdentNum",
+        "name": "parentNodeNumOfTargetNode",
         "type": "uint256"
       }
     ],
@@ -307,13 +336,8 @@
         "type": "bytes32"
       },
       {
-        "internalType": "uint256[]",
-        "name": "verifiedData0",
-        "type": "uint256[]"
-      },
-      {
         "internalType": "address[]",
-        "name": "challenger",
+        "name": "challengers",
         "type": "address[]"
       }
     ],
@@ -373,25 +397,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "challengeIdentNum",
-        "type": "uint256"
-      }
-    ],
-    "name": "getCanChallengeContinue",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "getVersionAndEnableTime",
     "outputs": [
@@ -422,7 +427,7 @@
         "type": "address"
       }
     ],
-    "name": "getWithdrawRequestInfo",
+    "name": "getWithdrawRequestList",
     "outputs": [
       {
         "components": [
@@ -442,7 +447,7 @@
             "type": "address"
           }
         ],
-        "internalType": "struct IORMakerDeposit.WithdrawRequestInfo",
+        "internalType": "struct IORMakerDeposit.WithdrawRequestList",
         "name": "",
         "type": "tuple"
       }
@@ -487,122 +492,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "bytes",
-        "name": "proofData",
-        "type": "bytes"
-      }
-    ],
-    "name": "parsePublicInput",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint64",
-            "name": "sourceChainId",
-            "type": "uint64"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "sourceTxHash",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "txIndex",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "from",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "to",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "freezeToken",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "freezeAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "nonce",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint64",
-            "name": "timestamp",
-            "type": "uint64"
-          },
-          {
-            "internalType": "uint256",
-            "name": "dest",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "destToken",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "L1TXBlockHash",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "L1TBlockNumber",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "mdcContractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "managerContractAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "ruleRootSlot",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "ruleVersionSlot",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "enableTimeSlot",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "RulePreRootHash",
-            "type": "bytes32"
-          }
-        ],
-        "internalType": "struct ORMakerDeposit.PublicInputData",
-        "name": "",
-        "type": "tuple"
-      }
-    ],
-    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -1030,13 +919,23 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "spvAddress",
+        "name": "challenger",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "challenger",
+        "name": "spvAddress",
         "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "sourceChainId",
+        "type": "uint64"
+      },
+      {
+        "internalType": "bytes32",
+        "name": "sourceTxHash",
+        "type": "bytes32"
       },
       {
         "internalType": "bytes",
@@ -1044,58 +943,61 @@
         "type": "bytes"
       },
       {
-        "internalType": "bytes32[2]",
-        "name": "spvBlockHashs",
-        "type": "bytes32[2]"
-      },
-      {
         "components": [
           {
-            "internalType": "uint256[]",
-            "name": "data",
-            "type": "uint256[]"
+            "internalType": "uint256",
+            "name": "minChallengeSecond",
+            "type": "uint256"
           },
           {
-            "components": [
-              {
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
-              },
-              {
-                "internalType": "bytes32",
-                "name": "key",
-                "type": "bytes32"
-              },
-              {
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct IORChallengeSpv.VerifyInfoSlot[]",
-            "name": "slots",
-            "type": "tuple[]"
+            "internalType": "uint256",
+            "name": "maxChallengeSecond",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "nonce",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "destChainId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "from",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "destToken",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "destAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "responseMakersHash",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "responseTime",
+            "type": "uint256"
           }
         ],
-        "internalType": "struct IORChallengeSpv.VerifyInfo",
-        "name": "verifyInfo",
+        "internalType": "struct IORMakerDeposit.verifiedDataInfo",
+        "name": "verifiedSourceTxData",
         "type": "tuple"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "verifiedData0",
-        "type": "uint256[]"
       },
       {
         "internalType": "bytes",
         "name": "rawDatas",
         "type": "bytes"
-      },
-      {
-        "internalType": "uint64",
-        "name": "sourceChainId",
-        "type": "uint64"
       }
     ],
     "name": "verifyChallengeDest",
@@ -1107,13 +1009,18 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "spvAddress",
+        "name": "challenger",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "challenger",
+        "name": "spvAddress",
         "type": "address"
+      },
+      {
+        "internalType": "uint64",
+        "name": "sourceChainId",
+        "type": "uint64"
       },
       {
         "internalType": "bytes",
@@ -1121,42 +1028,13 @@
         "type": "bytes"
       },
       {
-        "components": [
-          {
-            "internalType": "uint256[]",
-            "name": "data",
-            "type": "uint256[]"
-          },
-          {
-            "components": [
-              {
-                "internalType": "address",
-                "name": "account",
-                "type": "address"
-              },
-              {
-                "internalType": "bytes32",
-                "name": "key",
-                "type": "bytes32"
-              },
-              {
-                "internalType": "uint256",
-                "name": "value",
-                "type": "uint256"
-              }
-            ],
-            "internalType": "struct IORChallengeSpv.VerifyInfoSlot[]",
-            "name": "slots",
-            "type": "tuple[]"
-          }
-        ],
-        "internalType": "struct IORChallengeSpv.VerifyInfo",
-        "name": "verifyInfo",
-        "type": "tuple"
+        "internalType": "bytes",
+        "name": "rawDatas",
+        "type": "bytes"
       },
       {
         "internalType": "bytes",
-        "name": "rawDatas",
+        "name": "encodeRuleBytes",
         "type": "bytes"
       }
     ],

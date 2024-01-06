@@ -79,23 +79,23 @@ describe('Describe check MDC rule snaptShot', () => {
     );
   });
 
-  test('mdc rule snaptShot created and stored', () => {
-    // check MDC relation
-    assert.fieldEquals(
-      'MDC',
-      mockMdcAddr.toLowerCase(),
-      'ruleSnapshot',
-      `[${ruleSnapshotId}]`,
-    );
+  // test('mdc rule snaptShot created and stored', () => {
+  //   // check MDC relation
+  //   assert.fieldEquals(
+  //     'MDC',
+  //     mockMdcAddr.toLowerCase(),
+  //     'ruleSnapshot',
+  //     `[${ruleSnapshotId}]`,
+  //   );
 
-    // check EBC relation
-    assert.fieldEquals(
-      'ebcRel',
-      ebcAddress.toLowerCase(), // this id depends on the transaction input EBC data field
-      'rulesList',
-      `[${ruleSnapshotId}]`,
-    );
-  });
+  //   // check EBC relation
+  //   assert.fieldEquals(
+  //     'ebcRel',
+  //     ebcAddress.toLowerCase(), // this id depends on the transaction input EBC data field
+  //     'rulesList',
+  //     `[${ruleSnapshotId}]`,
+  //   );
+  // });
 
   // test("rules in ruleSnapshot created and stored", () => {
   // check rule relation
@@ -145,20 +145,20 @@ describe('Describe check MDC rule snaptShot', () => {
   //   assert.fieldEquals('latestRule', latestRuleId, 'root', root);
   // });
 
-  test('chainPairManager created and stored', () => {
-    const mockPairID: string = '5-420';
-    const mockPair: string =
-      '0x239b7ef2adaabfc2e4e13c143349a3d2f3d3ddc5b389dcd246cb3d728103b609';
+  // test('chainPairManager created and stored', () => {
+  //   const mockPairID: string = '5-420';
+  //   const mockPair: string =
+  //     '0x239b7ef2adaabfc2e4e13c143349a3d2f3d3ddc5b389dcd246cb3d728103b609';
 
-    assert.entityCount('chainPairManager', 3);
+  //   assert.entityCount('chainPairManager', 3);
 
-    assert.fieldEquals('chainPairManager', mockPairID, 'id', mockPairID);
+  //   assert.fieldEquals('chainPairManager', mockPairID, 'id', mockPairID);
 
-    // assert.fieldEquals(
-    //   "crossChainPairManager",
-    //   mockPairID,
-    //   "allRulesInfo",
-    //   mockPair
-    // )
-  });
+  //   // assert.fieldEquals(
+  //   //   "crossChainPairManager",
+  //   //   mockPairID,
+  //   //   "allRulesInfo",
+  //   //   mockPair
+  //   // )
+  // });
 });

@@ -4,11 +4,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: MDCFactory
-    network: sepolia
+    network: mainnet
     source:
-      address: "0x925bb1A0F051221eBDfD170b10De885c6A589e64"
+      address: "0x6747B308651B23C11D6019E38394b805F3BCa82B"
       abi: MDCFactory
-      startBlock: 4909350
+      startBlock: 18212080
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -24,11 +24,11 @@ dataSources:
       file: MDCFactory/MDCFactory.wasm
   - kind: ethereum
     name: ORManager
-    network: sepolia
+    network: mainnet
     source:
-      address: "0x76FC39362EF66DAd742791BDe738b9B050C3cBf5"
+      address: "0xF73AA1B01B2FbBb0B8daD8D44a8660C4930f8Ea3"
       abi: ORManager
-      startBlock: 4909350
+      startBlock: 18933510
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -77,11 +77,11 @@ dataSources:
       file: ORManager/ORManager.wasm
   - kind: ethereum
     name: FeeManager
-    network: sepolia
+    network: mainnet
     source:
       address: "0xcC45c67d121A4BC3BC88Cc5A3099a8F7854f11f6"
       abi: FeeManager
-      startBlock: 4909350
+      startBlock: 18212091
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -112,11 +112,11 @@ dataSources:
       file: FeeManager/FeeManager.wasm
   - kind: ethereum
     name: spvData
-    network: sepolia
+    network: mainnet
     source:
-      address: "0x25A87436D67684402E626B7915bCa520F12e4bae"
+      address: "0xa1aDd021C99c34424a9ECd2762A1fd5a5A84fa34"
       abi: spvData
-      startBlock: 4909350
+      startBlock: 18933745
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -138,7 +138,7 @@ dataSources:
 templates:
   - kind: ethereum
     name: MDC
-    network: sepolia
+    network: mainnet
     source:
       abi: MDC
     mapping:
@@ -156,7 +156,7 @@ templates:
           file: MDC/abis/ORMakerDeposit.json
       eventHandlers:
         - event: ChallengeInfoUpdated(indexed
-            bytes32,(uint256,uint64,address,uint64,uint256,uint256,uint64,uint64,uint64,uint64,uint128),(address,uint64,uint64,bytes32))
+            bytes32,(uint256,uint64,address,uint64,uint256,uint256,uint64,uint64,uint64,uint64,uint128),(address,uint64,uint64,uint64,bytes32))
           handler: handleChallengeInfoUpdated
         - event: ColumnArrayUpdated(indexed address,bytes32,address[],address[],uint64[])
           handler: handleColumnArrayUpdated
@@ -171,7 +171,7 @@ templates:
       file: templates/MDC/MDC.wasm
   - kind: ethereum
     name: MDCFactory
-    network: sepolia
+    network: mainnet
     source:
       abi: MDCFactory
     mapping:
