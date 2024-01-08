@@ -61,7 +61,7 @@ export function getCreateChallenge(
   let _createChallenge = createChallenge.load(id);
   if (_createChallenge == null) {
     _createChallenge = new createChallenge(id);
-    _createChallenge.challengeId = challengeManager.id;
+    _createChallenge.challengeId = challengeManager.challengeId;
     _createChallenge.challenger = challenger;
     _createChallenge.isVerifyPass = false;
     log.info('new_CreateChallenge, managerId: {}, challenger: {}, id: {}', [

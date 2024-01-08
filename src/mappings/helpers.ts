@@ -50,7 +50,7 @@ import {
   debugLogCreateRules,
   debugLogMapping,
 } from './config';
-import { rscRuleType, rscRules } from './rule-utils';
+import { getruleEntity, rscRuleType, rscRules } from './rule-utils';
 import { getSubgraphManager } from './factory-core';
 
 export const ZERO_BI: BigInt = BigInt.fromI32(0);
@@ -214,6 +214,7 @@ export function getMDCEntity(mdcAddress: Address, event: ethereum.Event): MDC {
     // mdc.dealerSnapshot = [];
     // mdc.ebcSnapshot = [];
     // mdc.chainIdSnapshot = [];
+    mdc.allRulesInfo = [];
     mdc.ruleSnapshot = [];
     mdc.ruleLatest = [];
     mdc.challengeManager = [];
@@ -1312,6 +1313,51 @@ function updateLatestRules(
     rsc.chain0Token.toHexString(),
     rsc.chain1Token.toHexString(),
   ]);
+
+  /** refactor MDC part start**/
+  const ruleInfo = getruleEntity(id, ruleKey, mdc, ebc, event);
+  ruleInfo.owner = mdc.owner;
+  ruleInfo.ruleKey = ruleKey;
+  ruleInfo.ruleRoot = rscRules.root;
+  ruleInfo.ruleVersion = BigInt.fromI32(rscRules.version);
+  ruleInfo.mdcAddr = mdc.id;
+  ruleInfo.ebcAddr = ebc.id;
+  ruleInfo.chain0 = rsc.chain0;
+  ruleInfo.chain1 = rsc.chain1;
+  ruleInfo.chain0Status = rsc.chain0Status.toI32();
+  ruleInfo.chain1Status = rsc.chain1Status.toI32();
+  ruleInfo.chain0Token = chain0TokenPad;
+  ruleInfo.chain1Token = chain1TokenPad;
+  ruleInfo.chain0minPrice = rsc.chain0minPrice;
+  ruleInfo.chain0maxPrice = rsc.chain0maxPrice;
+  ruleInfo.chain1minPrice = rsc.chain1minPrice;
+  ruleInfo.chain1maxPrice = rsc.chain1maxPrice;
+  ruleInfo.chain0WithholdingFee = rsc.chain0WithholdingFee;
+  ruleInfo.chain1WithholdingFee = rsc.chain1WithholdingFee;
+  ruleInfo.chain0TradeFee = rsc.chain0TradeFee.toI32();
+  ruleInfo.chain1TradeFee = rsc.chain1TradeFee.toI32();
+  ruleInfo.chain0ResponseTime = rsc.chain0ResponseTime.toI32();
+  ruleInfo.chain1ResponseTime = rsc.chain1ResponseTime.toI32();
+  ruleInfo.chain0CompensationRatio = rsc.chain0CompensationRatio.toI32();
+  ruleInfo.chain1CompensationRatio = rsc.chain1CompensationRatio.toI32();
+  ruleInfo.enableTimestamp = enableTimestamp;
+  ruleInfo.enableBlockNumber = calculateEnableBlockNumber(
+    event.block.timestamp,
+    enableTimestamp,
+    event.block.number,
+  );
+  ruleInfo.ruleValidation = validateBool;
+  ruleInfo.ruleValidationErrorstatus = validateResult;
+  ruleInfo.latestUpdateTimestamp = event.block.timestamp;
+  ruleInfo.latestUpdateBlockNumber = event.block.number;
+  ruleInfo.latestUpdateHash = event.transaction.hash.toHexString();
+  if (rsc.selector === updateRulesRootMode.ETH) {
+    ruleInfo.type = 'ETH';
+  } else if (rsc.selector === updateRulesRootMode.ERC20) {
+    ruleInfo.type = 'ERC20';
+  }
+  ruleInfo.save();
+  /** refactor MDC part end**/
 
   _rule.latestSnapShotID = _snapshotLatestRule.id;
   const _rscRuleType = _rule;

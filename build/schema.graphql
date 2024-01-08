@@ -147,6 +147,7 @@ type MDC @entity {
   factoryAddr: String! # mdc factory address
   manager: String # ob manager address
   # Rel
+  allRulesInfo: [allRulesInfo!]!
   ruleUpdateRel: [ruleUpdateRel!]!
   responseMakersSnapshot: [responseMakersSnapshot!]! #snapshot
   ruleSnapshot: [ruleRel!]! #snapshot
@@ -164,6 +165,62 @@ type MDC @entity {
   createblockTimestamp: BigInt!
   createtransactionHash: String!
   latestUpdatetransactionHash: String!
+}
+
+type allRulesInfo @entity {
+  id: ID! # hash(mdc, ebc, chain0, chain1, token0 token1)
+  sameRuleKeySnapshot: [sameRuleKeySnapshot!]!
+  updateNumber: BigInt! # repensent the numbers of this rule been updated
+  ruleKey: String! # hash(chain0,chain1,token0,token1)
+  # Rel
+  mdc: MDC! @derivedFrom(field: "allRulesInfo")
+  # ebc: ebcRel! @derivedFrom(field: "allRulesInfo")
+  # latestRule: latestRule! @derivedFrom(field: "allRulesInfo")
+  latestUpdateHash: String
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+}
+
+type sameRuleKeySnapshot @entity(immutable: true) {
+  id: ID!
+  # makerHash: String! # hash(mdc, ebc, chain0, chain1)
+  ruleKey: String! # hash(chain0,chain1,token0,token1)
+  ruleRoot: String! # bytes32
+  ruleVersion: BigInt! # uint32
+  owner: String! # address
+  currUpdateNumber: BigInt! # version++
+  mdcAddr: String! # address
+  ebcAddr: String! # address
+  type: String # ETH/ERC20
+  chain0: BigInt # uint64
+  chain1: BigInt # uint64
+  chain0Status: Int # uint8
+  chain1Status: Int # uint8
+  chain0Token: String # Address
+  chain1Token: String # Address
+  chain0minPrice: BigInt # uint128
+  chain1minPrice: BigInt # uint128
+  chain0maxPrice: BigInt # uint128
+  chain1maxPrice: BigInt # uint128
+  chain0WithholdingFee: BigInt # uint128
+  chain1WithholdingFee: BigInt # uint128
+  chain0TradeFee: Int # uint16
+  chain1TradeFee: Int # uint16
+  chain0ResponseTime: Int # uint32
+  chain1ResponseTime: Int # uint32
+  chain0CompensationRatio: Int # uint32
+  chain1CompensationRatio: Int # uint32
+  enableTimestamp: BigInt # uint64
+  enableBlockNumber: BigInt
+  latestUpdateTimestamp: BigInt
+  latestUpdateBlockNumber: BigInt
+  latestUpdateHash: String
+  ruleValidation: Boolean!
+  ruleValidationErrorstatus: String!
+
+  # Related
+  allRulesInfo: [allRulesInfo!]! @derivedFrom(field: "sameRuleKeySnapshot")
+  # ruleRel: [ruleRel!]! @derivedFrom(field: "sameRuleKeySnapshot")
 }
 
 type ruleUpdateRel @entity {
