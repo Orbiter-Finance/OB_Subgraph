@@ -49,7 +49,6 @@ import {
   function_verifyChallengeSourceSelcetorArray,
   function_verifyChallengeDestSelcetorArray,
   getChainInfoSnapshotEntity,
-  orManagerUpdateTimeInfo,
   func_updateChainTokens,
 } from './helpers';
 import {
@@ -57,6 +56,7 @@ import {
   withdrawRequestList,
   ebcRel,
   createChallenge,
+  orMDCEnableTimeSnapshot,
 } from '../types/schema';
 import {
   funcETHRootMockInput,
@@ -96,6 +96,7 @@ import {
   getCreateChallenge,
 } from './mdc-challenge';
 import { getSubgraphManager } from './factory-core';
+import { orManagerUpdateTimeInfo } from './or-manager-core';
 
 export enum challengeENUM {
   CREATE = 0,
@@ -276,6 +277,7 @@ export function handleColumnArrayUpdatedEvent(
     columnArraySnapshot,
   );
   // ebcSnapshot.save();
+  orMDCUpdateTimeInfo(event, enableTimestamp);
 
   columnArraySnapshot.save();
   mdc.save();
@@ -677,4 +679,25 @@ export function handleWithdrawRequestedEvent(
   withdrawEntity.latestUpdateBlockNumber = event.block.number;
   withdrawEntity.save();
   mdc.save();
+}
+
+export function orMDCUpdateTimeInfo(
+  event: ethereum.Event,
+  enableTimestamp: BigInt,
+): void {
+  const mdcAddress = event.address.toHexString();
+  if (enableTimestamp) {
+    const id = entity.createHashID([mdcAddress, enableTimestamp.toHexString()]);
+    let enableTimeSnapshot = orMDCEnableTimeSnapshot.load(id);
+    if (enableTimeSnapshot == null) {
+      enableTimeSnapshot = new orMDCEnableTimeSnapshot(id);
+      enableTimeSnapshot.mdcAddr = mdcAddress;
+      enableTimeSnapshot.orMDCenableTimestamp = enableTimestamp;
+      enableTimeSnapshot.orMDClatestUpdateHash =
+        event.transaction.hash.toHexString();
+      enableTimeSnapshot.orMDClatestUpdateTimestamp = event.block.timestamp;
+      enableTimeSnapshot.orMDClatestUpdateBlockNumber = event.block.number;
+      enableTimeSnapshot.save();
+    }
+  }
 }

@@ -334,11 +334,24 @@ type SubgraphManager @entity {
   factory: [FactoryManager!]!
   totalFactory: Int!
   currentFactoryTemplate: Int!
+}
 
+type orManagerEnableTimeSnapshot @entity(immutable: true) {
+  id: ID! # hash(managerAddr, enabletime)
+  managerAddr: String!
   orManagerenableTimestamp: BigInt!
   orManagerlatestUpdateHash: String!
   orManagerlatestUpdateTimestamp: BigInt!
   orManagerlatestUpdateBlockNumber: BigInt!
+}
+
+type orMDCEnableTimeSnapshot @entity(immutable: true) {
+  id: ID! # hash(mdcAddr, enabletime)
+  mdcAddr: String!
+  orMDCenableTimestamp: BigInt!
+  orMDClatestUpdateHash: String!
+  orMDClatestUpdateTimestamp: BigInt!
+  orMDClatestUpdateBlockNumber: BigInt!
 }
 
 # customed using entity

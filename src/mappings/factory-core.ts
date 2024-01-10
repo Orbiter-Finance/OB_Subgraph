@@ -32,10 +32,6 @@ export function getSubgraphManager(): SubgraphManager {
     subgraphManager.factory = [];
     subgraphManager.totalFactory = totalFactory;
     subgraphManager.currentFactoryTemplate = 0;
-    subgraphManager.orManagerenableTimestamp = ZERO_BI;
-    subgraphManager.orManagerlatestUpdateBlockNumber = ZERO_BI;
-    subgraphManager.orManagerlatestUpdateTimestamp = ZERO_BI;
-    subgraphManager.orManagerlatestUpdateHash = '0';
     log.info('create SubgraphManager, id: {}, extrafactoryCount:{}', [
       subgraphManagerID,
       totalFactory.toString(),

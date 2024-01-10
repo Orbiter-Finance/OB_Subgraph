@@ -3310,6 +3310,66 @@ export class SubgraphManager extends Entity {
   set currentFactoryTemplate(value: i32) {
     this.set("currentFactoryTemplate", Value.fromI32(value));
   }
+}
+
+export class orManagerEnableTimeSnapshot extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save orManagerEnableTimeSnapshot entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type orManagerEnableTimeSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("orManagerEnableTimeSnapshot", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): orManagerEnableTimeSnapshot | null {
+    return changetype<orManagerEnableTimeSnapshot | null>(
+      store.get_in_block("orManagerEnableTimeSnapshot", id)
+    );
+  }
+
+  static load(id: string): orManagerEnableTimeSnapshot | null {
+    return changetype<orManagerEnableTimeSnapshot | null>(
+      store.get("orManagerEnableTimeSnapshot", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get managerAddr(): string {
+    let value = this.get("managerAddr");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set managerAddr(value: string) {
+    this.set("managerAddr", Value.fromString(value));
+  }
 
   get orManagerenableTimestamp(): BigInt {
     let value = this.get("orManagerenableTimestamp");
@@ -3361,6 +3421,118 @@ export class SubgraphManager extends Entity {
 
   set orManagerlatestUpdateBlockNumber(value: BigInt) {
     this.set("orManagerlatestUpdateBlockNumber", Value.fromBigInt(value));
+  }
+}
+
+export class orMDCEnableTimeSnapshot extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(
+      id != null,
+      "Cannot save orMDCEnableTimeSnapshot entity without an ID"
+    );
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type orMDCEnableTimeSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("orMDCEnableTimeSnapshot", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): orMDCEnableTimeSnapshot | null {
+    return changetype<orMDCEnableTimeSnapshot | null>(
+      store.get_in_block("orMDCEnableTimeSnapshot", id)
+    );
+  }
+
+  static load(id: string): orMDCEnableTimeSnapshot | null {
+    return changetype<orMDCEnableTimeSnapshot | null>(
+      store.get("orMDCEnableTimeSnapshot", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get mdcAddr(): string {
+    let value = this.get("mdcAddr");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set mdcAddr(value: string) {
+    this.set("mdcAddr", Value.fromString(value));
+  }
+
+  get orMDCenableTimestamp(): BigInt {
+    let value = this.get("orMDCenableTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set orMDCenableTimestamp(value: BigInt) {
+    this.set("orMDCenableTimestamp", Value.fromBigInt(value));
+  }
+
+  get orMDClatestUpdateHash(): string {
+    let value = this.get("orMDClatestUpdateHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set orMDClatestUpdateHash(value: string) {
+    this.set("orMDClatestUpdateHash", Value.fromString(value));
+  }
+
+  get orMDClatestUpdateTimestamp(): BigInt {
+    let value = this.get("orMDClatestUpdateTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set orMDClatestUpdateTimestamp(value: BigInt) {
+    this.set("orMDClatestUpdateTimestamp", Value.fromBigInt(value));
+  }
+
+  get orMDClatestUpdateBlockNumber(): BigInt {
+    let value = this.get("orMDClatestUpdateBlockNumber");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set orMDClatestUpdateBlockNumber(value: BigInt) {
+    this.set("orMDClatestUpdateBlockNumber", Value.fromBigInt(value));
   }
 }
 

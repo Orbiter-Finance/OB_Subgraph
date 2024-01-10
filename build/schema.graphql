@@ -182,7 +182,7 @@ type allRulesInfo @entity {
 }
 
 type sameRuleKeySnapshot @entity(immutable: true) {
-  id: ID! #hash(allRulesInfo.id, currUpdateNumber)
+  id: ID!
   # makerHash: String! # hash(mdc, ebc, chain0, chain1)
   ruleKey: String! # hash(chain0,chain1,token0,token1)
   ruleRoot: String! # bytes32
@@ -334,11 +334,24 @@ type SubgraphManager @entity {
   factory: [FactoryManager!]!
   totalFactory: Int!
   currentFactoryTemplate: Int!
+}
 
+type orManagerEnableTimeSnapshot @entity(immutable: true) {
+  id: ID! # hash(managerAddr, enabletime)
+  managerAddr: String!
   orManagerenableTimestamp: BigInt!
   orManagerlatestUpdateHash: String!
   orManagerlatestUpdateTimestamp: BigInt!
   orManagerlatestUpdateBlockNumber: BigInt!
+}
+
+type orMDCEnableTimeSnapshot @entity(immutable: true) {
+  id: ID! # hash(mdcAddr, enabletime)
+  mdcAddr: String!
+  orMDCenableTimestamp: BigInt!
+  orMDClatestUpdateHash: String!
+  orMDClatestUpdateTimestamp: BigInt!
+  orMDClatestUpdateBlockNumber: BigInt!
 }
 
 # customed using entity
@@ -394,47 +407,6 @@ type currBoundSpvInfo @entity {
   enableTimestamp: BigInt
   mdc: MDC! @derivedFrom(field: "currBoundSpvInfo") # MDC
 }
-
-# # customed using entity
-# type dealerSnapshot @entity {
-#   id: ID! # txHash - logIndex
-#   dealerList: [String!]! # dealer address array
-#   dealerMappingSnapshot: [dealerMappingSnapshot!]! # dealer address mapping, defined by maker
-#   columnArrayHash: String
-#   enableTimestamp: BigInt
-#   latestUpdateHash: String
-#   latestUpdateTimestamp: BigInt
-#   latestUpdateBlockNumber: BigInt
-#   # Rel
-#   mdc: MDC! @derivedFrom(field: "dealerSnapshot") # MDC
-# }
-
-# # customed using entity
-# type ebcSnapshot @entity {
-#   id: ID! # txHash - logIndex
-#   ebcList: [String!]! # ebc address array
-#   ebcMappingSnapshot: [ebcMappingSnapshot!]! # ebc address mapping, defined by maker
-#   columnArrayHash: String
-#   enableTimestamp: BigInt
-#   latestUpdateHash: String
-#   latestUpdateTimestamp: BigInt
-#   latestUpdateBlockNumber: BigInt
-#   # Rel
-#   mdc: MDC! @derivedFrom(field: "ebcSnapshot") # MDC
-# }
-
-# type chainIdSnapshot @entity {
-#   id: ID! # txHash - logIndex
-#   chainIdList: [BigInt!]! # chainId array
-#   chainIdMappingSnapshot: [chainIdMappingSnapshot!]! # chainId mapping, defined by maker
-#   columnArrayHash: String
-#   enableTimestamp: BigInt
-#   latestUpdateHash: String
-#   latestUpdateTimestamp: BigInt
-#   latestUpdateBlockNumber: BigInt
-#   # Rel
-#   mdc: MDC! @derivedFrom(field: "chainIdSnapshot") # MDC
-# }
 
 # customed using entity
 type DealerMapping @entity {

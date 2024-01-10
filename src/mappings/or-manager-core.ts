@@ -4,6 +4,7 @@ import {
   FactoryManager,
   SubgraphManager,
   challengeUserRatioSnapshot,
+  orManagerEnableTimeSnapshot,
 } from '../types/schema';
 import { log } from '@graphprotocol/graph-ts';
 import { MDCFactory } from '../types/MDCFactory/MDCFactory';
@@ -21,7 +22,6 @@ import {
   getFactoryEntity,
   getMDCEntity,
   getmdcLatestColumnEntity,
-  orManagerUpdateTimeInfo,
 } from './helpers';
 import { entity } from './utils';
 import { isProduction } from './config';
@@ -57,4 +57,28 @@ export function handlechallengeUserRatioEvent(
   snapshot.save();
 
   orManagerUpdateTimeInfo(event, enableTime);
+}
+
+export function orManagerUpdateTimeInfo(
+  event: ethereum.Event,
+  enableTimestamp: BigInt,
+): void {
+  if (enableTimestamp) {
+    const managerAddress = event.address.toHexString();
+    const id = entity.createHashID([
+      managerAddress,
+      enableTimestamp.toHexString(),
+    ]);
+    let enableTimeSnapshot = orManagerEnableTimeSnapshot.load(id);
+    if (enableTimeSnapshot == null) {
+      enableTimeSnapshot = new orManagerEnableTimeSnapshot(id);
+      enableTimeSnapshot.managerAddr = managerAddress;
+      enableTimeSnapshot.orManagerenableTimestamp = enableTimestamp;
+      enableTimeSnapshot.orManagerlatestUpdateHash =
+        event.transaction.hash.toHexString();
+      enableTimeSnapshot.orManagerlatestUpdateTimestamp = event.block.timestamp;
+      enableTimeSnapshot.orManagerlatestUpdateBlockNumber = event.block.number;
+      enableTimeSnapshot.save();
+    }
+  }
 }

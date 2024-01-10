@@ -52,6 +52,7 @@ import {
 } from './config';
 import { getruleEntity, rscRuleType, rscRules } from './rule-utils';
 import { getSubgraphManager } from './factory-core';
+import { orMDCUpdateTimeInfo } from './mdc-core';
 
 export const ZERO_BI: BigInt = BigInt.fromI32(0);
 export const ONE_BI: BigInt = BigInt.fromI32(1);
@@ -899,6 +900,8 @@ export function mdcStoreResponseMaker(
   responseMakers.latestUpdateHash = event.transaction.hash.toHexString();
   responseMakers.save();
 
+  orMDCUpdateTimeInfo(event, enableTimestamp);
+
   // for (let i = 0; i < responseMakersArray.length; i++) {
   //   let _responseMaker = getResponseMakerEntity(
   //     responseMakersArray[i],
@@ -1488,6 +1491,8 @@ function updateLatestRules(
   }
   _ruleUpdateVersion.save();
 
+  orMDCUpdateTimeInfo(event, enableTimestamp);
+
   return latestRuleId;
 }
 
@@ -1923,19 +1928,4 @@ export function calculateEnableBlockNumber(
     }
   }
   return enableBlockNumber;
-}
-
-export function orManagerUpdateTimeInfo(
-  event: ethereum.Event,
-  enableTimestamp: BigInt,
-): void {
-  if (enableTimestamp) {
-    let subgraphManager = getSubgraphManager();
-    subgraphManager.orManagerenableTimestamp = enableTimestamp;
-    subgraphManager.orManagerlatestUpdateHash =
-      event.transaction.hash.toHexString();
-    subgraphManager.orManagerlatestUpdateTimestamp = event.block.timestamp;
-    subgraphManager.orManagerlatestUpdateBlockNumber = event.block.number;
-    subgraphManager.save();
-  }
 }
