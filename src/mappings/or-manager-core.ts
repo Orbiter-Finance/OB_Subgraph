@@ -3,6 +3,7 @@ import {
   DealerMapping,
   FactoryManager,
   SubgraphManager,
+  submitterSnapshot,
   challengeUserRatioSnapshot,
   orManagerEnableTimeSnapshot,
 } from '../types/schema';
@@ -17,8 +18,10 @@ import {
   ONE_ADDRESS,
   ONE_NUM,
   calculateEnableBlockNumber,
+  customData,
   decodeEnabletime,
   func_updateChallengeUserRatio,
+  func_updateSubmitter,
   getFactoryEntity,
   getMDCEntity,
   getmdcLatestColumnEntity,
@@ -55,6 +58,28 @@ export function handlechallengeUserRatioEvent(
   snapshot.latestUpdateTimestamp = event.block.timestamp;
   snapshot.latestUpdateHash = event.transaction.hash.toHexString();
   snapshot.save();
+
+  orManagerUpdateTimeInfo(event, enableTime);
+}
+
+export function handleSubmitterFeeUpdatedEvent(
+  event: ethereum.Event,
+  submitter: Address,
+): void {
+  const inputdata = isProduction ? event.transaction.input : customData.input;
+  const enableTime = decodeEnabletime(inputdata, func_updateSubmitter, true);
+  const id = entity.createHashID([
+    event.transaction.hash.toHexString(),
+    event.logIndex.toString(),
+  ]);
+  let snapshot = new submitterSnapshot(id);
+  snapshot.submitterAddr = submitter.toHexString();
+  snapshot.enableTimestamp = enableTime;
+  snapshot.latestUpdateBlockNumber = event.block.number;
+  snapshot.latestUpdateTimestamp = event.block.timestamp;
+  snapshot.latestUpdateHash = event.transaction.hash.toHexString();
+  snapshot.save();
+  log.info('create submitterSnapshot id: {}', [id]);
 
   orManagerUpdateTimeInfo(event, enableTime);
 }

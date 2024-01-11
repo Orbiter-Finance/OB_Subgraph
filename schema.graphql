@@ -680,12 +680,13 @@ type ProtocolFeeUpdated @entity(immutable: true) {
   transactionHash: Bytes!
 }
 
-type SubmitterFeeUpdated @entity(immutable: true) {
-  id: Bytes!
-  submitter: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type submitterSnapshot @entity(immutable: true) {
+  id: ID!
+  submitterAddr: String! # address
+  enableTimestamp: BigInt! # uint64
+  latestUpdateBlockNumber: BigInt!
+  latestUpdateTimestamp: BigInt!
+  latestUpdateHash: String!
 }
 
 type ETHDeposit @entity(immutable: true) {

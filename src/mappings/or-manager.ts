@@ -19,14 +19,16 @@ import {
   MinChallengeRatioUpdated,
   OwnershipTransferred,
   ProtocolFeeUpdated,
-  SubmitterFeeUpdated,
 } from '../types/schema';
 import {
   handleChainInfoUpdatedEvent,
   handleChainTokenUpdatedEvent,
   handleEbcsUpdatedEvent,
 } from './mdc-core';
-import { handlechallengeUserRatioEvent } from './or-manager-core';
+import {
+  handleSubmitterFeeUpdatedEvent,
+  handlechallengeUserRatioEvent,
+} from './or-manager-core';
 
 export function handleChainInfoUpdated(event: ChainInfoUpdatedEvent): void {
   handleChainInfoUpdatedEvent(event, event.params.id, event.params.chainInfo);
@@ -136,14 +138,5 @@ export function handleProtocolFeeUpdated(event: ProtocolFeeUpdatedEvent): void {
 export function handleSubmitterFeeUpdated(
   event: SubmitterFeeUpdatedEvent,
 ): void {
-  let entity = new SubmitterFeeUpdated(
-    event.transaction.hash.concatI32(event.logIndex.toI32()),
-  );
-  entity.submitter = event.params.submitter;
-
-  entity.blockNumber = event.block.number;
-  entity.blockTimestamp = event.block.timestamp;
-  entity.transactionHash = event.transaction.hash;
-
-  entity.save();
+  handleSubmitterFeeUpdatedEvent(event, event.params.submitter);
 }

@@ -29,18 +29,25 @@ import {
   ETH_ZERO_ADDRESS,
   customData,
 } from '../src/mappings/helpers';
-import { mockMdcAddr, updateChainTokens } from './mock-data';
+import {
+  functionupdateSubmitter,
+  mockMdcAddr,
+  updateChainTokens,
+} from './mock-data';
 import {
   createChainInfoUpdatedEvent,
   createChainTokenUpdatedEvent,
   createEbcsUpdatedEvent,
+  createSubmitterFeeUpdatedEvent,
 } from './or-manager-utils';
 import {
   handleChainInfoUpdated,
   handleChainTokenUpdated,
   handleEbcsUpdated,
+  handleSubmitterFeeUpdated,
 } from '../src/mappings/or-manager';
 import { padZeroToUint } from '../src/mappings/utils';
+import { handleSubmitterFeeUpdatedEvent } from '../src/mappings/or-manager-core';
 
 describe('Describe check responseMakers Event', () => {
   const impl = '0x5F9204BC7402D77d8C9bAA97d8F225e85347961e';
@@ -226,5 +233,40 @@ describe('Describe check ChainTokenUpdated Event', () => {
     //   "symbol",
     //   "ETH"
     // )
+  });
+});
+
+describe('Describe check SubmitterFeeUpdatedEvent Event', () => {
+  const enableTime = '1704881482';
+  const submitter = '0xc3C7A782dda00a8E61Cb9Ba0ea8680bb3f3B9d10';
+  const mockId =
+    '0x79ff246b066c46d12064660cab7fa20081c5be970ff3dc1c5c0e2f8067501c2e';
+  beforeAll(() => {
+    let _submitter = Address.fromString(submitter);
+    customData.setInput(Bytes.fromHexString(functionupdateSubmitter));
+    const newSubmitterFeeUpdatedEvent =
+      createSubmitterFeeUpdatedEvent(_submitter);
+    handleSubmitterFeeUpdated(newSubmitterFeeUpdatedEvent);
+  });
+
+  afterAll(() => {
+    clearStore();
+  });
+
+  test('submitterSnapshot created and stored', () => {
+    assert.entityCount('submitterSnapshot', 1);
+
+    assert.fieldEquals(
+      'submitterSnapshot',
+      mockId,
+      'submitterAddr',
+      submitter.toLowerCase(),
+    );
+    assert.fieldEquals(
+      'submitterSnapshot',
+      mockId,
+      'enableTimestamp',
+      enableTime,
+    );
   });
 });

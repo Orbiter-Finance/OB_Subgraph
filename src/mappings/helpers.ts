@@ -103,6 +103,7 @@ export const func_updateColumnArrayName =
   '(uint64,address[],address[],uint64[])';
 export const func_updateResponseMakersName = '(uint64,bytes[])';
 export const func_updateChallengeUserRatio = '(uint64,uint64)';
+export const func_updateSubmitter = '(uint64,address)';
 
 // chalenge related
 export const func_checkChallengeName = '(uint64,bytes32,address[])';

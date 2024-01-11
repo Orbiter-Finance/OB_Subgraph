@@ -7329,77 +7329,64 @@ export class ProtocolFeeUpdated extends Entity {
   }
 }
 
-export class SubmitterFeeUpdated extends Entity {
-  constructor(id: Bytes) {
+export class submitterSnapshot extends Entity {
+  constructor(id: string) {
     super();
-    this.set("id", Value.fromBytes(id));
+    this.set("id", Value.fromString(id));
   }
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save SubmitterFeeUpdated entity without an ID");
+    assert(id != null, "Cannot save submitterSnapshot entity without an ID");
     if (id) {
       assert(
-        id.kind == ValueKind.BYTES,
-        `Entities of type SubmitterFeeUpdated must have an ID of type Bytes but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        id.kind == ValueKind.STRING,
+        `Entities of type submitterSnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("SubmitterFeeUpdated", id.toBytes().toHexString(), this);
+      store.set("submitterSnapshot", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: Bytes): SubmitterFeeUpdated | null {
-    return changetype<SubmitterFeeUpdated | null>(
-      store.get_in_block("SubmitterFeeUpdated", id.toHexString())
+  static loadInBlock(id: string): submitterSnapshot | null {
+    return changetype<submitterSnapshot | null>(
+      store.get_in_block("submitterSnapshot", id)
     );
   }
 
-  static load(id: Bytes): SubmitterFeeUpdated | null {
-    return changetype<SubmitterFeeUpdated | null>(
-      store.get("SubmitterFeeUpdated", id.toHexString())
+  static load(id: string): submitterSnapshot | null {
+    return changetype<submitterSnapshot | null>(
+      store.get("submitterSnapshot", id)
     );
   }
 
-  get id(): Bytes {
+  get id(): string {
     let value = this.get("id");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set id(value: Bytes) {
-    this.set("id", Value.fromBytes(value));
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
   }
 
-  get submitter(): Bytes {
-    let value = this.get("submitter");
+  get submitterAddr(): string {
+    let value = this.get("submitterAddr");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toString();
     }
   }
 
-  set submitter(value: Bytes) {
-    this.set("submitter", Value.fromBytes(value));
+  set submitterAddr(value: string) {
+    this.set("submitterAddr", Value.fromString(value));
   }
 
-  get blockNumber(): BigInt {
-    let value = this.get("blockNumber");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set blockNumber(value: BigInt) {
-    this.set("blockNumber", Value.fromBigInt(value));
-  }
-
-  get blockTimestamp(): BigInt {
-    let value = this.get("blockTimestamp");
+  get enableTimestamp(): BigInt {
+    let value = this.get("enableTimestamp");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -7407,21 +7394,47 @@ export class SubmitterFeeUpdated extends Entity {
     }
   }
 
-  set blockTimestamp(value: BigInt) {
-    this.set("blockTimestamp", Value.fromBigInt(value));
+  set enableTimestamp(value: BigInt) {
+    this.set("enableTimestamp", Value.fromBigInt(value));
   }
 
-  get transactionHash(): Bytes {
-    let value = this.get("transactionHash");
+  get latestUpdateBlockNumber(): BigInt {
+    let value = this.get("latestUpdateBlockNumber");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
-      return value.toBytes();
+      return value.toBigInt();
     }
   }
 
-  set transactionHash(value: Bytes) {
-    this.set("transactionHash", Value.fromBytes(value));
+  set latestUpdateBlockNumber(value: BigInt) {
+    this.set("latestUpdateBlockNumber", Value.fromBigInt(value));
+  }
+
+  get latestUpdateTimestamp(): BigInt {
+    let value = this.get("latestUpdateTimestamp");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestUpdateTimestamp(value: BigInt) {
+    this.set("latestUpdateTimestamp", Value.fromBigInt(value));
+  }
+
+  get latestUpdateHash(): string {
+    let value = this.get("latestUpdateHash");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set latestUpdateHash(value: string) {
+    this.set("latestUpdateHash", Value.fromString(value));
   }
 }
 
